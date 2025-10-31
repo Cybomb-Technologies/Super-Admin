@@ -17,6 +17,12 @@ import Blogmanagment from './pages/cybomb/blog-management'
 import Pressrelease from './pages/cybomb/press-release'
 import Newsletter from './pages/cybomb/Newsletter'
 
+import SocialMediaDashboard from './pages/Social-Media/Dashboard'
+import PromotionRequests from './pages/Social-Media/PromotionRequests'
+import ContactMessages from './pages/Social-Media/ContactMessages'
+import Users from './pages/Social-Media/Users'
+import Customers from './pages/Social-Media/Customers'
+
 export default function App(){
   return (
     <div className="app">
@@ -32,7 +38,13 @@ export default function App(){
           <Route path="/cybomb/blog-management" element={<Blogmanagment/>} />
           <Route path="/cybomb/press-release" element={<Pressrelease/>} />
           <Route path="/cybomb/news-letter" element={<Newsletter/>} />
-          
+
+          <Route path="/social-media/dashboad" element={<SocialMediaDashboard/>} />
+          <Route path="/social-media/promotional-request" element={<PromotionRequests/>} />
+          <Route path="/social-media/users" element={<Users/>} />
+          <Route path="/social-media/contact" element={<ContactMessages/>} />
+          <Route path="/social-media/customers" element={<Customers/>} />
+      
           
             
           <Route path="/products/list" element={<ProductList/>} />
