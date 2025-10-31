@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import styles from './career-application.module.css';
 
-const API_URL = import.meta.env.VITE_API_BASE;
+const API_URL = import.meta.env.VITE_CYBOMB_API_BASE;
 
 function Careerapplication() {
   const [candidates, setCandidates] = useState([]);

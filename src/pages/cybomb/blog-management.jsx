@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styles from './blog-management.module.css';
 
-const API_URL = import.meta.env.VITE_API_BASE;
+const API_URL = import.meta.env.VITE_CYBOMB_API_BASE;
 
 function Blogmanagement() {
   const [blogs, setBlogs] = useState([]);
