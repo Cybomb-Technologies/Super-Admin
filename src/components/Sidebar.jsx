@@ -51,10 +51,17 @@ export default function Sidebar() {
     { to: "/cybomb/press-release", label: "Press Release" },
     { to: "/cybomb/news-letter", label: "Newsletter" },
   ];
-  const products = [
-    { to: "/products/list", label: "Product List" },
-    { to: "/products/add", label: "Add Product" },
+  const socialmedia = [
+    { to: "/social-media/dashboad", label: "Dashboard" },
+    { to: "/social-media/promotional-request", label: "Promotional Request" },
+    { to: "/social-media/customers", label: "Customers" },
+    { to: "/social-media/users", label: "Users" },
+    { to: "/social-media/contact", label: "Contact Message" },
+    
   ];
+
+  
+
   const orders = [
     { to: "/orders/list", label: "Order List" },
     { to: "/orders/detail", label: "Order Detail" },
@@ -120,7 +127,7 @@ export default function Sidebar() {
               <Dropdown title="Cybomb" items={cybomb} icon="🚀" />
             </li>
             <li>
-              <Dropdown title="PDF Works" items={products} icon="📄" />
+              <Dropdown title="PDF Works" items={orders} icon="📄" />
             </li>
             <li>
               <Dropdown title="Rank SEO" items={orders} icon="🔍" />
@@ -128,6 +135,10 @@ export default function Sidebar() {
             <li>
               <Dropdown title="Djit Trading" items={settings} icon="💹" />
             </li>
+            <li>
+              <Dropdown title="Social Media" items={socialmedia} icon="💹" />
+            </li>
+           
           </ul>
         </nav>
 
