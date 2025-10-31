@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styles from './form-submission.module.css';
 
-const API_URL = import.meta.env.VITE_API_BASE;
+const API_URL = import.meta.env.VITE_CYBOMB_API_BASE;
 
 function Formsubmission() {
   const [activeTab, setActiveTab] = useState("all");

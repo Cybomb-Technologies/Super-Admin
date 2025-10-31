@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import styles from "./dashboard.module.css";
 
-const API_URL = import.meta.env.VITE_API_BASE;
+const API_URL = import.meta.env.VITE_CYBOMB_API_BASE;
 
 export default function Cybombdashboard() {
   const [stats, setStats] = useState({
@@ -204,7 +204,7 @@ export default function Cybombdashboard() {
               <i className="fas fa-inbox"></i>
               Recent Form Submissions
             </h6>
-            <Link to="/admin/form-submission" className={styles.viewAllBtn}>
+            <Link to="/cybomb/form-submission" className={styles.viewAllBtn}>
               View All
               <i className="fas fa-arrow-right"></i>
             </Link>
@@ -264,7 +264,7 @@ export default function Cybombdashboard() {
               <i className="fas fa-briefcase"></i>
               Recent Job Applications
             </h6>
-            <Link to="/admin/career-page" className={styles.viewAllBtn}>
+            <Link to="/cybomb/career-application" className={styles.viewAllBtn}>
               View All
               <i className="fas fa-arrow-right"></i>
             </Link>
@@ -327,7 +327,7 @@ export default function Cybombdashboard() {
             <i className="fas fa-blog"></i>
             Blog Management
           </h6>
-          <Link to="/admin/admin-blog" className={styles.manageBlogsBtn}>
+          <Link to="/cybomb/blog-management" className={styles.manageBlogsBtn}>
             <i className="fas fa-plus"></i>
             Manage Blogs
           </Link>
@@ -360,7 +360,7 @@ export default function Cybombdashboard() {
                       <td>
                         <div className={styles.actionButtons}>
                           <Link
-                            to="/admin/admin-blog"
+                            to="/cybomb/admin-blog"
                             className={styles.editBtn}
                             title="Edit Blog"
                           >
