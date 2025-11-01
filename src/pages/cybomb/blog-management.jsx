@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import styles from './blog-management.module.css';
+import styles from "./blog-management.module.css";
 
 const API_URL = import.meta.env.VITE_CYBOMB_API_BASE;
 
@@ -18,16 +18,25 @@ function Blogmanagement() {
   const [editId, setEditId] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Fetch blogs
+  // ✅ Fetch blogs safely
   const fetchBlogs = async () => {
     try {
       setLoading(true);
       const res = await fetch(`${API_URL}/api/blogs`);
       const data = await res.json();
-      setBlogs(data);
-      setFilteredBlogs(data);
+      console.log("Fetched blogs:", data);
+
+      // ✅ Ensure blogs is always an array
+      const blogsArray = Array.isArray(data)
+        ? data
+        : data.blogs || data.data || [];
+
+      setBlogs(blogsArray);
+      setFilteredBlogs(blogsArray);
     } catch (error) {
       console.error("Error fetching blogs:", error);
+      setBlogs([]);
+      setFilteredBlogs([]);
     } finally {
       setLoading(false);
     }
@@ -37,23 +46,23 @@ function Blogmanagement() {
     fetchBlogs();
   }, []);
 
-  // Handle search
+  // ✅ Handle search
   useEffect(() => {
-    const results = blogs.filter(
+    const results = (Array.isArray(blogs) ? blogs : []).filter(
       (blog) =>
-        blog.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        blog.description.toLowerCase().includes(searchTerm.toLowerCase())
+        blog.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        blog.description?.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredBlogs(results);
   }, [searchTerm, blogs]);
 
-  // Handle input changes
+  // ✅ Handle input changes
   const handleChange = (e) => {
     const { name, value, files } = e.target;
     setFormData({ ...formData, [name]: files ? files[0] : value });
   };
 
-  // Submit form (Add/Edit)
+  // ✅ Submit form (Add/Edit)
   const handleSubmit = async (e) => {
     e.preventDefault();
     const form = new FormData();
@@ -83,7 +92,7 @@ function Blogmanagement() {
     }
   };
 
-  // Delete blog
+  // ✅ Delete blog
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this blog?")) {
       try {
@@ -95,11 +104,11 @@ function Blogmanagement() {
     }
   };
 
-  // Edit blog
+  // ✅ Edit blog
   const handleEdit = (blog) => {
     setFormData({
       title: blog.title,
-      date: blog.date.split('T')[0],
+      date: blog.date ? blog.date.split("T")[0] : "",
       description: blog.description,
       fullContent: blog.fullContent,
       image: null,
@@ -114,9 +123,8 @@ function Blogmanagement() {
         <div className={styles.headerContent}>
           <div className={styles.titleSection}>
             <h1 className={styles.title}>Blog Management</h1>
-            {/* <p className={styles.subtitle}>Create and manage your blog posts</p> */}
           </div>
-          
+
           <div className={styles.controls}>
             <div className={styles.searchContainer}>
               <span className={styles.searchIcon}>🔍</span>
@@ -128,7 +136,7 @@ function Blogmanagement() {
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
-            
+
             <button
               className={styles.addButton}
               onClick={() => {
@@ -150,6 +158,7 @@ function Blogmanagement() {
         </div>
       </div>
 
+      {/* ✅ Stats */}
       <div className={styles.statsGrid}>
         <div className={styles.statCard}>
           <div className={styles.statIcon}>📝</div>
@@ -169,14 +178,18 @@ function Blogmanagement() {
           <div className={styles.statIcon}>📅</div>
           <div className={styles.statContent}>
             <div className={styles.statNumber}>
-              {blogs.filter(blog => new Date(blog.date) > new Date(Date.now() - 7 * 86400000)).length}
+              {blogs.filter(
+                (blog) =>
+                  new Date(blog.date) >
+                  new Date(Date.now() - 7 * 86400000)
+              ).length}
             </div>
             <div className={styles.statLabel}>This Week</div>
           </div>
         </div>
       </div>
 
-      {/* Blog Table */}
+      {/* ✅ Blog Table */}
       <div className={styles.tableContainer}>
         {loading ? (
           <div className={styles.loadingContainer}>
@@ -202,14 +215,14 @@ function Blogmanagement() {
                       <div className={styles.blogTitle}>{blog.title}</div>
                     </td>
                     <td className={styles.dateCell}>
-                      {new Date(blog.date).toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: 'short',
-                        day: 'numeric'
+                      {new Date(blog.date).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
                       })}
                     </td>
                     <td className={styles.descriptionCell}>
-                      {blog.description.slice(0, 60)}...
+                      {blog.description?.slice(0, 60)}...
                     </td>
                     <td className={styles.imageCell}>
                       {blog.image && (
@@ -226,15 +239,13 @@ function Blogmanagement() {
                           className={styles.editButton}
                           onClick={() => handleEdit(blog)}
                         >
-                          <span className={styles.editIcon}>✏️</span>
-                          Edit
+                          <span className={styles.editIcon}>✏️</span>Edit
                         </button>
                         <button
                           className={styles.deleteButton}
                           onClick={() => handleDelete(blog._id)}
                         >
-                          <span className={styles.deleteIcon}>🗑️</span>
-                          Delete
+                          <span className={styles.deleteIcon}>🗑️</span>Delete
                         </button>
                       </div>
                     </td>
@@ -242,16 +253,15 @@ function Blogmanagement() {
                 ))}
               </tbody>
             </table>
-            
+
             {filteredBlogs.length === 0 && !loading && (
               <div className={styles.emptyState}>
                 <div className={styles.emptyIcon}>📝</div>
                 <h3>No blogs found</h3>
                 <p>
-                  {searchTerm 
+                  {searchTerm
                     ? `No results found for "${searchTerm}"`
-                    : "Get started by creating your first blog post!"
-                  }
+                    : "Get started by creating your first blog post!"}
                 </p>
                 {!searchTerm && (
                   <button
@@ -268,20 +278,26 @@ function Blogmanagement() {
         )}
       </div>
 
-      {/* Add/Edit Blog Modal */}
+      {/* ✅ Add/Edit Blog Modal */}
       {showModal && (
-        <div className={styles.modalBackdrop} onClick={() => setShowModal(false)}>
-          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+        <div
+          className={styles.modalBackdrop}
+          onClick={() => setShowModal(false)}
+        >
+          <div
+            className={styles.modalContent}
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className={styles.modalHeader}>
-              <h2>{editId ? 'Edit Blog' : 'Add New Blog'}</h2>
-              <button 
+              <h2>{editId ? "Edit Blog" : "Add New Blog"}</h2>
+              <button
                 className={styles.modalClose}
                 onClick={() => setShowModal(false)}
               >
                 ✕
               </button>
             </div>
-            
+
             <form onSubmit={handleSubmit} className={styles.modalForm}>
               <div className={styles.formGroup}>
                 <label className={styles.formLabel}>Blog Title</label>
@@ -295,7 +311,7 @@ function Blogmanagement() {
                   required
                 />
               </div>
-              
+
               <div className={styles.formGroup}>
                 <label className={styles.formLabel}>Publish Date</label>
                 <input
@@ -307,7 +323,7 @@ function Blogmanagement() {
                   required
                 />
               </div>
-              
+
               <div className={styles.formGroup}>
                 <label className={styles.formLabel}>Short Description</label>
                 <textarea
@@ -320,7 +336,7 @@ function Blogmanagement() {
                   required
                 />
               </div>
-              
+
               <div className={styles.formGroup}>
                 <label className={styles.formLabel}>Full Content</label>
                 <textarea
@@ -333,7 +349,7 @@ function Blogmanagement() {
                   required
                 />
               </div>
-              
+
               <div className={styles.formGroup}>
                 <label className={styles.formLabel}>Blog Image</label>
                 <input
@@ -344,7 +360,7 @@ function Blogmanagement() {
                   accept="image/*"
                 />
               </div>
-              
+
               <div className={styles.modalFooter}>
                 <button
                   type="button"
@@ -353,11 +369,8 @@ function Blogmanagement() {
                 >
                   Cancel
                 </button>
-                <button
-                  type="submit"
-                  className={styles.submitButton}
-                >
-                  {editId ? 'Update Blog' : 'Create Blog'}
+                <button type="submit" className={styles.submitButton}>
+                  {editId ? "Update Blog" : "Create Blog"}
                 </button>
               </div>
             </form>

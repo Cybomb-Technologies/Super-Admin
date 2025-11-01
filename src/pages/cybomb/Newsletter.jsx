@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import styles from './Newsletter.module.css';
+import styles from "./Newsletter.module.css";
 
 const API_URL = import.meta.env.VITE_CYBOMB_API_BASE;
 
@@ -8,17 +8,31 @@ function Newsletter() {
   const [filteredSubscribers, setFilteredSubscribers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
 
   // Fetch newsletter subscribers
   const fetchSubscribers = async () => {
     try {
       setLoading(true);
+      setErrorMessage("");
       const res = await fetch(`${API_URL}/api/footer-mail`);
+      if (!res.ok) {
+        throw new Error(`Failed to fetch data (${res.status})`);
+      }
+
       const data = await res.json();
-      setSubscribers(data);
-      setFilteredSubscribers(data);
+      console.log("Fetched newsletter data:", data);
+
+      // ✅ Safely extract array
+      const arrayData = Array.isArray(data)
+        ? data
+        : data.data || data.subscribers || [];
+
+      setSubscribers(arrayData);
+      setFilteredSubscribers(arrayData);
     } catch (error) {
       console.error("Error fetching newsletter data:", error);
+      setErrorMessage(error.message);
     } finally {
       setLoading(false);
     }
@@ -30,8 +44,9 @@ function Newsletter() {
 
   // Search filter
   useEffect(() => {
+    if (!Array.isArray(subscribers)) return;
     const results = subscribers.filter((sub) =>
-      sub.email.toLowerCase().includes(searchTerm.toLowerCase())
+      sub.email?.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredSubscribers(results);
   }, [searchTerm, subscribers]);
@@ -49,19 +64,23 @@ function Newsletter() {
   };
 
   const formatDate = (dateString) => {
+    if (!dateString) return "N/A";
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     });
   };
 
   const getRecentSubscribers = () => {
+    if (!Array.isArray(subscribers)) return 0;
     const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
-    return subscribers.filter(sub => new Date(sub.createdAt) > oneWeekAgo).length;
+    return subscribers.filter(
+      (sub) => new Date(sub.createdAt) > oneWeekAgo
+    ).length;
   };
 
   return (
@@ -74,6 +93,12 @@ function Newsletter() {
           </div>
         </div>
       </div>
+
+      {errorMessage && (
+        <div className={styles.errorMessage}>
+          ❌ {errorMessage}
+        </div>
+      )}
 
       <div className={styles.statsGrid}>
         <div className={styles.statCard}>
@@ -112,7 +137,8 @@ function Newsletter() {
         </div>
         <div className={styles.resultsBadge}>
           <span className={styles.badgeIcon}>👥</span>
-          {filteredSubscribers.length} {filteredSubscribers.length === 1 ? 'Subscriber' : 'Subscribers'}
+          {filteredSubscribers.length}{" "}
+          {filteredSubscribers.length === 1 ? "Subscriber" : "Subscribers"}
         </div>
       </div>
 
@@ -132,30 +158,33 @@ function Newsletter() {
               </tr>
             </thead>
             <tbody>
-              {filteredSubscribers.map((sub) => (
-                <tr key={sub._id} className={styles.tableRow}>
-                  <td className={styles.emailCell}>
-                    <div className={styles.emailWrapper}>
-                      <span className={styles.emailIcon}>✉️</span>
-                      <span className={styles.emailText}>{sub.email}</span>
-                    </div>
-                  </td>
-                  <td className={styles.dateCell}>
-                    <div className={styles.dateWrapper}>
-                      <span className={styles.dateText}>{formatDate(sub.createdAt)}</span>
-                    </div>
-                  </td>
-                  <td className={styles.actionsCell}>
-                    <button
-                      className={styles.deleteButton}
-                      onClick={() => handleDelete(sub._id)}
-                    >
-                      <span className={styles.deleteIcon}>🗑️</span>
-                      Remove
-                    </button>
-                  </td>
-                </tr>
-              ))}
+              {Array.isArray(filteredSubscribers) &&
+                filteredSubscribers.map((sub) => (
+                  <tr key={sub._id} className={styles.tableRow}>
+                    <td className={styles.emailCell}>
+                      <div className={styles.emailWrapper}>
+                        <span className={styles.emailIcon}>✉️</span>
+                        <span className={styles.emailText}>{sub.email}</span>
+                      </div>
+                    </td>
+                    <td className={styles.dateCell}>
+                      <div className={styles.dateWrapper}>
+                        <span className={styles.dateText}>
+                          {formatDate(sub.createdAt)}
+                        </span>
+                      </div>
+                    </td>
+                    <td className={styles.actionsCell}>
+                      <button
+                        className={styles.deleteButton}
+                        onClick={() => handleDelete(sub._id)}
+                      >
+                        <span className={styles.deleteIcon}>🗑️</span>
+                        Remove
+                      </button>
+                    </td>
+                  </tr>
+                ))}
             </tbody>
           </table>
 
@@ -164,10 +193,9 @@ function Newsletter() {
               <div className={styles.emptyIcon}>📭</div>
               <h3>No subscribers found</h3>
               <p>
-                {searchTerm 
+                {searchTerm
                   ? `No results found for "${searchTerm}"`
-                  : "Your newsletter subscribers will appear here."
-                }
+                  : "Your newsletter subscribers will appear here."}
               </p>
             </div>
           )}

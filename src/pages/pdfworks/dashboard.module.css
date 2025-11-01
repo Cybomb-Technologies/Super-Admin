@@ -1,0 +1,445 @@
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  min-height: 100vh;
+  font-family: 'Inter', 'Poppins', sans-serif;
+}
+
+.header {
+  margin-bottom: 3rem;
+}
+
+.title {
+  font-size: 3rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #1A173A, #6666CC);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 0.5rem;
+  line-height: 1.2;
+}
+
+.subtitle {
+  color: #6B7280;
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.crownIcon {
+  display: inline-block;
+  margin-left: 0.5rem;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-5px); }
+}
+
+/* Stats Grid */
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.statCard {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border-radius: 24px;
+  padding: 2rem;
+  box-shadow: 
+    0 10px 25px rgba(0, 0, 0, 0.08),
+    0 0 0 1px rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  transition: all 0.4s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.statCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #6666CC, #8844EE);
+}
+
+.statCard:hover {
+  transform: translateY(-8px);
+  box-shadow: 
+    0 25px 50px rgba(0, 0, 0, 0.15),
+    0 0 0 1px rgba(255, 255, 255, 0.8);
+}
+
+.statContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.statInfo {
+  flex: 1;
+}
+
+.statLabel {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #6B7280;
+  margin-bottom: 0.5rem;
+}
+
+.statValue {
+  font-size: 2.5rem;
+  font-weight: 800;
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+
+.statIcon {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 1rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.statIcon::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: inherit;
+  border-radius: inherit;
+}
+
+/* Stat Card Colors */
+.usersCard .statValue {
+  color: #3B82F6;
+}
+
+.usersCard .statIcon {
+  background: linear-gradient(135deg, #3B82F6, #1D4ED8);
+  color: white;
+}
+
+.filesCard .statValue {
+  color: #8B5CF6;
+}
+
+.filesCard .statIcon {
+  background: linear-gradient(135deg, #8B5CF6, #7C3AED);
+  color: white;
+}
+
+.revenueCard .statValue {
+  color: #10B981;
+}
+
+.revenueCard .statIcon {
+  background: linear-gradient(135deg, #10B981, #059669);
+  color: white;
+}
+
+.activeCard .statValue {
+  color: #F59E0B;
+}
+
+.activeCard .statIcon {
+  background: linear-gradient(135deg, #F59E0B, #D97706);
+  color: white;
+}
+
+/* User Table Section */
+.userSection {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border-radius: 24px;
+  padding: 2.5rem;
+  box-shadow: 
+    0 10px 25px rgba(0, 0, 0, 0.08),
+    0 0 0 1px rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  transition: all 0.3s ease;
+}
+
+.userSection:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 15px 35px rgba(0, 0, 0, 0.12),
+    0 0 0 1px rgba(255, 255, 255, 0.8);
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+
+.sectionTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1A173A;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.userCount {
+  background: linear-gradient(135deg, #6666CC, #8844EE);
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.tableContainer {
+  overflow-x: auto;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(10px);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 800px;
+}
+
+.tableHead {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border-bottom: 2px solid #E5E7EB;
+}
+
+.tableHeader {
+  padding: 1.25rem 1.5rem;
+  text-align: left;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #4B5563;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.tableRow {
+  transition: all 0.3s ease;
+  border-bottom: 1px solid #F3F4F6;
+}
+
+.tableRow:hover {
+  background: linear-gradient(135deg, #f0f9ff, #f8fafc);
+  transform: translateX(4px);
+}
+
+.tableCell {
+  padding: 1.25rem 1.5rem;
+  font-size: 0.95rem;
+  color: #374151;
+  vertical-align: middle;
+}
+
+/* Badges */
+.planBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: capitalize;
+  border: 1px solid;
+}
+
+.planFree {
+  background: linear-gradient(135deg, #F3F4F6, #E5E7EB);
+  color: #374151;
+  border-color: rgba(107, 114, 128, 0.2);
+}
+
+.planPro {
+  background: linear-gradient(135deg, #EDE9FE, #F3F4F6);
+  color: #7C3AED;
+  border-color: rgba(124, 58, 237, 0.2);
+}
+
+.planBusiness {
+  background: linear-gradient(135deg, #DBEAFE, #EFF6FF);
+  color: #1D4ED8;
+  border-color: rgba(29, 78, 216, 0.2);
+}
+
+.roleBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: capitalize;
+  border: 1px solid;
+}
+
+.roleUser {
+  background: linear-gradient(135deg, #DCFCE7, #ECFDF5);
+  color: #166534;
+  border-color: rgba(34, 197, 94, 0.2);
+}
+
+.roleAdmin {
+  background: linear-gradient(135deg, #FEE2E2, #FEF2F2);
+  color: #991B1B;
+  border-color: rgba(239, 68, 68, 0.2);
+}
+
+.dateText {
+  color: #6B7280;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* Quick Actions */
+.quickActions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.actionButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border: 2px solid #E5E7EB;
+  border-radius: 12px;
+  font-weight: 600;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.actionButton:hover {
+  border-color: #6666CC;
+  color: #6666CC;
+  transform: translateY(-2px);
+}
+
+/* Loading State */
+.loadingState {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 4rem 2rem;
+  color: #6B7280;
+  font-weight: 600;
+}
+
+.loadingSpinner {
+  animation: spin 1s linear infinite;
+  width: 2rem;
+  height: 2rem;
+  color: #6666CC;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Empty State */
+.emptyState {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #6B7280;
+}
+
+.emptyIcon {
+  width: 4rem;
+  height: 4rem;
+  margin: 0 auto 1.5rem;
+  color: #D1D5DB;
+}
+
+.emptyTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.emptyText {
+  color: #9CA3AF;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+  
+  .title {
+    font-size: 2rem;
+  }
+  
+  .statsGrid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .statCard {
+    padding: 1.5rem;
+  }
+  
+  .userSection {
+    padding: 1.5rem;
+  }
+  
+  .sectionHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .tableHeader,
+  .tableCell {
+    padding: 1rem;
+  }
+  
+  .quickActions {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Animation for cards */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.statCard, .userSection {
+  animation: fadeInUp 0.6s ease-out;
+}
