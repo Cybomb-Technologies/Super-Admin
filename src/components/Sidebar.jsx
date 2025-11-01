@@ -46,22 +46,38 @@ export default function Sidebar() {
   const cybomb = [
     { to: "/cybomb/dashboard", label: "Dashboard" },
     { to: "/cybomb/form-submission", label: "Form Submission" },
-    { to: "/cybomb/career-application", label: "Careerb Application" },
+    { to: "/cybomb/career-application", label: "Career Application" },
     { to: "/cybomb/blog-management", label: "Blog Management" },
     { to: "/cybomb/press-release", label: "Press Release" },
     { to: "/cybomb/news-letter", label: "Newsletter" },
   ];
-  const products = [
-    { to: "/products/list", label: "Product List" },
-    { to: "/products/add", label: "Add Product" },
+  const aitals = [
+    { to: "/aitals/dashboard", label: "Dashboard" },
+    { to: "/aitals/enquiry", label: "Enquiry Data" },
+    { to: "/aitals/contact-forms", label: "Contact Form" },
+    { to: "/aitals/application", label: "Application" },
+    { to: "/aitals/job-openings", label: "Job Opening" },
+    { to: "/aitals/blog", label: "Blog Manager" },
+    { to: "/aitals/newsletter-subscribers", label: "Newsletter Subscribers" },
   ];
-  const orders = [
-    { to: "/orders/list", label: "Order List" },
-    { to: "/orders/detail", label: "Order Detail" },
+  const socialmedia = [
+    { to: "/social-media/dashboad", label: "Dashboard" },
+    { to: "/social-media/promotional-request", label: "Promotional Request" },
+    { to: "/social-media/customers", label: "Customers" },
+    { to: "/social-media/users", label: "Users" },
+    { to: "/social-media/contact", label: "Contact Message" },
   ];
-  const settings = [
-    { to: "/settings/general", label: "General" },
-    { to: "/settings/security", label: "Security" },
+
+  const pdfworks = [
+    { to: "/pdf-works/dashboard", label: "Dashboard" },
+    { to: "/pdf-works/user", label: "User" },
+    { to: "/pdf-works/contact-details", label: "Contact Details" },
+  ];
+
+   const rankseo = [
+    { to: "/rankseo/user", label: "User" },
+    // { to: "/pdf-works/user", label: "User" },
+    // { to: "/pdf-works/contact-details", label: "Contact Details" },
   ];
 
   return (
@@ -120,13 +136,19 @@ export default function Sidebar() {
               <Dropdown title="Cybomb" items={cybomb} icon="🚀" />
             </li>
             <li>
-              <Dropdown title="PDF Works" items={products} icon="📄" />
+              <Dropdown title="Aitals Tech" items={aitals} icon="📄" />
             </li>
             <li>
-              <Dropdown title="Rank SEO" items={orders} icon="🔍" />
+              <Dropdown title="PDF Works" items={pdfworks} icon="📄" />
             </li>
-            <li>
+            {/* <li>
+              <Dropdown title="Rank SEO" items={rankseo} icon="🔍" />
+            </li> */}
+            {/* <li>
               <Dropdown title="Djit Trading" items={settings} icon="💹" />
+            </li> */}
+            <li>
+              <Dropdown title="Social Media" items={socialmedia} icon="💹" />
             </li>
           </ul>
         </nav>
