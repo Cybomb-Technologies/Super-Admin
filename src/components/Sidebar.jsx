@@ -83,6 +83,11 @@ export default function Sidebar() {
     { to: "/rankseo/user", label: "User" },
   ];
 
+   const livechat = [
+    { to: "/live-chat/djitrading", label: "Djit Trading" },
+   
+  ];
+
   return (
     <>
       {/* Mobile Overlay */}
@@ -144,6 +149,9 @@ export default function Sidebar() {
             </li>
             <li>
               <Dropdown title="Social Media" items={socialmedia} icon="💹" />
+            </li>
+             <li>
+              <Dropdown title="Live Chat" items={livechat} icon="💹" />
             </li>
           </ul>
         </nav>

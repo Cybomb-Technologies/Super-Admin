@@ -39,6 +39,7 @@ import PDFuser from "./pages/pdfworks/user";
 import Pdfcontact from "./pages/pdfworks/contact";
 import Rankuser from "./pages/rankseo/user";
 import AdminDetails from "./pages/pdfworks/AdminDetails";
+import DjitTradingLiveChat from "./pages/live-chat/djit-trading/djit-live-chat";
 
 
 export default function App() {
@@ -99,8 +100,9 @@ export default function App() {
           <Route path="/orders/list" element={<OrderList />} />
           <Route path="/orders/detail" element={<OrderDetail />} />
           <Route path="/settings/general" element={<SettingsGeneral />} />
+           <Route path="/live-chat/djitrading" element={<DjitTradingLiveChat/>} />
 
-
+ 
       
 
           <Route
