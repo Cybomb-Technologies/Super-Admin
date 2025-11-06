@@ -16,6 +16,8 @@ import Careerapplication from "./pages/cybomb/career-application";
 import Blogmanagment from "./pages/cybomb/blog-management";
 import Pressrelease from "./pages/cybomb/press-release";
 import Newsletter from "./pages/cybomb/Newsletter";
+import AdminManagement from "./pages/cybomb/AdminManagement";
+
 
 import SocialMediaDashboard from "./pages/Social-Media/Dashboard";
 import PromotionRequests from "./pages/Social-Media/PromotionRequests";
@@ -30,10 +32,13 @@ import ApplicationManager from "./pages/aitals/dashboard/ApplicationManager";
 import JobOpeningManager from "./pages/aitals/dashboard/JobOpeningManager";
 import BlogManager from "./pages/aitals/dashboard/BlogManager";
 import NewsletterManager from "./pages/aitals/dashboard/NewsletterManager";
+import AdminRegister from "./pages/aitals/dashboard/AdminRegister";
+
 import PDFdashboard from "./pages/pdfworks/dashboard";
 import PDFuser from "./pages/pdfworks/user";
 import Pdfcontact from "./pages/pdfworks/contact";
 import Rankuser from "./pages/rankseo/user";
+import AdminDetails from "./pages/pdfworks/AdminDetails";
 import DjitTradingLiveChat from "./pages/live-chat/djit-trading/djit-live-chat";
 
 
@@ -55,6 +60,8 @@ export default function App() {
           <Route path="/cybomb/blog-management" element={<Blogmanagment />} />
           <Route path="/cybomb/press-release" element={<Pressrelease />} />
           <Route path="/cybomb/news-letter" element={<Newsletter />} />
+          <Route path="/cybomb/admin-management" element={<AdminManagement />} />
+
 
           <Route
             path="/social-media/dashboad"
@@ -77,12 +84,14 @@ export default function App() {
           <Route
             path="/aitals/newsletter-subscribers"
             element={<NewsletterManager />}
+            
           />
+<Route path="/aitals/admin-register" element={<AdminRegister />} />
 
           <Route path="/pdf-works/dashboard" element={<PDFdashboard />} />
           <Route path="/pdf-works/user" element={<PDFuser />} />
           <Route path="/pdf-works/contact-details" element={<Pdfcontact/>} />
-
+<Route path="/PDF-Works/admin-details" element={<AdminDetails/>}/>
           <Route path="/rankseo/user" element={<Rankuser/>} />
           
         

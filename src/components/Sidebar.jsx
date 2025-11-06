@@ -48,9 +48,11 @@ export default function Sidebar() {
     { to: "/cybomb/form-submission", label: "Form Submission" },
     { to: "/cybomb/career-application", label: "Career Application" },
     { to: "/cybomb/blog-management", label: "Blog Management" },
+    { to: "/cybomb/admin-management", label: "Admin Management" },
     { to: "/cybomb/press-release", label: "Press Release" },
     { to: "/cybomb/news-letter", label: "Newsletter" },
   ];
+  
   const aitals = [
     { to: "/aitals/dashboard", label: "Dashboard" },
     { to: "/aitals/enquiry", label: "Enquiry Data" },
@@ -59,7 +61,9 @@ export default function Sidebar() {
     { to: "/aitals/job-openings", label: "Job Opening" },
     { to: "/aitals/blog", label: "Blog Manager" },
     { to: "/aitals/newsletter-subscribers", label: "Newsletter Subscribers" },
+    { to: "/aitals/admin-register", label: "Admin Register" },
   ];
+  
   const socialmedia = [
     { to: "/social-media/dashboad", label: "Dashboard" },
     { to: "/social-media/promotional-request", label: "Promotional Request" },
@@ -72,12 +76,11 @@ export default function Sidebar() {
     { to: "/pdf-works/dashboard", label: "Dashboard" },
     { to: "/pdf-works/user", label: "User" },
     { to: "/pdf-works/contact-details", label: "Contact Details" },
+    { to: "/pdf-works/admin-details", label: "Admin Details" }, // ✅ Added AdminDetails to PDF Works
   ];
 
-   const rankseo = [
+  const rankseo = [
     { to: "/rankseo/user", label: "User" },
-    // { to: "/pdf-works/user", label: "User" },
-    // { to: "/pdf-works/contact-details", label: "Contact Details" },
   ];
 
    const livechat = [
@@ -115,10 +118,8 @@ export default function Sidebar() {
         }`}
       >
         <div className={styles.brand}>
-          {/* <div className={styles.brandLogo}>⚡</div> */}
           <div className={styles.brandText}>
             <div className={styles.brandTitle}>⚡ Super Admin</div>
-            {/* <div className={styles.brandSubtitle}>Management Panel</div> */}
           </div>
         </div>
 
@@ -146,12 +147,6 @@ export default function Sidebar() {
             <li>
               <Dropdown title="PDF Works" items={pdfworks} icon="📄" />
             </li>
-            {/* <li>
-              <Dropdown title="Rank SEO" items={rankseo} icon="🔍" />
-            </li> */}
-            {/* <li>
-              <Dropdown title="Djit Trading" items={settings} icon="💹" />
-            </li> */}
             <li>
               <Dropdown title="Social Media" items={socialmedia} icon="💹" />
             </li>
