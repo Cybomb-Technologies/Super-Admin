@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./AdminRegister.css";
 
-const API_URL = "http://localhost:5000";
+const API_URL = "https://api.aitals.com";
 
 function AdminManagement() {
   const [admins, setAdmins] = useState([]);
