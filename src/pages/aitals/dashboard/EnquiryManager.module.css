@@ -1,12 +1,12 @@
 .container {
   background: transparent;
   min-height: 100vh;
-  margin:25px 25px 25px 44px;
+  margin: 25px 25px 25px 44px;
 }
 
 /* Header Styles */
 .header {
-  background: linear-gradient(135deg, #1A173A 0%, #6666CC 100%);
+  background: linear-gradient(135deg, #1a173a 0%, #6666cc 100%);
   border-radius: 20px;
   padding: 2rem;
   margin-bottom: 2rem;
@@ -45,7 +45,7 @@
   font-size: 2rem;
   font-weight: 800;
   margin-bottom: 0.5rem;
-  background: linear-gradient(135deg, #FFFFFF 0%, #E2E8F0 100%);
+  background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -108,13 +108,13 @@
   transform: translateY(-50%);
   width: 1.25rem;
   height: 1.25rem;
-  color: #6666CC;
+  color: #6666cc;
 }
 
 .searchInput {
   width: 100%;
   padding: 0.875rem 1rem 0.875rem 3rem;
-  border: 2px solid #E2E8F0;
+  border: 2px solid #e2e8f0;
   border-radius: 12px;
   font-size: 1rem;
   background: white;
@@ -123,7 +123,7 @@
 
 .searchInput:focus {
   outline: none;
-  border-color: #6666CC;
+  border-color: #6666cc;
   box-shadow: 0 0 0 3px rgba(102, 102, 204, 0.1);
 }
 
@@ -135,7 +135,7 @@
 
 .filterSelect {
   padding: 0.875rem 1rem;
-  border: 2px solid #E2E8F0;
+  border: 2px solid #e2e8f0;
   border-radius: 12px;
   font-size: 1rem;
   background: white;
@@ -146,7 +146,45 @@
 
 .filterSelect:focus {
   outline: none;
-  border-color: #6666CC;
+  border-color: #6666cc;
+}
+
+/* Import Container */
+.importContainer {
+  position: relative;
+}
+
+.fileInput {
+  position: absolute;
+  left: -9999px;
+  opacity: 0;
+}
+
+.importButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1.5rem;
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.importButton:hover:not(.importButtonDisabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+  background: linear-gradient(135deg, #2563eb, #1e40af);
+}
+
+.importButtonDisabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none !important;
 }
 
 .exportButton {
@@ -154,23 +192,53 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.875rem 1.5rem;
-  background: linear-gradient(135deg, #6666CC 0%, #8A2BE2 100%);
+  background: linear-gradient(135deg, #10b981, #059669);
   color: white;
   border: none;
   border-radius: 12px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
+  white-space: nowrap;
 }
 
-.exportButton:hover {
+.exportButton:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(102, 102, 204, 0.4);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+  background: linear-gradient(135deg, #059669, #047857);
 }
 
-.exportIcon {
-  width: 1.25rem;
-  height: 1.25rem;
+.exportButton:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.templateButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1.5rem;
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.templateButton:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+  background: linear-gradient(135deg, #7c3aed, #6d28d9);
+}
+
+.templateButton:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
 }
 
 /* Enquiries Grid */
@@ -193,12 +261,12 @@
 .enquiryCard:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
-  border-color: #6666CC;
+  border-color: #6666cc;
 }
 
 .enquiryCard.unread {
-  border-left: 4px solid #6666CC;
-  background: linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 100%);
+  border-left: 4px solid #6666cc;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
 }
 
 .enquiryHeader {
@@ -223,12 +291,12 @@
 .emailIcon {
   width: 1.25rem;
   height: 1.25rem;
-  color: #6666CC;
+  color: #6666cc;
 }
 
 .email {
   font-weight: 600;
-  color: #2D3748;
+  color: #2d3748;
   font-size: 1.1rem;
 }
 
@@ -250,7 +318,9 @@
   gap: 0.5rem;
 }
 
-.readButton, .expandButton, .deleteButton {
+.readButton,
+.expandButton,
+.deleteButton {
   padding: 0.5rem;
   border: none;
   border-radius: 8px;
@@ -260,18 +330,18 @@
 }
 
 .readButton:hover {
-  background: #E6FFFA;
+  background: #e6fffa;
   color: #319795;
 }
 
 .expandButton:hover {
-  background: #EDF2F7;
-  color: #4A5568;
+  background: #edf2f7;
+  color: #4a5568;
 }
 
 .deleteButton:hover {
-  background: #FED7D7;
-  color: #E53E3E;
+  background: #fed7d7;
+  color: #e53e3e;
 }
 
 .actionIcon {
@@ -282,13 +352,14 @@
 .subject {
   font-size: 1.125rem;
   font-weight: 600;
-  color: #2D3748;
+  color: #2d3748;
   margin-bottom: 1rem;
   line-height: 1.4;
 }
 
 /* Badges */
-.badgeNew, .badgeRead {
+.badgeNew,
+.badgeRead {
   padding: 0.25rem 0.75rem;
   border-radius: 20px;
   font-size: 0.75rem;
@@ -297,20 +368,20 @@
 }
 
 .badgeNew {
-  background: #FFEBEE;
-  color: #E53E3E;
+  background: #ffebee;
+  color: #e53e3e;
 }
 
 .badgeRead {
-  background: #E8F5E8;
-  color: #38A169;
+  background: #e8f5e8;
+  color: #38a169;
 }
 
 /* Enquiry Details */
 .enquiryDetails {
   margin-top: 1.5rem;
   padding-top: 1.5rem;
-  border-top: 1px solid #E2E8F0;
+  border-top: 1px solid #e2e8f0;
   animation: slideDown 0.3s ease;
 }
 
@@ -331,7 +402,7 @@
 
 .detailLabel {
   font-weight: 600;
-  color: #4A5568;
+  color: #4a5568;
   margin-bottom: 0.5rem;
   font-size: 0.875rem;
   text-transform: uppercase;
@@ -339,12 +410,47 @@
 }
 
 .message {
-  color: #2D3748;
+  color: #2d3748;
   line-height: 1.6;
-  background: #F7FAFC;
+  background: #f7fafc;
   padding: 1rem;
   border-radius: 8px;
-  border-left: 4px solid #6666CC;
+  border-left: 4px solid #6666cc;
+}
+
+/* Additional Info */
+.additionalInfo {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.infoItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: #f8fafc;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+.infoIcon {
+  width: 1rem;
+  height: 1rem;
+  color: #6666cc;
+}
+
+.infoLabel {
+  font-weight: 600;
+  color: #4a5568;
+  font-size: 0.875rem;
+}
+
+.infoValue {
+  color: #2d3748;
+  font-weight: 500;
 }
 
 .metaInfo {
@@ -369,7 +475,7 @@
 
 .metaValue {
   font-size: 0.875rem;
-  color: #2D3748;
+  color: #2d3748;
   font-family: monospace;
 }
 
@@ -385,14 +491,14 @@
 .emptyIcon {
   width: 4rem;
   height: 4rem;
-  color: #CBD5E0;
+  color: #cbd5e0;
   margin: 0 auto 1.5rem;
 }
 
 .emptyTitle {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #4A5568;
+  color: #4a5568;
   margin-bottom: 0.5rem;
 }
 
@@ -417,26 +523,30 @@
   width: 3rem;
   height: 3rem;
   animation: spin 1s linear infinite;
-  color: #6666CC;
+  color: #6666cc;
 }
 
 .loadingText {
   margin-top: 1rem;
   font-size: 1.125rem;
   font-weight: 600;
-  color: #4B5563;
+  color: #4b5563;
 }
 
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Footer */
 .footer {
   margin-top: 2rem;
   padding-top: 1.5rem;
-  border-top: 1px solid #E2E8F0;
+  border-top: 1px solid #e2e8f0;
 }
 
 .footerStats {
@@ -452,34 +562,48 @@
     flex-direction: column;
     gap: 1.5rem;
   }
-  
+
   .stats {
     width: 100%;
     justify-content: space-around;
   }
-  
+
   .controls {
     flex-direction: column;
   }
-  
+
   .searchBox {
     min-width: 100%;
   }
-  
+
   .controlGroup {
     width: 100%;
     justify-content: space-between;
+    flex-wrap: wrap;
   }
-  
+
+  .importButton,
+  .exportButton,
+  .templateButton {
+    flex: 1;
+    min-width: 120px;
+    justify-content: center;
+  }
+
   .enquiryHeader {
     flex-direction: column;
     gap: 1rem;
   }
-  
+
   .actions {
     align-self: flex-end;
   }
-  
+
+  .additionalInfo {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
   .metaInfo {
     flex-direction: column;
     gap: 1rem;
@@ -491,17 +615,27 @@
     padding: 1.5rem;
     border-radius: 16px;
   }
-  
+
   .title {
     font-size: 1.75rem;
   }
-  
+
   .statCard {
     padding: 0.875rem 1rem;
     min-width: 80px;
   }
-  
+
   .statNumber {
     font-size: 1.75rem;
+  }
+
+  .controlGroup {
+    flex-direction: column;
+  }
+
+  .importButton,
+  .exportButton,
+  .templateButton {
+    width: 100%;
   }
 }

@@ -1,5 +1,7 @@
 import React, { useEffect, useState, useMemo } from "react";
 import * as XLSX from "xlsx";
+import axios from "axios";
+
 const API_URL = import.meta.env.VITE_PDF_API_URL;
 
 function Pdfcontact() {
@@ -7,14 +9,16 @@ function Pdfcontact() {
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [exportLoading, setExportLoading] = useState(false);
+  const [importLoading, setImportLoading] = useState(false);
+  const [templateLoading, setTemplateLoading] = useState(false);
+  const [fileInputKey, setFileInputKey] = useState(Date.now());
 
   useEffect(() => {
     const fetchContacts = async () => {
       try {
         setIsLoading(true);
         setError(null);
-
-      
 
         const res = await fetch(`${API_URL}/api/contact`, {
           headers: {
@@ -57,44 +61,136 @@ function Pdfcontact() {
       return (
         contact.name?.toLowerCase().includes(searchLower) ||
         contact.email?.toLowerCase().includes(searchLower) ||
-        contact.phone?.toLowerCase().includes(searchLower) ||
         contact.message?.toLowerCase().includes(searchLower)
       );
     });
   }, [contacts, searchTerm]);
 
-  const exportToExcel = () => {
+  const exportToExcel = async () => {
     try {
-      if (!filteredContacts.length) {
-        alert("No data to export");
-        return;
+      setExportLoading(true);
+
+      const response = await fetch(`${API_URL}/api/contact/export`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `contacts-${new Date().toISOString().split("T")[0]}.xlsx`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+      } else {
+        throw new Error("Export failed");
       }
-
-      const worksheet = XLSX.utils.json_to_sheet(
-        filteredContacts.map((contact) => ({
-          Name: contact?.name || "N/A",
-          Email: contact?.email || "N/A",
-          Phone: contact?.phone || "N/A",
-          Message: contact?.message || "No message",
-          "Submitted Date": contact?.createdAt
-            ? new Date(contact.createdAt).toLocaleDateString()
-            : "N/A",
-          "Contact ID": contact?._id || "N/A",
-          Status: contact?.status || "unread",
-        }))
-      );
-
-      const workbook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(workbook, worksheet, "Contacts");
-      XLSX.writeFile(
-        workbook,
-        `contacts_data_${new Date().toISOString().split("T")[0]}.xlsx`
-      );
-
-      alert("Contacts data exported successfully!");
     } catch (error) {
       console.error("Export error:", error);
-      alert("Failed to export data");
+      alert("Export failed. Please try again.");
+    } finally {
+      setExportLoading(false);
+    }
+  };
+
+  const handleDownloadTemplate = async () => {
+    try {
+      setTemplateLoading(true);
+
+      const response = await fetch(`${API_URL}/api/contact/template`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `contact-import-template.xlsx`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+      } else {
+        throw new Error("Failed to download template");
+      }
+    } catch (error) {
+      console.error("Download template error:", error);
+      alert("Failed to download template. Please try again.");
+    } finally {
+      setTemplateLoading(false);
+    }
+  };
+
+  const handleImport = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    // Validate file type
+    const validTypes = [
+      "text/csv",
+      "application/vnd.ms-excel",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    ];
+
+    const validExtensions = [".csv", ".xls", ".xlsx"];
+    const fileExtension = "." + file.name.split(".").pop().toLowerCase();
+
+    if (
+      !validTypes.includes(file.type) &&
+      !validExtensions.includes(fileExtension)
+    ) {
+      alert("Please select a valid CSV or Excel file (.csv, .xls, .xlsx)");
+      return;
+    }
+
+    try {
+      setImportLoading(true);
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const response = await axios.post(
+        `${API_URL}/api/contact/import`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      if (response.data.success) {
+        alert(response.data.message);
+        // Refresh contacts data
+        const res = await fetch(`${API_URL}/api/contact`, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        const data = await res.json();
+        if (data.success && data.contacts) {
+          setContacts(data.contacts);
+        } else if (Array.isArray(data)) {
+          setContacts(data);
+        }
+      } else {
+        alert(`Import failed: ${response.data.message}`);
+      }
+    } catch (error) {
+      console.error("Import error:", error);
+      const errorMessage =
+        error.response?.data?.message || "Import failed. Please try again.";
+      alert(`Import error: ${errorMessage}`);
+    } finally {
+      setImportLoading(false);
+      // Reset file input
+      setFileInputKey(Date.now());
     }
   };
 
@@ -153,9 +249,12 @@ function Pdfcontact() {
       transition: "all 0.3s ease",
       background: "white",
     },
-    exportButton: {
-      background: "linear-gradient(135deg, #4CAF50 0%, #45a049 100%)",
-      color: "white",
+    actionButtons: {
+      display: "flex",
+      gap: "10px",
+      flexWrap: "wrap",
+    },
+    button: {
       border: "none",
       padding: "12px 25px",
       borderRadius: "15px",
@@ -166,6 +265,25 @@ function Pdfcontact() {
       alignItems: "center",
       gap: "8px",
       transition: "all 0.3s ease",
+    },
+    exportButton: {
+      background: "linear-gradient(135deg, #4CAF50 0%, #45a049 100%)",
+      color: "white",
+    },
+    importButton: {
+      background: "linear-gradient(135deg, #2196F3 0%, #1976D2 100%)",
+      color: "white",
+    },
+    templateButton: {
+      background: "linear-gradient(135deg, #9C27B0 0%, #7B1FA2 100%)",
+      color: "white",
+    },
+    disabledButton: {
+      opacity: 0.7,
+      cursor: "not-allowed",
+    },
+    fileInput: {
+      display: "none",
     },
     statsContainer: {
       display: "grid",
@@ -205,15 +323,6 @@ function Pdfcontact() {
       textOverflow: "ellipsis",
       whiteSpace: "nowrap",
     },
-    statusBadge: {
-      padding: "6px 12px",
-      borderRadius: "20px",
-      fontSize: "14px",
-      fontWeight: "500",
-      textTransform: "capitalize",
-    },
-    statusRead: { background: "rgba(34, 197, 94, 0.1)", color: "#16a34a" },
-    statusUnread: { background: "rgba(239, 68, 68, 0.1)", color: "#dc2626" },
     noData: {
       textAlign: "center",
       padding: "50px",
@@ -221,15 +330,6 @@ function Pdfcontact() {
       fontSize: "18px",
     },
   };
-
-  // Spinner animation
-  useEffect(() => {
-    const styleSheet = document.styleSheets[0];
-    const keyframes = `
-      @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    `;
-    if (styleSheet) styleSheet.insertRule(keyframes, styleSheet.cssRules.length);
-  }, []);
 
   return (
     <div style={styles.container}>
@@ -259,12 +359,56 @@ function Pdfcontact() {
                 style={styles.searchInput}
               />
             </div>
-            <button onClick={exportToExcel} style={styles.exportButton}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" />
-              </svg>
-              Export to Excel
-            </button>
+            <div style={styles.actionButtons}>
+              {/* Import Button */}
+              <div style={{ position: "relative" }}>
+                <input
+                  key={fileInputKey}
+                  type="file"
+                  id="import-contact-file"
+                  accept=".csv,.xlsx,.xls"
+                  onChange={handleImport}
+                  style={styles.fileInput}
+                  disabled={importLoading}
+                />
+                <label
+                  htmlFor="import-contact-file"
+                  style={{
+                    ...styles.button,
+                    ...styles.importButton,
+                    ...(importLoading && styles.disabledButton),
+                  }}
+                >
+                  {importLoading ? "Importing..." : "Import"}
+                </label>
+              </div>
+
+              {/* Export Button */}
+              <button
+                onClick={exportToExcel}
+                disabled={exportLoading}
+                style={{
+                  ...styles.button,
+                  ...styles.exportButton,
+                  ...(exportLoading && styles.disabledButton),
+                }}
+              >
+                {exportLoading ? "Exporting..." : "Export"}
+              </button>
+
+              {/* Download Template Button */}
+              <button
+                onClick={handleDownloadTemplate}
+                disabled={templateLoading}
+                style={{
+                  ...styles.button,
+                  ...styles.templateButton,
+                  ...(templateLoading && styles.disabledButton),
+                }}
+              >
+                {templateLoading ? "Downloading..." : "Download Template"}
+              </button>
+            </div>
           </div>
         </div>
 
@@ -277,12 +421,6 @@ function Pdfcontact() {
           <div style={styles.statCard}>
             <div style={styles.statValue}>{filteredContacts.length}</div>
             <div style={styles.statLabel}>Filtered Results</div>
-          </div>
-          <div style={styles.statCard}>
-            <div style={styles.statValue}>
-              {contacts.filter((c) => c?.status === "unread").length}
-            </div>
-            <div style={styles.statLabel}>Unread Messages</div>
           </div>
           <div style={styles.statCard}>
             <div style={styles.statValue}>
@@ -321,10 +459,8 @@ function Pdfcontact() {
                 <tr>
                   <th style={styles.tableHeaderCell}>Name</th>
                   <th style={styles.tableHeaderCell}>Email</th>
-                  <th style={styles.tableHeaderCell}>Phone</th>
                   <th style={styles.tableHeaderCell}>Message</th>
                   <th style={styles.tableHeaderCell}>Date</th>
-                  <th style={styles.tableHeaderCell}>Status</th>
                 </tr>
               </thead>
               <tbody>
@@ -332,7 +468,6 @@ function Pdfcontact() {
                   <tr key={contact?._id || index}>
                     <td style={styles.tableCell}>{contact?.name || "N/A"}</td>
                     <td style={styles.tableCell}>{contact?.email || "N/A"}</td>
-                    <td style={styles.tableCell}>{contact?.phone || "N/A"}</td>
                     <td
                       style={{ ...styles.tableCell, ...styles.messageCell }}
                       title={contact?.message}
@@ -346,18 +481,6 @@ function Pdfcontact() {
                             { year: "numeric", month: "short", day: "numeric" }
                           )
                         : "N/A"}
-                    </td>
-                    <td style={styles.tableCell}>
-                      <span
-                        style={{
-                          ...styles.statusBadge,
-                          ...(contact?.status === "read"
-                            ? styles.statusRead
-                            : styles.statusUnread),
-                        }}
-                      >
-                        {contact?.status || "unread"}
-                      </span>
                     </td>
                   </tr>
                 ))}

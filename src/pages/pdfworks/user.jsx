@@ -1,11 +1,17 @@
 import React, { useEffect, useState, useMemo } from "react";
 import * as XLSX from "xlsx"; // npm install xlsx
+import axios from "axios";
+
 const API_URL = import.meta.env.VITE_PDF_API_URL;
 
 function PDFuser() {
   const [users, setUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [exportLoading, setExportLoading] = useState(false);
+  const [importLoading, setImportLoading] = useState(false);
+  const [templateLoading, setTemplateLoading] = useState(false);
+  const [fileInputKey, setFileInputKey] = useState(Date.now());
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -46,33 +52,134 @@ function PDFuser() {
       (user) =>
         user.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         user.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.role?.toLowerCase().includes(searchTerm.toLowerCase())
+        user.role?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.plan?.toLowerCase().includes(searchTerm.toLowerCase())
     );
   }, [users, searchTerm]);
 
-  const exportToExcel = () => {
+  const exportToExcel = async () => {
     try {
-      const worksheet = XLSX.utils.json_to_sheet(
-        filteredUsers.map((user) => ({
-          Name: user.name,
-          Email: user.email,
-          Role: user.role,
-          "Joined Date": new Date(user.createdAt).toLocaleDateString(),
-          "User ID": user._id,
-        }))
-      );
+      setExportLoading(true);
+      // const token = localStorage.getItem("pdfpro_admin_token");
 
-      const workbook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(workbook, worksheet, "Users");
-      XLSX.writeFile(
-        workbook,
-        `users_data_${new Date().toISOString().split("T")[0]}.xlsx`
-      );
+      const response = await fetch(`${API_URL}/api/auth/users/export`, {
+        // headers: { Authorization: `Bearer ${token}` },
+      });
 
-      alert("Users data exported successfully!");
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `users-${new Date().toISOString().split("T")[0]}.xlsx`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+      } else {
+        throw new Error("Export failed");
+      }
     } catch (error) {
       console.error("Export error:", error);
-      alert("Failed to export data");
+      alert("Export failed. Please try again.");
+    } finally {
+      setExportLoading(false);
+    }
+  };
+
+  const handleDownloadTemplate = async () => {
+    try {
+      setTemplateLoading(true);
+      // const token = localStorage.getItem("pdfpro_admin_token");
+
+      const response = await fetch(`${API_URL}/api/auth/users/template`, {
+        // headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `user-import-template.xlsx`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+      } else {
+        throw new Error("Failed to download template");
+      }
+    } catch (error) {
+      console.error("Download template error:", error);
+      alert("Failed to download template. Please try again.");
+    } finally {
+      setTemplateLoading(false);
+    }
+  };
+
+  const handleImport = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    // Validate file type
+    const validTypes = [
+      "text/csv",
+      "application/vnd.ms-excel",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    ];
+
+    const validExtensions = [".csv", ".xls", ".xlsx"];
+    const fileExtension = "." + file.name.split(".").pop().toLowerCase();
+
+    if (
+      !validTypes.includes(file.type) &&
+      !validExtensions.includes(fileExtension)
+    ) {
+      alert("Please select a valid CSV or Excel file (.csv, .xls, .xlsx)");
+      return;
+    }
+
+    try {
+      setImportLoading(true);
+      const formData = new FormData();
+      formData.append("file", file);
+
+      // const token = localStorage.getItem("pdfpro_admin_token");
+      const response = await axios.post(
+        `${API_URL}/api/auth/users/import`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            // Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.data.success) {
+        alert(response.data.message);
+        // Refresh users data
+        const res = await fetch(`${API_URL}/api/auth/users`, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        const data = await res.json();
+        if (data.success && data.users) {
+          setUsers(data.users);
+        }
+      } else {
+        alert(`Import failed: ${response.data.error}`);
+      }
+    } catch (error) {
+      console.error("Import error:", error);
+      const errorMessage =
+        error.response?.data?.error || "Import failed. Please try again.";
+      alert(`Import error: ${errorMessage}`);
+    } finally {
+      setImportLoading(false);
+      // Reset file input
+      setFileInputKey(Date.now());
     }
   };
 
@@ -104,7 +211,11 @@ function PDFuser() {
       WebkitTextFillColor: "transparent",
       margin: 0,
     },
-    searchBox: { position: "relative", display: "flex", alignItems: "center" },
+    searchBox: {
+      position: "relative",
+      display: "flex",
+      alignItems: "center",
+    },
     searchIcon: {
       position: "absolute",
       left: "15px",
@@ -120,9 +231,12 @@ function PDFuser() {
       width: "300px",
       outline: "none",
     },
-    exportButton: {
-      background: "linear-gradient(135deg, #4CAF50 0%, #45a049 100%)",
-      color: "white",
+    actionButtons: {
+      display: "flex",
+      gap: "10px",
+      flexWrap: "wrap",
+    },
+    button: {
       border: "none",
       padding: "12px 25px",
       borderRadius: "15px",
@@ -132,6 +246,26 @@ function PDFuser() {
       display: "flex",
       alignItems: "center",
       gap: "8px",
+      transition: "all 0.3s ease",
+    },
+    exportButton: {
+      background: "linear-gradient(135deg, #4CAF50 0%, #45a049 100%)",
+      color: "white",
+    },
+    importButton: {
+      background: "linear-gradient(135deg, #2196F3 0%, #1976D2 100%)",
+      color: "white",
+    },
+    templateButton: {
+      background: "linear-gradient(135deg, #9C27B0 0%, #7B1FA2 100%)",
+      color: "white",
+    },
+    disabledButton: {
+      opacity: 0.7,
+      cursor: "not-allowed",
+    },
+    fileInput: {
+      display: "none",
     },
     tableContainer: {
       overflow: "hidden",
@@ -139,7 +273,10 @@ function PDFuser() {
       background: "white",
       boxShadow: "0 10px 30px rgba(0, 0, 0, 0.1)",
     },
-    table: { width: "100%", borderCollapse: "collapse" },
+    table: {
+      width: "100%",
+      borderCollapse: "collapse",
+    },
     tableHeader: {
       background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
       color: "white",
@@ -149,7 +286,10 @@ function PDFuser() {
       textAlign: "left",
       fontWeight: "600",
     },
-    tableCell: { padding: "16px 20px", color: "#475569" },
+    tableCell: {
+      padding: "16px 20px",
+      color: "#475569",
+    },
   };
 
   return (
@@ -180,14 +320,63 @@ function PDFuser() {
                 style={styles.searchInput}
               />
             </div>
-            <button onClick={exportToExcel} style={styles.exportButton}>
-              Export to Excel
-            </button>
+            <div style={styles.actionButtons}>
+              {/* Import Button */}
+              <div style={{ position: "relative" }}>
+                <input
+                  key={fileInputKey}
+                  type="file"
+                  id="import-user-file"
+                  accept=".csv,.xlsx,.xls"
+                  onChange={handleImport}
+                  style={styles.fileInput}
+                  disabled={importLoading}
+                />
+                <label
+                  htmlFor="import-user-file"
+                  style={{
+                    ...styles.button,
+                    ...styles.importButton,
+                    ...(importLoading && styles.disabledButton),
+                  }}
+                >
+                  {importLoading ? "Importing..." : "Import"}
+                </label>
+              </div>
+
+              {/* Export Button */}
+              <button
+                onClick={exportToExcel}
+                disabled={exportLoading}
+                style={{
+                  ...styles.button,
+                  ...styles.exportButton,
+                  ...(exportLoading && styles.disabledButton),
+                }}
+              >
+                {exportLoading ? "Exporting..." : "Export"}
+              </button>
+
+              {/* Download Template Button */}
+              <button
+                onClick={handleDownloadTemplate}
+                disabled={templateLoading}
+                style={{
+                  ...styles.button,
+                  ...styles.templateButton,
+                  ...(templateLoading && styles.disabledButton),
+                }}
+              >
+                {templateLoading ? "Downloading..." : "Download Template"}
+              </button>
+            </div>
           </div>
         </div>
 
         {isLoading ? (
-          <p>Loading users...</p>
+          <p style={{ textAlign: "center", padding: "30px" }}>
+            Loading users...
+          </p>
         ) : filteredUsers.length === 0 ? (
           <p style={{ textAlign: "center", padding: "30px" }}>
             No users found.
@@ -200,6 +389,7 @@ function PDFuser() {
                   <th style={styles.tableHeaderCell}>Name</th>
                   <th style={styles.tableHeaderCell}>Email</th>
                   <th style={styles.tableHeaderCell}>Role</th>
+                  <th style={styles.tableHeaderCell}>Plan</th>
                   <th style={styles.tableHeaderCell}>Joined Date</th>
                 </tr>
               </thead>
@@ -209,6 +399,7 @@ function PDFuser() {
                     <td style={styles.tableCell}>{user.name}</td>
                     <td style={styles.tableCell}>{user.email}</td>
                     <td style={styles.tableCell}>{user.role}</td>
+                    <td style={styles.tableCell}>{user.plan || "free"}</td>
                     <td style={styles.tableCell}>
                       {new Date(user.createdAt).toLocaleDateString("en-US", {
                         year: "numeric",

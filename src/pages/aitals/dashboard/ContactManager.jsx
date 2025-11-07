@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { 
-  Mail, 
-  Trash2, 
-  User, 
-  MessageSquare, 
-  Calendar, 
-  Search, 
+import {
+  Mail,
+  Trash2,
+  User,
+  MessageSquare,
+  Calendar,
+  Search,
   Filter,
   Eye,
   EyeOff,
@@ -15,13 +15,22 @@ import {
   ChevronLeft,
   ChevronRight,
   Loader,
-  ExternalLink
+  ExternalLink,
+  Upload,
+  FileText,
+  FileDown,
 } from "lucide-react";
-import styles from './ContactManager.module.css';
+import styles from "./ContactManager.module.css";
+import axios from "axios";
 
 const API_BASE_URL = import.meta.env.VITE_AITALS_API_URL;
 
-const HorizontalTableView = ({ contacts, onDelete, onToggleRead, onViewDetails }) => {
+const HorizontalTableView = ({
+  contacts,
+  onDelete,
+  onToggleRead,
+  onViewDetails,
+}) => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
@@ -36,7 +45,10 @@ const HorizontalTableView = ({ contacts, onDelete, onToggleRead, onViewDetails }
   // Pagination
   const totalPages = Math.ceil(contacts.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const paginatedContacts = contacts.slice(startIndex, startIndex + itemsPerPage);
+  const paginatedContacts = contacts.slice(
+    startIndex,
+    startIndex + itemsPerPage
+  );
 
   const handlePreviousPage = () => {
     if (currentPage > 1) setCurrentPage(currentPage - 1);
@@ -54,7 +66,6 @@ const HorizontalTableView = ({ contacts, onDelete, onToggleRead, onViewDetails }
           <thead>
             <tr>
               <th className={styles.th}>Contact Info</th>
-              <th className={styles.th}>Subject</th>
               <th className={styles.th}>Message Preview</th>
               <th className={styles.th}>Date</th>
               <th className={styles.th}>Status</th>
@@ -63,7 +74,12 @@ const HorizontalTableView = ({ contacts, onDelete, onToggleRead, onViewDetails }
           </thead>
           <tbody>
             {paginatedContacts.map((contact, index) => (
-              <tr key={contact._id || index} className={`${styles.tr} ${!contact.read ? styles.unreadRow : ''}`}>
+              <tr
+                key={contact._id || index}
+                className={`${styles.tr} ${
+                  !contact.read ? styles.unreadRow : ""
+                }`}
+              >
                 {/* Contact Info Column */}
                 <td className={styles.td}>
                   <div className={styles.contactCell}>
@@ -71,35 +87,14 @@ const HorizontalTableView = ({ contacts, onDelete, onToggleRead, onViewDetails }
                       <User className={styles.avatarIcon} />
                     </div>
                     <div className={styles.contactInfo}>
-                      <div className={styles.name}>{contact.name || "Unknown"}</div>
+                      <div className={styles.name}>
+                        {contact.name || "Unknown"}
+                      </div>
                       <div className={styles.email}>
                         <Mail className={styles.smallIcon} />
                         {contact.email}
                       </div>
-                      {contact.phone && (
-                        <div className={styles.phone}>
-                          <Phone className={styles.smallIcon} />
-                          {contact.phone}
-                        </div>
-                      )}
-                      {contact.company && (
-                        <div className={styles.company}>
-                          <Building className={styles.smallIcon} />
-                          {contact.company}
-                        </div>
-                      )}
                     </div>
-                  </div>
-                </td>
-
-                {/* Subject Column */}
-                <td className={styles.td}>
-                  <div className={styles.subjectCell}>
-                    {contact.subject ? (
-                      <span className={styles.subjectText}>{contact.subject}</span>
-                    ) : (
-                      <span className={styles.naText}>No Subject</span>
-                    )}
                   </div>
                 </td>
 
@@ -110,10 +105,9 @@ const HorizontalTableView = ({ contacts, onDelete, onToggleRead, onViewDetails }
                     <div className={styles.messagePreview}>
                       {contact.message ? (
                         <>
-                          {contact.message.length > 80 
-                            ? `${contact.message.substring(0, 80)}...` 
-                            : contact.message
-                          }
+                          {contact.message.length > 80
+                            ? `${contact.message.substring(0, 80)}...`
+                            : contact.message}
                         </>
                       ) : (
                         <span className={styles.naText}>No message</span>
@@ -127,11 +121,13 @@ const HorizontalTableView = ({ contacts, onDelete, onToggleRead, onViewDetails }
                   <div className={styles.dateCell}>
                     <Calendar className={styles.dateIcon} />
                     <div>
-                      <div className={styles.date}>{formatDate(contact.createdAt)}</div>
+                      <div className={styles.date}>
+                        {formatDate(contact.createdAt)}
+                      </div>
                       <div className={styles.time}>
-                        {new Date(contact.createdAt).toLocaleTimeString([], { 
-                          hour: '2-digit', 
-                          minute: '2-digit' 
+                        {new Date(contact.createdAt).toLocaleTimeString([], {
+                          hour: "2-digit",
+                          minute: "2-digit",
                         })}
                       </div>
                     </div>
@@ -143,7 +139,9 @@ const HorizontalTableView = ({ contacts, onDelete, onToggleRead, onViewDetails }
                   <div className={styles.statusCell}>
                     <button
                       onClick={() => onToggleRead(contact._id, contact.read)}
-                      className={`${styles.statusButton} ${contact.read ? styles.read : styles.unread}`}
+                      className={`${styles.statusButton} ${
+                        contact.read ? styles.read : styles.unread
+                      }`}
                       title={contact.read ? "Mark as unread" : "Mark as read"}
                     >
                       {contact.read ? (
@@ -172,9 +170,9 @@ const HorizontalTableView = ({ contacts, onDelete, onToggleRead, onViewDetails }
                       <ExternalLink className={styles.actionIcon} />
                       <span>View</span>
                     </button>
-                    
+
                     <button
-                      onClick={() => onDelete(contact._id, 'contact')}
+                      onClick={() => onDelete(contact._id, "contact")}
                       className={styles.deleteButton}
                       title="Delete contact"
                     >
@@ -192,7 +190,9 @@ const HorizontalTableView = ({ contacts, onDelete, onToggleRead, onViewDetails }
       {contacts.length > 0 && (
         <div className={styles.pagination}>
           <div className={styles.paginationInfo}>
-            Showing {startIndex + 1}-{Math.min(startIndex + itemsPerPage, contacts.length)} of {contacts.length} contacts
+            Showing {startIndex + 1}-
+            {Math.min(startIndex + itemsPerPage, contacts.length)} of{" "}
+            {contacts.length} contacts
           </div>
           <div className={styles.paginationControls}>
             <button
@@ -202,19 +202,23 @@ const HorizontalTableView = ({ contacts, onDelete, onToggleRead, onViewDetails }
             >
               <ChevronLeft className={styles.paginationIcon} />
             </button>
-            
+
             <div className={styles.pageNumbers}>
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-                <button
-                  key={page}
-                  onClick={() => setCurrentPage(page)}
-                  className={`${styles.pageButton} ${currentPage === page ? styles.activePage : ''}`}
-                >
-                  {page}
-                </button>
-              ))}
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                (page) => (
+                  <button
+                    key={page}
+                    onClick={() => setCurrentPage(page)}
+                    className={`${styles.pageButton} ${
+                      currentPage === page ? styles.activePage : ""
+                    }`}
+                  >
+                    {page}
+                  </button>
+                )
+              )}
             </div>
-            
+
             <button
               onClick={handleNextPage}
               disabled={currentPage === totalPages}
@@ -253,13 +257,12 @@ const ContactDetailsModal = ({ contact, onClose, onToggleRead, onDelete }) => {
             </div>
             <div>
               <h3 className={styles.modalTitle}>Contact Details</h3>
-              <p className={styles.modalSubtitle}>Submitted on {formatDate(contact.createdAt)}</p>
+              <p className={styles.modalSubtitle}>
+                Submitted on {formatDate(contact.createdAt)}
+              </p>
             </div>
           </div>
-          <button 
-            className={styles.modalClose}
-            onClick={onClose}
-          >
+          <button className={styles.modalClose} onClick={onClose}>
             ×
           </button>
         </div>
@@ -275,28 +278,19 @@ const ContactDetailsModal = ({ contact, onClose, onToggleRead, onDelete }) => {
               <div className={styles.detailGrid}>
                 <div className={styles.detailItem}>
                   <span className={styles.detailLabel}>Full Name:</span>
-                  <span className={styles.detailValue}>{contact.name || "Not provided"}</span>
+                  <span className={styles.detailValue}>
+                    {contact.name || "Not provided"}
+                  </span>
                 </div>
                 <div className={styles.detailItem}>
                   <span className={styles.detailLabel}>Email:</span>
-                  <a href={`mailto:${contact.email}`} className={styles.detailLink}>
+                  <a
+                    href={`mailto:${contact.email}`}
+                    className={styles.detailLink}
+                  >
                     {contact.email}
                   </a>
                 </div>
-                {contact.phone && (
-                  <div className={styles.detailItem}>
-                    <span className={styles.detailLabel}>Phone:</span>
-                    <a href={`tel:${contact.phone}`} className={styles.detailLink}>
-                      {contact.phone}
-                    </a>
-                  </div>
-                )}
-                {contact.company && (
-                  <div className={styles.detailItem}>
-                    <span className={styles.detailLabel}>Company:</span>
-                    <span className={styles.detailValue}>{contact.company}</span>
-                  </div>
-                )}
               </div>
             </div>
 
@@ -306,12 +300,6 @@ const ContactDetailsModal = ({ contact, onClose, onToggleRead, onDelete }) => {
                 <MessageSquare className={styles.sectionIcon} />
                 Message Details
               </h4>
-              {contact.subject && (
-                <div className={styles.detailItemFull}>
-                  <span className={styles.detailLabel}>Subject:</span>
-                  <span className={styles.detailValue}>{contact.subject}</span>
-                </div>
-              )}
               <div className={styles.detailItemFull}>
                 <span className={styles.detailLabel}>Message:</span>
                 <div className={styles.messageContent}>
@@ -333,13 +321,19 @@ const ContactDetailsModal = ({ contact, onClose, onToggleRead, onDelete }) => {
                 </div>
                 <div className={styles.detailItem}>
                   <span className={styles.detailLabel}>Status:</span>
-                  <span className={`${styles.statusBadge} ${contact.read ? styles.read : styles.unread}`}>
-                    {contact.read ? 'Read' : 'Unread'}
+                  <span
+                    className={`${styles.statusBadge} ${
+                      contact.read ? styles.read : styles.unread
+                    }`}
+                  >
+                    {contact.read ? "Read" : "Unread"}
                   </span>
                 </div>
                 <div className={styles.detailItem}>
                   <span className={styles.detailLabel}>Submitted:</span>
-                  <span className={styles.detailValue}>{formatDate(contact.createdAt)}</span>
+                  <span className={styles.detailValue}>
+                    {formatDate(contact.createdAt)}
+                  </span>
                 </div>
               </div>
             </div>
@@ -366,8 +360,12 @@ const ContactDetailsModal = ({ contact, onClose, onToggleRead, onDelete }) => {
             </button>
             <button
               onClick={() => {
-                if (window.confirm("Are you sure you want to delete this contact?")) {
-                  onDelete(contact._id, 'contact');
+                if (
+                  window.confirm(
+                    "Are you sure you want to delete this contact?"
+                  )
+                ) {
+                  onDelete(contact._id, "contact");
                   onClose();
                 }
               }}
@@ -391,6 +389,10 @@ const ContactManager = ({ contacts = [], onDelete }) => {
   const [filterStatus, setFilterStatus] = useState("all");
   const [selectedContact, setSelectedContact] = useState(null);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
+  const [exportLoading, setExportLoading] = useState(false);
+  const [importLoading, setImportLoading] = useState(false);
+  const [templateLoading, setTemplateLoading] = useState(false);
+  const [fileInputKey, setFileInputKey] = useState(Date.now());
 
   const fetchContacts = async () => {
     try {
@@ -402,10 +404,10 @@ const ContactManager = ({ contacts = [], onDelete }) => {
       const json = await res.json();
       const contactsData = json.data || json;
       // Add read status if not present
-      const enrichedContacts = contactsData.map(contact => ({
+      const enrichedContacts = contactsData.map((contact) => ({
         ...contact,
         read: contact.read || false,
-        createdAt: contact.createdAt || new Date().toISOString()
+        createdAt: contact.createdAt || new Date().toISOString(),
       }));
       setData(enrichedContacts);
     } catch (err) {
@@ -416,7 +418,8 @@ const ContactManager = ({ contacts = [], onDelete }) => {
   };
 
   const handleDelete = async (id, type) => {
-    if (!window.confirm("Are you sure you want to delete this contact?")) return;
+    if (!window.confirm("Are you sure you want to delete this contact?"))
+      return;
     try {
       // const token = localStorage.getItem("adminToken");
       await fetch(`${API_BASE_URL}/api/${type}/${id}`, {
@@ -436,11 +439,11 @@ const ContactManager = ({ contacts = [], onDelete }) => {
         method: "PATCH",
         headers: {
           // "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ read: !currentStatus })
+        body: JSON.stringify({ read: !currentStatus }),
       });
-      
+
       if (res.ok) {
         fetchContacts();
       }
@@ -454,44 +457,129 @@ const ContactManager = ({ contacts = [], onDelete }) => {
     setShowDetailsModal(true);
   };
 
-  const exportToCSV = () => {
-    const headers = ['Name', 'Email', 'Phone', 'Company', 'Subject', 'Message', 'Date', 'Status'];
-    const csvData = filteredContacts.map(contact => [
-      contact.name,
-      contact.email,
-      contact.phone || 'N/A',
-      contact.company || 'N/A',
-      contact.subject || 'N/A',
-      contact.message,
-      new Date(contact.createdAt).toLocaleDateString(),
-      contact.read ? 'Read' : 'Unread'
-    ]);
-    
-    const csvContent = [headers, ...csvData]
-      .map(row => row.map(field => `"${field}"`).join(','))
-      .join('\n');
-    
-    const blob = new Blob([csvContent], { type: 'text/csv' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `contacts-${new Date().toISOString().split('T')[0]}.csv`;
-    a.click();
-    window.URL.revokeObjectURL(url);
+  const handleExport = async () => {
+    try {
+      setExportLoading(true);
+      const token = localStorage.getItem("adminToken");
+      const response = await fetch(`${API_BASE_URL}/api/contact/export`, {
+        // headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `contacts-${new Date().toISOString().split("T")[0]}.xlsx`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+      }
+    } catch (error) {
+      console.error("Export error:", error);
+      alert("Export failed. Please try again.");
+    } finally {
+      setExportLoading(false);
+    }
+  };
+
+  const handleDownloadTemplate = async () => {
+    try {
+      setTemplateLoading(true);
+      const token = localStorage.getItem("adminToken");
+      const response = await fetch(`${API_BASE_URL}/api/contact/template`, {
+        // headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `contact-import-template.xlsx`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+      } else {
+        throw new Error("Failed to download template");
+      }
+    } catch (error) {
+      console.error("Download template error:", error);
+      alert("Failed to download template. Please try again.");
+    } finally {
+      setTemplateLoading(false);
+    }
+  };
+
+  const handleImport = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    // Validate file type
+    const validTypes = [
+      "text/csv",
+      "application/vnd.ms-excel",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    ];
+
+    const validExtensions = [".csv", ".xls", ".xlsx"];
+    const fileExtension = "." + file.name.split(".").pop().toLowerCase();
+
+    if (
+      !validTypes.includes(file.type) &&
+      !validExtensions.includes(fileExtension)
+    ) {
+      alert("Please select a valid CSV or Excel file (.csv, .xls, .xlsx)");
+      return;
+    }
+
+    try {
+      setImportLoading(true);
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const token = localStorage.getItem("adminToken");
+      const response = await axios.post(
+        `${API_BASE_URL}/api/contact/import`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            // Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.data.success) {
+        alert(response.data.message);
+        // Refresh data
+        await fetchContacts();
+      } else {
+        alert(`Import failed: ${response.data.message}`);
+      }
+    } catch (error) {
+      console.error("Import error:", error);
+      const errorMessage =
+        error.response?.data?.message || "Import failed. Please try again.";
+      alert(`Import error: ${errorMessage}`);
+    } finally {
+      setImportLoading(false);
+      // Reset file input
+      setFileInputKey(Date.now());
+    }
   };
 
   // Filter contacts
-  const filteredContacts = data.filter(contact => {
-    const matchesSearch = 
+  const filteredContacts = data.filter((contact) => {
+    const matchesSearch =
       contact.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       contact.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      contact.message?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      contact.phone?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      contact.company?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      contact.subject?.toLowerCase().includes(searchTerm.toLowerCase());
+      contact.message?.toLowerCase().includes(searchTerm.toLowerCase());
 
-    const matchesStatus = 
-      filterStatus === "all" || 
+    const matchesStatus =
+      filterStatus === "all" ||
       (filterStatus === "read" && contact.read) ||
       (filterStatus === "unread" && !contact.read);
 
@@ -534,7 +622,7 @@ const ContactManager = ({ contacts = [], onDelete }) => {
             </div>
             <div className={styles.statCard}>
               <span className={styles.statNumber}>
-                {data.filter(contact => !contact.read).length}
+                {data.filter((contact) => !contact.read).length}
               </span>
               <span className={styles.statLabel}>Unread</span>
             </div>
@@ -554,9 +642,9 @@ const ContactManager = ({ contacts = [], onDelete }) => {
             className={styles.searchInput}
           />
         </div>
-        
+
         <div className={styles.controlGroup}>
-          <select 
+          <select
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
             className={styles.filterSelect}
@@ -565,13 +653,59 @@ const ContactManager = ({ contacts = [], onDelete }) => {
             <option value="unread">Unread Only</option>
             <option value="read">Read Only</option>
           </select>
-          
-          <button 
-            onClick={exportToCSV}
+
+          {/* Import Button */}
+          <div className={styles.importContainer}>
+            <input
+              key={fileInputKey}
+              type="file"
+              id="import-contact-file"
+              accept=".csv,.xlsx,.xls"
+              onChange={handleImport}
+              className={styles.fileInput}
+              disabled={importLoading}
+            />
+            <label
+              htmlFor="import-contact-file"
+              className={`${styles.importButton} ${
+                importLoading ? styles.importButtonDisabled : ""
+              }`}
+            >
+              {importLoading ? (
+                <Loader className={`w-4 h-4 ${styles.loadingSpinner}`} />
+              ) : (
+                <Upload className="w-4 h-4" />
+              )}
+              {importLoading ? "Importing..." : "Import"}
+            </label>
+          </div>
+
+          {/* Export Button */}
+          <button
+            onClick={handleExport}
+            disabled={exportLoading}
             className={styles.exportButton}
           >
-            <Download className={styles.exportIcon} />
-            Export CSV
+            {exportLoading ? (
+              <Loader className={`w-4 h-4 ${styles.loadingSpinner}`} />
+            ) : (
+              <FileDown className="w-4 h-4" />
+            )}
+            {exportLoading ? "Exporting..." : "Export"}
+          </button>
+
+          {/* Download Template Button */}
+          <button
+            onClick={handleDownloadTemplate}
+            disabled={templateLoading}
+            className={styles.templateButton}
+          >
+            {templateLoading ? (
+              <Loader className={`w-4 h-4 ${styles.loadingSpinner}`} />
+            ) : (
+              <FileText className="w-4 h-4" />
+            )}
+            {templateLoading ? "Downloading..." : "Download Template"}
           </button>
         </div>
       </div>
@@ -589,16 +723,14 @@ const ContactManager = ({ contacts = [], onDelete }) => {
         <div className={styles.emptyState}>
           <Mail className={styles.emptyIcon} />
           <h3 className={styles.emptyTitle}>
-            {searchTerm || filterStatus !== "all" 
-              ? "No contacts found" 
-              : "No contact messages yet"
-            }
+            {searchTerm || filterStatus !== "all"
+              ? "No contacts found"
+              : "No contact messages yet"}
           </h3>
           <p className={styles.emptyText}>
-            {searchTerm || filterStatus !== "all" 
+            {searchTerm || filterStatus !== "all"
               ? "Try adjusting your search or filter criteria"
-              : "Contact form submissions will appear here once users start submitting."
-            }
+              : "Contact form submissions will appear here once users start submitting."}
           </p>
         </div>
       )}
