@@ -13,9 +13,10 @@ function DjitTradingLiveChat() {
   const [socket, setSocket] = useState(null);
   const messagesEndRef = useRef(null);
 
+  const API_URL = import.meta.env.VITE_DJITTRADING_API_URL
   // Initialize Socket.IO
   useEffect(() => {
-    const newSocket = io('http://localhost:5000');
+    const newSocket = io(API_URL);
     setSocket(newSocket);
 
     // Socket event listeners
@@ -67,7 +68,7 @@ function DjitTradingLiveChat() {
   const fetchChats = async () => {
     try {
       const token = localStorage.getItem("adminToken");
-      const res = await fetch(`http://localhost:5000/api/livechat/admin/chats?status=${statusFilter}`, {
+      const res = await fetch(`${API_URL}/api/livechat/admin/chats?status=${statusFilter}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -87,7 +88,7 @@ function DjitTradingLiveChat() {
   const fetchChatUsers = async () => {
     try {
       const token = localStorage.getItem("adminToken");
-      const res = await fetch(`http://localhost:5000/api/livechat/admin/chat-users`, {
+      const res = await fetch(`${API_URL}/api/livechat/admin/chat-users`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -108,7 +109,7 @@ function DjitTradingLiveChat() {
     try {
       setIsLoading(true);
       const token = localStorage.getItem("adminToken");
-      const res = await fetch(`http://localhost:5000/api/livechat/admin/chat/${chat._id}`, {
+      const res = await fetch(`${API_URL}/api/livechat/admin/chat/${chat._id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -137,7 +138,7 @@ function DjitTradingLiveChat() {
   const markMessagesAsRead = async (chatId) => {
     try {
       const token = localStorage.getItem("adminToken");
-      await fetch(`http://localhost:5000/api/livechat/admin/chat/${chatId}`, {
+      await fetch(`${API_URL}/api/livechat/admin/chat/${chatId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -154,7 +155,7 @@ function DjitTradingLiveChat() {
     try {
       setIsLoading(true);
       const token = localStorage.getItem("adminToken");
-      const res = await fetch("http://localhost:5000/api/livechat/admin/reply", {
+      const res = await fetch(`${API_URL}/api/livechat/admin/reply`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -186,7 +187,7 @@ function DjitTradingLiveChat() {
   const updateChatStatus = async (chatId, status) => {
     try {
       const token = localStorage.getItem("adminToken");
-      const res = await fetch("http://localhost:5000/api/livechat/admin/status", {
+      const res = await fetch(`${API_URL}/api/livechat/admin/status`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
