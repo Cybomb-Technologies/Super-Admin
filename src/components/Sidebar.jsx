@@ -288,19 +288,7 @@ export default function Sidebar() {
               <div className={styles.userRole}>Administrator</div>
             </div>
           </div>
-          
-          {/* Refresh Button */}
-          <div className="mt-4">
-            <button
-              onClick={fetchCybombCounts}
-              disabled={loading}
-              // Keeping Tailwind classes for the button style, but you should move this to a CSS Module class for consistency
-              className="w-full flex items-center justify-center gap-2 p-3 bg-gray-700 text-gray-300 rounded-lg hover:bg-gray-600 hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <span className={`${loading ? 'animate-spin' : ''}`}>🔄</span>
-              {loading ? 'Refreshing...' : 'Refresh Counts'}
-            </button>
-          </div>
+        
         </div>
       </aside>
     </>
