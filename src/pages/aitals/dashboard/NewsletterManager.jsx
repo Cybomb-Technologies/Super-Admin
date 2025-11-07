@@ -11,9 +11,12 @@ import {
   Calendar,
   Loader,
   Sparkles,
-  FileDown
+  FileDown,
+  Upload,
+  FileText,
 } from "lucide-react";
-import styles from './NewsletterManager.module.css';
+import styles from "./NewsletterManager.module.css";
+import axios from "axios";
 
 const API_BASE_URL = import.meta.env.VITE_AITALS_API_URL;
 
@@ -26,6 +29,9 @@ const NewsletterManager = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [exportLoading, setExportLoading] = useState(false);
+  const [importLoading, setImportLoading] = useState(false);
+  const [templateLoading, setTemplateLoading] = useState(false);
+  const [fileInputKey, setFileInputKey] = useState(Date.now());
 
   const fetchSubscribers = async (page = 1) => {
     try {
@@ -97,7 +103,9 @@ const NewsletterManager = () => {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
-        a.download = `newsletter-subscribers-${new Date().toISOString().split('T')[0]}.xlsx`;
+        a.download = `newsletter-subscribers-${
+          new Date().toISOString().split("T")[0]
+        }.xlsx`;
         document.body.appendChild(a);
         a.click();
         window.URL.revokeObjectURL(url);
@@ -105,8 +113,96 @@ const NewsletterManager = () => {
       }
     } catch (error) {
       console.error("Export error:", error);
+      alert("Export failed. Please try again.");
     } finally {
       setExportLoading(false);
+    }
+  };
+
+  const handleImport = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    // Validate file type
+    const validTypes = [
+      "text/csv",
+      "application/vnd.ms-excel",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    ];
+
+    const validExtensions = [".csv", ".xls", ".xlsx"];
+    const fileExtension = "." + file.name.split(".").pop().toLowerCase();
+
+    if (
+      !validTypes.includes(file.type) &&
+      !validExtensions.includes(fileExtension)
+    ) {
+      alert("Please select a valid CSV or Excel file (.csv, .xls, .xlsx)");
+      return;
+    }
+
+    try {
+      setImportLoading(true);
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const token = localStorage.getItem("adminToken");
+      const response = await axios.post(
+        `${API_BASE_URL}/api/newsletter/import`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            // Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.data.success) {
+        alert(response.data.message);
+        // Refresh data
+        await Promise.all([fetchSubscribers(), fetchStats()]);
+      } else {
+        alert(`Import failed: ${response.data.message}`);
+      }
+    } catch (error) {
+      console.error("Import error:", error);
+      const errorMessage =
+        error.response?.data?.message || "Import failed. Please try again.";
+      alert(`Import error: ${errorMessage}`);
+    } finally {
+      setImportLoading(false);
+      // Reset file input
+      setFileInputKey(Date.now());
+    }
+  };
+
+  const handleDownloadTemplate = async () => {
+    try {
+      setTemplateLoading(true);
+      const token = localStorage.getItem("adminToken");
+      const response = await fetch(`${API_BASE_URL}/api/newsletter/template`, {
+        // headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `newsletter-import-template.xlsx`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+      } else {
+        throw new Error("Failed to download template");
+      }
+    } catch (error) {
+      console.error("Download template error:", error);
+      alert("Failed to download template. Please try again.");
+    } finally {
+      setTemplateLoading(false);
     }
   };
 
@@ -132,7 +228,9 @@ const NewsletterManager = () => {
       {/* Header */}
       <div className={styles.header}>
         <h1 className={styles.title}>Newsletter Manager</h1>
-        <p className={styles.subtitle}>Manage your newsletter subscribers and track performance</p>
+        <p className={styles.subtitle}>
+          Manage your newsletter subscribers and track performance
+        </p>
       </div>
 
       {/* Stats Cards */}
@@ -156,7 +254,9 @@ const NewsletterManager = () => {
             <div className={styles.statContent}>
               <div className={styles.statInfo}>
                 <div className={styles.statLabel}>Active Subscribers</div>
-                <div className={styles.statValue}>{stats.activeSubscribers}</div>
+                <div className={styles.statValue}>
+                  {stats.activeSubscribers}
+                </div>
               </div>
               <div className={styles.statIcon}>
                 <UserCheck className="w-6 h-6" />
@@ -169,7 +269,9 @@ const NewsletterManager = () => {
             <div className={styles.statContent}>
               <div className={styles.statInfo}>
                 <div className={styles.statLabel}>New This Month</div>
-                <div className={styles.statValue}>{stats.newSubscribersThisMonth}</div>
+                <div className={styles.statValue}>
+                  {stats.newSubscribersThisMonth}
+                </div>
               </div>
               <div className={styles.statIcon}>
                 <TrendingUp className="w-6 h-6" />
@@ -182,7 +284,9 @@ const NewsletterManager = () => {
             <div className={styles.statContent}>
               <div className={styles.statInfo}>
                 <div className={styles.statLabel}>Inactive</div>
-                <div className={styles.statValue}>{stats.inactiveSubscribers}</div>
+                <div className={styles.statValue}>
+                  {stats.inactiveSubscribers}
+                </div>
               </div>
               <div className={styles.statIcon}>
                 <UserX className="w-6 h-6" />
@@ -220,19 +324,62 @@ const NewsletterManager = () => {
             </select>
           </div>
 
-          {/* Export Button */}
-          <button
-            onClick={handleExport}
-            disabled={exportLoading}
-            className={styles.exportButton}
-          >
-            {exportLoading ? (
-              <Loader className={`w-4 h-4 ${styles.loadingSpinner}`} />
-            ) : (
-              <FileDown className="w-4 h-4" />
-            )}
-            {exportLoading ? "Exporting..." : "Export Excel"}
-          </button>
+          {/* Action Buttons */}
+          <div className={styles.actionButtons}>
+            {/* Import Button */}
+            <div className={styles.importContainer}>
+              <input
+                key={fileInputKey}
+                type="file"
+                id="import-file"
+                accept=".csv,.xlsx,.xls"
+                onChange={handleImport}
+                className={styles.fileInput}
+                disabled={importLoading}
+              />
+              <label
+                htmlFor="import-file"
+                className={`${styles.importButton} ${
+                  importLoading ? styles.importButtonDisabled : ""
+                }`}
+              >
+                {importLoading ? (
+                  <Loader className={`w-4 h-4 ${styles.loadingSpinner}`} />
+                ) : (
+                  <Upload className="w-4 h-4" />
+                )}
+                {importLoading ? "Importing..." : "Import"}
+              </label>
+            </div>
+
+            {/* Export Button */}
+            <button
+              onClick={handleExport}
+              disabled={exportLoading}
+              className={styles.exportButton}
+            >
+              {exportLoading ? (
+                <Loader className={`w-4 h-4 ${styles.loadingSpinner}`} />
+              ) : (
+                <FileDown className="w-4 h-4" />
+              )}
+              {exportLoading ? "Exporting..." : "Export"}
+            </button>
+
+            {/* Download Template Button */}
+            <button
+              onClick={handleDownloadTemplate}
+              disabled={templateLoading}
+              className={styles.templateButton}
+            >
+              {templateLoading ? (
+                <Loader className={`w-4 h-4 ${styles.loadingSpinner}`} />
+              ) : (
+                <FileText className="w-4 h-4" />
+              )}
+              {templateLoading ? "Downloading..." : "Download Template"}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -271,7 +418,9 @@ const NewsletterManager = () => {
                   <td className={styles.tableCell}>
                     <span
                       className={`${styles.statusBadge} ${
-                        subscriber.isActive ? styles.statusActive : styles.statusInactive
+                        subscriber.isActive
+                          ? styles.statusActive
+                          : styles.statusInactive
                       }`}
                     >
                       {subscriber.isActive ? "Active" : "Inactive"}
@@ -320,8 +469,8 @@ const NewsletterManager = () => {
           <Mail className={styles.emptyIcon} />
           <h3 className={styles.emptyTitle}>No subscribers found</h3>
           <p className={styles.emptyText}>
-            {searchTerm || statusFilter !== "all" 
-              ? "Try adjusting your search or filter criteria" 
+            {searchTerm || statusFilter !== "all"
+              ? "Try adjusting your search or filter criteria"
               : "Start building your newsletter audience!"}
           </p>
         </div>
