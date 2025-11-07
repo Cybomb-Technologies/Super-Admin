@@ -1,9 +1,7 @@
-import React from "react";
+
 import { Routes, Route, Navigate } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
 import Dashboard from "./pages/Dashboard";
-import Cybombdashboard from "./pages/cybomb/dashboard";
-import UserAdd from "./pages/cybomb/dashboard";
 import ProductList from "./pages/products/ProductList";
 import ProductAdd from "./pages/products/ProductAdd";
 import OrderList from "./pages/orders/OrderList";
@@ -11,13 +9,6 @@ import OrderDetail from "./pages/orders/OrderDetail";
 import SettingsGeneral from "./pages/settings/SettingsGeneral";
 import SettingsSecurity from "./pages/settings/SettingsSecurity";
 import Adminheader from "./components/Adminheader";
-import Formsubmission from "./pages/cybomb/form-submission";
-import Careerapplication from "./pages/cybomb/career-application";
-import Blogmanagment from "./pages/cybomb/blog-management";
-import Pressrelease from "./pages/cybomb/press-release";
-import Newsletter from "./pages/cybomb/Newsletter";
-import AdminManagement from "./pages/cybomb/AdminManagement";
-
 
 import SocialMediaDashboard from "./pages/Social-Media/Dashboard";
 import PromotionRequests from "./pages/Social-Media/PromotionRequests";
@@ -41,26 +32,35 @@ import Rankuser from "./pages/rankseo/user";
 import AdminDetails from "./pages/pdfworks/AdminDetails";
 import DjitTradingLiveChat from "./pages/live-chat/djit-trading/djit-live-chat";
 
-
+// import AdminDashboardCybomb from "./pages/cybomb/AdminDashboard"
+import ApplicationManagerCybomb from "./pages/cybomb/ApplicationManager"
+import BlogManagerCybomb from "./pages/cybomb/BlogManager"
+import ContactManagerCybomb from "./pages/cybomb/ContactManager"
+import EnquiryManagerCybomb from "./pages/cybomb/EnquiryManager"
+import JobOpeningManagerCybomb from "./pages/cybomb/JobOpeningManager"
+import NewsletterManagerCybomb from "./pages/cybomb/NewsletterManager"
+import OverviewCybomb from "./pages/cybomb/Overview"
+import AdminPressreleaseCybomb from "./pages/cybomb/Press-Release"
 export default function App() {
   return (
     <div className="app">
       <Sidebar />
       <main className="content">
         <Adminheader />
+        <div className="dashboard-content-wrapper">
         <Routes>
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/cybomb/dashboard" element={<Cybombdashboard />} />
-          <Route path="/cybomb/form-submission" element={<Formsubmission />} />
-          <Route
-            path="/cybomb/career-application"
-            element={<Careerapplication />}
-          />
-          <Route path="/cybomb/blog-management" element={<Blogmanagment />} />
-          <Route path="/cybomb/press-release" element={<Pressrelease />} />
-          <Route path="/cybomb/news-letter" element={<Newsletter />} />
-          <Route path="/cybomb/admin-management" element={<AdminManagement />} />
+          {/* <Route path="/cybomb/dashboard" element={<AdminDashboardCybomb/>} /> */}
+          <Route path="/cybomb/dashboard-overview" element={<OverviewCybomb/>} />
+          <Route path="/cybomb/form-submission" element={<ContactManagerCybomb />} />
+          <Route path="/cybomb/career-application" element={<JobOpeningManagerCybomb />} />
+          <Route path="/cybomb/career-application-manager" element={<ApplicationManagerCybomb />} />
+          <Route path="/cybomb/blog-management" element={<BlogManagerCybomb />} />
+          <Route path="/cybomb/press-release" element={<AdminPressreleaseCybomb />} />
+          <Route path="/cybomb/enquiry-application" element={<EnquiryManagerCybomb />} />
+          <Route path="/cybomb/news-letter" element={<NewsletterManagerCybomb />} />
+          {/* <Route path="/cybomb/admin-management" element={<AdminManagement />} /> */}
 
 
           <Route
@@ -110,6 +110,7 @@ export default function App() {
             element={<div className="card">Page not found</div>}
           />
         </Routes>
+        </div>
       </main>
     </div>
   );
