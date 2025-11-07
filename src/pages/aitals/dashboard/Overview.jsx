@@ -12,7 +12,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-const API_BASE_URL1 = import.meta.env.VITE_API_BASE_URL;
+const API_BASE_URL1 = import.meta.env.VITE_CYBOMB_API_BASE;
 
 // Accept the new prop for internal navigation
 const Overview = ({ onNavigateToTab }) => {
