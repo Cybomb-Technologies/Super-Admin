@@ -181,7 +181,7 @@ export default function Sidebar() {
   ];
   
   const socialmedia = [
-    { to: "/social-media/dashboad", label: "Dashboard" },
+    { to: "/social-media/dashboard", label: "Dashboard" },
     { to: "/social-media/promotional-request", label: "Promotional Request" },
     { to: "/social-media/customers", label: "Customers" },
     { to: "/social-media/users", label: "Users" },
