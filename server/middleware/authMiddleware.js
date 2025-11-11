@@ -1,38 +1,53 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 
-// ✅ Verify Token
 exports.verifyToken = async (req, res, next) => {
   try {
-    const token = req.cookies.token;
+    // Get token from header or cookie
+    let token = req.header("Authorization") || req.cookies.token;
 
-    if (!token) return res.status(401).json({ error: "Not authorized" });
+    if (token && token.startsWith("Bearer ")) {
+      token = token.slice(7, token.length).trim();
+    }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    if (!token) {
+      return res
+        .status(401)
+        .json({ error: "Access denied. No token provided." });
+    }
 
-    req.user = decoded;
+    const verified = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(verified.id).select("-password");
+
+    if (!user) {
+      return res.status(401).json({ error: "User not found" });
+    }
+
+    req.user = user;
     next();
   } catch (err) {
     res.status(401).json({ error: "Invalid token" });
   }
 };
 
-// ✅ If specific role needed
 exports.requireRole = (role) => {
   return (req, res, next) => {
-    if (req.user.role !== role)
-      return res.status(403).json({ error: "Access denied" });
-
+    if (req.user.role !== role) {
+      return res.status(403).json({
+        error: "Access denied. Insufficient permissions.",
+      });
+    }
     next();
   };
 };
 
-// ✅ Allow multiple roles
-exports.allowRoles = (...roles) => {
+exports.allowRoles = (roles) => {
   return (req, res, next) => {
-    if (!roles.includes(req.user.role))
-      return res.status(403).json({ error: "Permission denied" });
-
+    if (!roles.includes(req.user.role)) {
+      return res.status(403).json({
+        error: "Access denied. Insufficient permissions.",
+      });
+    }
     next();
   };
 };

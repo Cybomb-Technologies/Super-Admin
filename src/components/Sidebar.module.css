@@ -63,11 +63,21 @@
   z-index: 998;
 }
 
-/* Brand Section */
+/* Brand Section - Updated to match admin header height */
 .brand {
-  padding: 24px 20px;
+  display: flex;
+  align-items: center;
+  padding: 1rem 1.5rem;
   border-bottom: 1px solid #333;
   background: rgba(255, 255, 255, 0.05);
+  height: 80px;
+  gap: 12px;
+}
+
+.brandLogoContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .brandLogo {
@@ -79,24 +89,34 @@
   align-items: center;
   justify-content: center;
   font-size: 20px;
-  margin-bottom: 12px;
   box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+  flex-shrink: 0;
+}
+
+.brandTextContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 40px;
 }
 
 .brandTitle {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 700;
   color: white;
   background: linear-gradient(135deg, #fff, #c084fc);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  line-height: 1.2;
+  margin-bottom: 2px;
 }
 
 .brandSubtitle {
-  font-size: 12px;
+  font-size: 11px;
   color: #94a3b8;
   font-weight: 500;
+  line-height: 1.2;
 }
 
 /* Navigation */
@@ -130,7 +150,7 @@
 }
 
 .link::before {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   top: 0;
@@ -235,7 +255,7 @@
 }
 
 .submenu .link::before {
-  content: '';
+  content: "";
   position: absolute;
   left: 20px;
   top: 50%;
@@ -347,19 +367,19 @@
     align-items: center;
     gap: 15px;
   }
-  
+
   .mobileOverlay {
     display: block;
   }
-  
+
   .sidebar {
     transform: translateX(-100%);
   }
-  
+
   .sidebarOpen {
     transform: translateX(0);
   }
-  
+
   .brand {
     padding-top: 40px;
   }
