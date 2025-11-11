@@ -4,7 +4,8 @@ import { NavLink, useLocation } from "react-router-dom";
 // IMPORT THE CSS MODULE
 import styles from "./Sidebar.module.css";
 
-const API_BASE_URL = import.meta.env.VITE_CYBOMB_API_BASE || 'http://localhost:5002';
+const API_BASE_URL =
+  import.meta.env.VITE_CYBOMB_API_BASE || "http://localhost:5002";
 
 const Dropdown = ({ title, items, icon, counts = {} }) => {
   const [open, setOpen] = useState(false);
@@ -19,27 +20,27 @@ const Dropdown = ({ title, items, icon, counts = {} }) => {
   const getCountForRoute = (label) => {
     // Map the human-readable label back to the count key used in cybombDropdownCounts
     const keyMap = {
-      'Contacts Submission': 'contacts',
-      'Enquiry Submission': 'popupforms',
-      'Career Application': 'applications',
-      'Job Openings': 'jobopenings',
-      'Blog Management': 'blogs',
-      'Press Release': 'pressreleases',
+      "Contacts Submission": "contacts",
+      "Enquiry Submission": "popupforms",
+      "Career Application": "applications",
+      "Job Openings": "jobopenings",
+      "Blog Management": "blogs",
+      "Press Release": "pressreleases",
     };
-    
+
     // Only process for Cybomb dropdown, which is the only one passing counts
     const lookupKey = keyMap[label];
-    
+
     return counts[lookupKey] || 0;
   };
 
   return (
-    <li className={styles.menuItem}> {/* Use li wrapper with CSS Module class */}
+    <li className={styles.menuItem}>
+      {" "}
+      {/* Use li wrapper with CSS Module class */}
       <button
         // Use CSS Module classes for button and open state
-        className={`${styles.menuButton} ${
-          open ? styles.menuButtonOpen : ""
-        }`}
+        className={`${styles.menuButton} ${open ? styles.menuButtonOpen : ""}`}
         onClick={() => setOpen((s) => !s)}
       >
         <div className={styles.menuButtonContent}>
@@ -47,12 +48,16 @@ const Dropdown = ({ title, items, icon, counts = {} }) => {
           <span className={styles.linkText}>{title}</span>
         </div>
         {/* Use CSS Module classes for arrow animation */}
-        <span className={`${styles.arrow} ${open ? styles.menuButtonOpen : ""}`}>
+        <span
+          className={`${styles.arrow} ${open ? styles.menuButtonOpen : ""}`}
+        >
           &#9660; {/* Unicode arrow for better styling */}
         </span>
       </button>
       {open && (
-        <ul className={styles.submenu}> {/* Use ul with CSS Module class */}
+        <ul className={styles.submenu}>
+          {" "}
+          {/* Use ul with CSS Module class */}
           {items.map((it) => {
             const itemCount = getCountForRoute(it.label);
             return (
@@ -66,8 +71,12 @@ const Dropdown = ({ title, items, icon, counts = {} }) => {
                   onClick={() => {
                     // Close mobile sidebar on link click
                     if (window.innerWidth <= 768) {
-                        document.querySelector(`.${styles.sidebar}`).classList.remove(styles.sidebarOpen);
-                        document.querySelector(`.${styles.mobileOverlay}`).style.display = 'none';
+                      document
+                        .querySelector(`.${styles.sidebar}`)
+                        .classList.remove(styles.sidebarOpen);
+                      document.querySelector(
+                        `.${styles.mobileOverlay}`
+                      ).style.display = "none";
                     }
                   }}
                 >
@@ -92,19 +101,52 @@ export default function Sidebar() {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [cybombCounts, setCybombCounts] = useState({});
   const [loading, setLoading] = useState(true);
+  const [userRole, setUserRole] = useState("");
+  const [userName, setUserName] = useState("");
+  const [userEmail, setUserEmail] = useState("");
+
+  // Fetch user data from localStorage
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (user) {
+      setUserName(user.name || "Admin User");
+      setUserRole(user.role || "Administrator");
+      setUserEmail(user.email || "");
+    }
+  }, []);
+
+  // Listen for user data changes
+  useEffect(() => {
+    const handleUserChange = () => {
+      const user = JSON.parse(localStorage.getItem("user"));
+      if (user) {
+        setUserName(user.name || "Admin User");
+        setUserRole(user.role || "Administrator");
+        setUserEmail(user.email || "");
+      }
+    };
+
+    window.addEventListener("storage", handleUserChange);
+    window.addEventListener("tokenChanged", handleUserChange);
+
+    return () => {
+      window.removeEventListener("storage", handleUserChange);
+      window.removeEventListener("tokenChanged", handleUserChange);
+    };
+  }, []);
 
   // Fetch Cybomb data counts
   const fetchCybombCounts = async () => {
     try {
       setLoading(true);
-      
+
       const endpoints = [
-        { key: 'popupforms', url: `${API_BASE_URL}/api/popup-mail` },
-        { key: 'contacts', url: `${API_BASE_URL}/api/contact` },
-        { key: 'applications', url: `${API_BASE_URL}/api/application` },
-        { key: 'blogs', url: `${API_BASE_URL}/api/blog` },
-        { key: 'jobopenings', url: `${API_BASE_URL}/api/applications` },
-        { key: 'pressreleases', url: `${API_BASE_URL}/api/pressrelease` },
+        { key: "popupforms", url: `${API_BASE_URL}/api/popup-mail` },
+        { key: "contacts", url: `${API_BASE_URL}/api/contact` },
+        { key: "applications", url: `${API_BASE_URL}/api/application` },
+        { key: "blogs", url: `${API_BASE_URL}/api/blog` },
+        { key: "jobopenings", url: `${API_BASE_URL}/api/applications` },
+        { key: "pressreleases", url: `${API_BASE_URL}/api/pressrelease` },
       ];
 
       const results = {};
@@ -114,13 +156,16 @@ export default function Sidebar() {
           const response = await fetch(endpoint.url);
           if (response.ok) {
             const data = await response.json();
-            
+
             // Handle different response structures
-            if (endpoint.key === 'popupforms') {
+            if (endpoint.key === "popupforms") {
               results[endpoint.key] = Array.isArray(data) ? data.length : 0;
             } else {
-              results[endpoint.key] = Array.isArray(data?.data) ? data.data.length : 
-                                    Array.isArray(data) ? data.length : 0;
+              results[endpoint.key] = Array.isArray(data?.data)
+                ? data.data.length
+                : Array.isArray(data)
+                ? data.length
+                : 0;
             }
           } else {
             results[endpoint.key] = 0;
@@ -141,7 +186,7 @@ export default function Sidebar() {
 
   useEffect(() => {
     fetchCybombCounts();
-    
+
     // Refresh counts every 30 seconds
     const interval = setInterval(fetchCybombCounts, 30000);
     return () => clearInterval(interval);
@@ -149,26 +194,41 @@ export default function Sidebar() {
 
   const cybombItems = [
     { to: "/cybomb/dashboard-overview", label: "Dashboard" },
-    { to: "/cybomb/form-submission", label: "Contacts Submission", countKey: "contacts" },
-    { to: "/cybomb/enquiry-application", label: "Enquiry Submission", countKey: "popupforms" },
-    { to: "/cybomb/career-application-manager", label: "Career Application", countKey: "applications" },
-    { to: "/cybomb/career-application", label: "Job Openings", countKey: "jobopenings" },
-    { to: "/cybomb/blog-management", label: "Blog Management", countKey: "blogs" },
-    { to: "/cybomb/press-release", label: "Press Release", countKey: "pressreleases" },
+    {
+      to: "/cybomb/form-submission",
+      label: "Contacts Submission",
+      countKey: "contacts",
+    },
+    {
+      to: "/cybomb/enquiry-application",
+      label: "Enquiry Submission",
+      countKey: "popupforms",
+    },
+    {
+      to: "/cybomb/career-application-manager",
+      label: "Career Application",
+      countKey: "applications",
+    },
+    {
+      to: "/cybomb/career-application",
+      label: "Job Openings",
+      countKey: "jobopenings",
+    },
+    {
+      to: "/cybomb/blog-management",
+      label: "Blog Management",
+      countKey: "blogs",
+    },
+    {
+      to: "/cybomb/press-release",
+      label: "Press Release",
+      countKey: "pressreleases",
+    },
     { to: "/cybomb/news-letter", label: "Newsletter" },
   ];
 
-  // Prepare counts for Cybomb dropdown - Map to the dropdown's expected keys
-  const cybombDropdownCounts = useMemo(() => {
-    return cybombItems.reduce((acc, item) => {
-      if (item.countKey && cybombCounts[item.countKey] !== undefined) {
-        // Use the countKey directly as the key for the dropdown component
-        acc[item.countKey] = cybombCounts[item.countKey];
-      }
-      return acc;
-    }, {});
-  }, [cybombCounts, cybombItems]);
-  
+  const adminItems = [{ to: "/admin/add-admin", label: "Add Admin" }];
+
   const aitals = [
     { to: "/aitals/dashboard", label: "Dashboard" },
     { to: "/aitals/enquiry", label: "Enquiry Data" },
@@ -179,7 +239,7 @@ export default function Sidebar() {
     { to: "/aitals/newsletter-subscribers", label: "Newsletter Subscribers" },
     { to: "/aitals/admin-register", label: "Admin Register" },
   ];
-  
+
   const socialmedia = [
     { to: "/social-media/dashboard", label: "Dashboard" },
     { to: "/social-media/promotional-request", label: "Promotional Request" },
@@ -194,10 +254,22 @@ export default function Sidebar() {
     { to: "/pdf-works/contact-details", label: "Contact Details" },
     { to: "/pdf-works/admin-details", label: "Admin Details" },
   ];
-  
-  const livechat = [
-    { to: "/live-chat/djitrading", label: "Djit Trading" },
-  ];
+
+  const livechat = [{ to: "/live-chat/djitrading", label: "Djit Trading" }];
+
+  // Prepare counts for Cybomb dropdown - Map to the dropdown's expected keys
+  const cybombDropdownCounts = useMemo(() => {
+    return cybombItems.reduce((acc, item) => {
+      if (item.countKey && cybombCounts[item.countKey] !== undefined) {
+        // Use the countKey directly as the key for the dropdown component
+        acc[item.countKey] = cybombCounts[item.countKey];
+      }
+      return acc;
+    }, {});
+  }, [cybombCounts, cybombItems]);
+
+  // Get first letter of user's name for avatar
+  const firstLetter = userName?.charAt(0)?.toUpperCase() || "A";
 
   return (
     <>
@@ -212,7 +284,7 @@ export default function Sidebar() {
 
       {/* Mobile Header */}
       {/* Use CSS Module class for mobile header */}
-      <div className={styles.mobileHeader}> 
+      <div className={styles.mobileHeader}>
         <button
           className={styles.mobileToggle}
           onClick={() => setIsMobileOpen(!isMobileOpen)}
@@ -232,13 +304,15 @@ export default function Sidebar() {
           isMobileOpen ? styles.sidebarOpen : ""
         }`}
       >
-        {/* Brand Section */}
+        {/* Brand Section - Updated to match admin header height */}
         <div className={styles.brand}>
-          <div className={styles.brandLogo}>
-            ⚡
+          <div className={styles.brandLogoContainer}>
+            <div className={styles.brandLogo}>⚡</div>
           </div>
-          <div>
-            <div className={styles.brandTitle}>Super Admin</div>
+          <div className={styles.brandTextContainer}>
+            <div className={styles.brandTitle}>
+              {userRole === "superadmin" ? "Super Admin" : "Admin Panel"}
+            </div>
             <div className={styles.brandSubtitle}>Administration Panel</div>
           </div>
         </div>
@@ -261,34 +335,65 @@ export default function Sidebar() {
               </NavLink>
             </li>
 
+            {/* Admin Dropdown - Only for Super Admin */}
+            {userRole === "superadmin" && (
+              <Dropdown
+                title="Admin"
+                items={adminItems}
+                icon="👨‍💼"
+                counts={{}}
+              />
+            )}
+
             {/* Cybomb Dropdown */}
-            <Dropdown 
-              title="Cybomb" 
-              items={cybombItems} 
-              icon="🚀" 
+            <Dropdown
+              title="Cybomb"
+              items={cybombItems}
+              icon="🚀"
               counts={cybombDropdownCounts}
             />
-            
+
             {/* Other Dropdowns */}
-            <Dropdown title="Aitals Tech" items={aitals} icon="📄" counts={{}} />
-            <Dropdown title="PDF Works" items={pdfworks} icon="📄" counts={{}} />
-            <Dropdown title="Social Media" items={socialmedia} icon="💹" counts={{}} />
-            <Dropdown title="Live Chat" items={livechat} icon="💬" counts={{}} />
+            <Dropdown
+              title="Aitals Tech"
+              items={aitals}
+              icon="📄"
+              counts={{}}
+            />
+            <Dropdown
+              title="PDF Works"
+              items={pdfworks}
+              icon="📄"
+              counts={{}}
+            />
+            <Dropdown
+              title="Social Media"
+              items={socialmedia}
+              icon="💹"
+              counts={{}}
+            />
+            <Dropdown
+              title="Live Chat"
+              items={livechat}
+              icon="💬"
+              counts={{}}
+            />
           </ul>
         </nav>
 
         {/* Sidebar Footer */}
         <div className={styles.sidebarFooter}>
           <div className={styles.userInfo}>
-            <div className={styles.userAvatar}>
-              AD
-            </div>
+            <div className={styles.userAvatar}>{firstLetter}</div>
             <div className={styles.userDetails}>
-              <div className={styles.userName}>Admin User</div>
-              <div className={styles.userRole}>Administrator</div>
+              <div className={styles.userName}>{userName}</div>
+              <div className={styles.userRole}>
+                {userRole === "superadmin"
+                  ? "Super Administrator"
+                  : "Administrator"}
+              </div>
             </div>
           </div>
-        
         </div>
       </aside>
     </>

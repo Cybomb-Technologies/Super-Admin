@@ -32,18 +32,26 @@ function Login() {
         return;
       }
 
-      // ✅ If backend returns token → store it
+      // ✅ If user requires OTP (Admin), redirect to OTP page
+      if (data.requiresOtp) {
+        localStorage.setItem("tempToken", data.tempToken);
+        localStorage.setItem("user", JSON.stringify(data.user));
+        navigate("/admin/verify-otp");
+        return;
+      }
+
+      // ✅ If backend returns token → store it (Super Admin)
       if (data.token) {
         localStorage.setItem("token", data.token);
         window.dispatchEvent(new Event("tokenChanged"));
       }
 
-      // ✅ Store user (optional)
+      // ✅ Store user
       if (data.user) {
         localStorage.setItem("user", JSON.stringify(data.user));
       }
 
-      // ✅ Navigate immediately after login
+      // ✅ Navigate immediately after login (Super Admin)
       navigate("/dashboard");
     } catch (err) {
       setError("Network error");
@@ -58,7 +66,7 @@ function Login() {
         <div className={styles.shape}></div>
         <div className={styles.shape}></div>
       </div>
-      
+
       <div className={styles.card}>
         <div className={styles.logoContainer}>
           <div className={styles.logo}>
@@ -100,15 +108,15 @@ function Login() {
             <span className={styles.inputIcon}>🔒</span>
           </div>
 
-          <button 
-            type="submit" 
-            className={`${styles.btn} ${isLoading ? styles.btnLoading : ''}`}
+          <button
+            type="submit"
+            className={`${styles.btn} ${isLoading ? styles.btnLoading : ""}`}
             disabled={isLoading}
           >
             {isLoading ? (
               <span className={styles.spinner}></span>
             ) : (
-              'Login to Dashboard'
+              "Login to Dashboard"
             )}
           </button>
         </form>

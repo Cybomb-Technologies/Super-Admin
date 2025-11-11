@@ -43,7 +43,8 @@ import OverviewCybomb from "./pages/cybomb/Overview";
 import AdminPressreleaseCybomb from "./pages/cybomb/Press-Release";
 
 import Login from "./pages/login/login";
-
+import AddAdmin from "./pages/admin/AddAdmin";
+import OtpVerification from "./pages/login/OtpVerification";
 export default function App() {
   const [token, setToken] = useState(localStorage.getItem("token"));
   const location = useLocation();
@@ -60,7 +61,9 @@ export default function App() {
   }, []);
 
   // 🔹 Hide layout for login route
-  const hideLayout = location.pathname === "/admin/login";
+  const hideLayout =
+    location.pathname === "/admin/login" ||
+    location.pathname === "/admin/verify-otp";
 
   return (
     <>
@@ -68,6 +71,7 @@ export default function App() {
         // ✅ Show only login page
         <Routes>
           <Route path="/admin/login" element={<Login />} />
+          <Route path="/admin/verify-otp" element={<OtpVerification />} />
         </Routes>
       ) : (
         // ✅ Protected layout (Sidebar + Header + Main content)
@@ -79,8 +83,10 @@ export default function App() {
 
             <main className="content">
               <Routes>
-                <Route path="/" element={<Navigate to="/dashboard" replace />} />
-
+                <Route
+                  path="/"
+                  element={<Navigate to="/dashboard" replace />}
+                />
                 {/* Dashboard */}
                 <Route
                   path="/dashboard"
@@ -90,7 +96,6 @@ export default function App() {
                     </ProtectedRoute>
                   }
                 />
-
                 {/* Social Media Routes */}
                 <Route
                   path="/social-media/dashboard"
@@ -132,7 +137,6 @@ export default function App() {
                     </ProtectedRoute>
                   }
                 />
-
                 {/* Cybomb Routes */}
                 <Route
                   path="/cybomb/dashboard-overview"
@@ -198,7 +202,6 @@ export default function App() {
                     </ProtectedRoute>
                   }
                 />
-
                 {/* Aitals Routes */}
                 <Route
                   path="/aitals/dashboard"
@@ -264,7 +267,6 @@ export default function App() {
                     </ProtectedRoute>
                   }
                 />
-
                 {/* PDF Works */}
                 <Route
                   path="/pdf-works/dashboard"
@@ -306,7 +308,6 @@ export default function App() {
                     </ProtectedRoute>
                   }
                 />
-
                 {/* Orders & Products */}
                 <Route
                   path="/products/list"
@@ -340,7 +341,6 @@ export default function App() {
                     </ProtectedRoute>
                   }
                 />
-
                 <Route
                   path="/settings/general"
                   element={
@@ -357,7 +357,15 @@ export default function App() {
                     </ProtectedRoute>
                   }
                 />
-
+                <Route
+                  path="/admin/add-admin"
+                  element={
+                    <ProtectedRoute>
+                      <AddAdmin />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route path="/admin/verify-otp" element={<OtpVerification />} />
                 {/* 404 */}
                 <Route
                   path="*"
