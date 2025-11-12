@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./OtpVerification.module.css";
 
+const API_BASE_URL = import.meta.env.VITE_SUPERADMIN_API_URL;
+
 function OtpVerification() {
   const navigate = useNavigate();
   const [otp, setOtp] = useState("");
@@ -50,7 +52,7 @@ function OtpVerification() {
         return;
       }
 
-      const res = await fetch("http://localhost:5000/api/auth/verify-otp", {
+      const res = await fetch(`${API_BASE_URL}/api/auth/verify-otp`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -95,7 +97,7 @@ function OtpVerification() {
         return;
       }
 
-      const res = await fetch("http://localhost:5000/api/auth/resend-otp", {
+      const res = await fetch(`${API_BASE_URL}/api/auth/resend-otp`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

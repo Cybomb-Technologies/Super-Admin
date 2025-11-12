@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./login.module.css";
 
+const API_BASE_URL = import.meta.env.VITE_SUPERADMIN_API_URL;
+
 function Login() {
   const navigate = useNavigate();
 
@@ -16,7 +18,7 @@ function Login() {
     setIsLoading(true);
 
     try {
-      const res = await fetch("http://localhost:5000/api/auth/login", {
+      const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
         method: "POST",
         credentials: "include",
         headers: {
