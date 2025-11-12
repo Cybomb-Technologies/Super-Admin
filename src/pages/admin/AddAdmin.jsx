@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./AddAdmin.module.css";
 
+const API_BASE_URL = import.meta.env.VITE_SUPERADMIN_API_URL;
+
 function AddAdmin() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -29,7 +31,7 @@ function AddAdmin() {
 
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:5000/api/admin/add-admin", {
+      const res = await fetch(`${API_BASE_URL}/api/admin/add-admin`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
