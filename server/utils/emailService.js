@@ -1,38 +1,32 @@
 const nodemailer = require("nodemailer");
 
-// Create transporter with better error handling
-let transporter;
+// Create transporter using Hostinger SMTP
+const transporter = nodemailer.createTransport({
+  host: process.env.EMAIL_HOST || "smtp.hostinger.com",
+  port: process.env.EMAIL_PORT ? Number(process.env.EMAIL_PORT) : 587,
+  secure: process.env.EMAIL_PORT == 465 ? true : false, // true for 465, false for 587
+  auth: {
+    user: process.env.EMAIL_USER, // Hostinger email
+    pass: process.env.EMAIL_PASS, // Email password or App Password
+  },
+});
 
-try {
-  transporter = nodemailer.createTransport({
-    service: process.env.EMAIL_SERVICE,
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
-    },
-  });
+// Verify transporter configuration
+transporter.verify((error, success) => {
+  if (error) {
+    console.log("❌ Email transporter configuration error:", error.message);
+    console.log("📧 OTP emails will fallback to console logging until fixed.");
+  } else {
+    console.log("✅ Email server is ready to send messages");
+  }
+});
 
-  // Verify transporter configuration
-  transporter.verify(function (error, success) {
-    if (error) {
-      console.log("Email transporter configuration error:", error);
-    } else {
-      console.log("Email server is ready to send messages");
-    }
-  });
-} catch (error) {
-  console.log("Email transporter initialization failed:", error);
-}
-
-// Send OTP email with fallback
+// Function to send OTP email
 const sendOtpEmail = async (email, otp) => {
   try {
-    // If email credentials are not configured, log OTP to console for development
-    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS || !transporter) {
+    // If transporter is not ready, fallback to console
+    if (!transporter || !process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
       console.log(`📧 [DEV MODE] OTP for ${email}: ${otp}`);
-      console.log(
-        `📧 Note: Configure EMAIL_USER and EMAIL_PASS in .env for real emails`
-      );
       return true;
     }
 
@@ -69,11 +63,9 @@ const sendOtpEmail = async (email, otp) => {
     console.log(`✅ OTP sent to ${email}`);
     return true;
   } catch (error) {
-    console.error("❌ Error sending OTP email:", error);
-
-    // Fallback: log OTP to console for development
+    console.error("❌ Error sending OTP email:", error.message);
     console.log(`📧 [FALLBACK] OTP for ${email}: ${otp}`);
-    return true; // Still return true to allow login flow to continue
+    return true;
   }
 };
 

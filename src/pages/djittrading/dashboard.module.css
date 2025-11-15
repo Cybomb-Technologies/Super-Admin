@@ -1,0 +1,559 @@
+.adminDashboard {
+  padding: 0;
+  background: #f8f9fa;
+  min-height: 100vh;
+}
+
+/* Loading State */
+.dashboardLoading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 60vh;
+  text-align: center;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #e3f2fd;
+  border-top: 4px solid #2196f3;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 16px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Header Section */
+.dashboardHeader {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 2rem 0;
+  margin-bottom: 2rem;
+}
+
+.headerContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.headerText {
+  flex: 1;
+}
+
+.dashboardTitle {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.headerIcon {
+  font-size: 1.5em;
+}
+
+.dashboardSubtitle {
+  font-size: 1.1rem;
+  opacity: 0.9;
+  margin-bottom: 0;
+}
+
+.refreshBtn {
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 50px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.refreshBtn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.btnIcon {
+  margin-right: 0.5rem;
+}
+
+/* Stats Grid */
+.statsGrid {
+  max-width: 1200px;
+  margin: 0 auto 2rem;
+  padding: 0 1rem;
+}
+
+.statCard {
+  border: none;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  overflow: hidden;
+  height: 100%;
+  border-left: 4px solid transparent;
+}
+
+.statCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+.usersCard {
+  border-left-color: #4CAF50;
+}
+
+.coursesCard {
+  border-left-color: #2196F3;
+}
+
+.enrollmentsCard {
+  border-left-color: #FF9800;
+}
+
+.revenueCard {
+  border-left-color: #9C27B0;
+}
+
+.statBody {
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.statIconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 70px;
+  height: 70px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.statIcon {
+  font-size: 2rem;
+}
+
+.statContent {
+  flex: 1;
+}
+
+.statNumber {
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: #2c3e50;
+  line-height: 1;
+  margin-bottom: 0.25rem;
+}
+
+.statLabel {
+  font-size: 0.9rem;
+  color: #6c757d;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.statTrend {
+  font-size: 0.8rem;
+  color: #85929e;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.trendIcon {
+  font-size: 0.9em;
+}
+
+/* Data Section */
+.dataSection {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.adminCard {
+  border: none;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  height: 100%;
+}
+
+.cardHeader {
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  border-bottom: 1px solid #e3e8f0;
+  padding: 1.25rem 1.5rem;
+}
+
+.cardHeaderContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cardTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.enrollmentCount {
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.5rem 0.75rem;
+  border-radius: 50px;
+}
+
+.cardBody {
+  padding: 0;
+}
+
+/* Table Styles */
+.tableContainer {
+  overflow-x: auto;
+}
+
+.dataTable {
+  margin: 0;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.tableHeader {
+  background: #f8f9fa;
+}
+
+.tableColumn {
+  padding: 1rem 1.25rem;
+  font-weight: 700;
+  color: #495057;
+  border-bottom: 2px solid #e9ecef;
+  white-space: nowrap;
+}
+
+.tableHeaderIcon {
+  margin-right: 0.5rem;
+}
+
+.tableRow {
+  transition: background-color 0.2s ease;
+}
+
+.tableRow:hover {
+  background-color: #f8f9fa;
+}
+
+.tableRow td {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #e9ecef;
+  vertical-align: middle;
+}
+
+/* User Column */
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.userAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.userDetails {
+  display: flex;
+  flex-direction: column;
+}
+
+.userName {
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 0.125rem;
+}
+
+.userEmail {
+  font-size: 0.8rem;
+  color: #6c757d;
+}
+
+/* Course Column */
+.courseInfo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.courseIcon {
+  font-size: 1.25rem;
+}
+
+.courseTitle {
+  font-weight: 500;
+  color: #495057;
+}
+
+/* Date Column */
+.dateInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.date {
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+.time {
+  font-size: 0.8rem;
+  color: #6c757d;
+}
+
+/* Amount Column */
+.amount {
+  font-weight: 700;
+  color: #27ae60;
+}
+
+/* Status Column */
+.statusBadge {
+  padding: 0.5rem 0.75rem;
+  border-radius: 50px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  min-width: 100px;
+  justify-content: center;
+}
+
+.statusIcon {
+  font-size: 0.9em;
+}
+
+/* Popular Courses */
+.popularCoursesBody {
+  padding: 1.5rem !important;
+}
+
+.popularCourses {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.courseItem {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  border-left: 4px solid transparent;
+}
+
+.courseItem:hover {
+  background: #e9ecef;
+  transform: translateX(5px);
+}
+
+.courseRank {
+  display: flex;
+  align-items: center;
+}
+
+.rankBadge {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.9rem;
+  color: white;
+}
+
+.rank1 {
+  background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+}
+
+.rank2 {
+  background: linear-gradient(135deg, #C0C0C0 0%, #A0A0A0 100%);
+}
+
+.rank3 {
+  background: linear-gradient(135deg, #CD7F32 0%, #A0522D 100%);
+}
+
+.rank4, .rank5 {
+  background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+}
+
+.courseContent {
+  flex: 1;
+}
+
+.courseHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.courseTypeIcon {
+  font-size: 1.5rem;
+  margin-top: 0.125rem;
+}
+
+.courseDetails {
+  flex: 1;
+}
+
+.courseName {
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+  line-height: 1.3;
+}
+
+.courseStats {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.enrollmentCount, .courseRevenue {
+  font-size: 0.8rem;
+  color: #6c757d;
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.statIconSmall {
+  font-size: 0.9em;
+}
+
+/* Empty States */
+.emptyState {
+  text-align: center;
+  padding: 3rem 2rem;
+  color: #6c757d;
+}
+
+.emptyIcon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+.emptyState h6 {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #495057;
+}
+
+.emptyState p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .headerContent {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+  
+  .dashboardTitle {
+    font-size: 1.75rem;
+    justify-content: center;
+  }
+  
+  .statBody {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.75rem;
+  }
+  
+  .statIconWrapper {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .statNumber {
+    font-size: 2rem;
+  }
+  
+  .cardHeaderContent {
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: flex-start;
+  }
+  
+  .tableColumn, .tableRow td {
+    padding: 0.75rem 0.5rem;
+  }
+  
+  .userInfo {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.5rem;
+  }
+  
+  .courseHeader {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.5rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .dashboardHeader {
+    padding: 1.5rem 0;
+  }
+  
+  .dashboardTitle {
+    font-size: 1.5rem;
+  }
+  
+  .statsGrid {
+    padding: 0 0.5rem;
+  }
+  
+  .dataSection {
+    padding: 0 0.5rem;
+  }
+}

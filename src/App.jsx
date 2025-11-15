@@ -5,10 +5,6 @@ import Adminheader from "./components/Adminheader";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 import Dashboard from "./pages/Dashboard";
-import ProductList from "./pages/products/ProductList";
-import ProductAdd from "./pages/products/ProductAdd";
-import OrderList from "./pages/orders/OrderList";
-import OrderDetail from "./pages/orders/OrderDetail";
 import SettingsGeneral from "./pages/settings/SettingsGeneral";
 
 import SocialMediaDashboard from "./pages/Social-Media/Dashboard";
@@ -45,6 +41,12 @@ import AdminPressreleaseCybomb from "./pages/cybomb/Press-Release";
 import Login from "./pages/login/login";
 import AddAdmin from "./pages/admin/AddAdmin";
 import OtpVerification from "./pages/login/OtpVerification";
+import DjittradingDashboard from "./pages/djittrading/dashboard";
+import Courses from "./pages/djittrading/CourseManagement";
+import DjittradingUsers from "./pages/djittrading/users";
+import EnrollmentManagement from "./pages/djittrading/EnrollmentManagement";
+import CouponGenerator from "./pages/djittrading/CouponGenerator";
+import NewsletterManagement from "./pages/djittrading/NewsletterManagement";
 export default function App() {
   const [token, setToken] = useState(localStorage.getItem("token"));
   const location = useLocation();
@@ -308,39 +310,90 @@ export default function App() {
                     </ProtectedRoute>
                   }
                 />
-                {/* Orders & Products */}
+                 <Route
+                  path="/djittrading/dashboard"
+                  element={
+                    <ProtectedRoute>
+                     <DjittradingDashboard />
+                    </ProtectedRoute>
+                  }
+                />
                 <Route
+                  path="/djittrading/course"
+                  element={
+                    <ProtectedRoute>
+                      <Courses/>
+                    </ProtectedRoute>
+                  }
+                />
+
+                 <Route
+                  path="/djittrading/users"
+                  element={
+                    <ProtectedRoute>
+                     <DjittradingUsers/>
+                    </ProtectedRoute>
+                  }
+                />
+                 <Route
+                  path="/djittrading/Enrollment"
+                  element={
+                    <ProtectedRoute>
+                      <EnrollmentManagement/>
+                    </ProtectedRoute>
+                  }
+                />
+                 <Route
+                  path="/djittrading/Coupon-Generator"
+                  element={
+                    <ProtectedRoute>
+                      <CouponGenerator/>
+                    </ProtectedRoute>
+                  }
+                />
+                 <Route
+                  path="/djittrading/Newsletter"
+                  element={
+                    <ProtectedRoute>
+                     <NewsletterManagement/>
+                    </ProtectedRoute>
+                  }
+                />
+                
+               
+                {/* Orders & Products */}
+                {/* <Route
                   path="/products/list"
                   element={
                     <ProtectedRoute>
                       <ProductList />
                     </ProtectedRoute>
                   }
-                />
-                <Route
+                /> */}
+                {/* <Route
                   path="/products/add"
                   element={
                     <ProtectedRoute>
                       <ProductAdd />
                     </ProtectedRoute>
                   }
-                />
-                <Route
+                /> */}
+                {/* <Route
                   path="/orders/list"
                   element={
                     <ProtectedRoute>
                       <OrderList />
                     </ProtectedRoute>
                   }
-                />
-                <Route
+                /> */}
+                {/* <Route
                   path="/orders/detail"
                   element={
                     <ProtectedRoute>
                       <OrderDetail />
                     </ProtectedRoute>
                   }
-                />
+                /> */}
                 <Route
                   path="/settings/general"
                   element={
@@ -350,7 +403,7 @@ export default function App() {
                   }
                 />
                 <Route
-                  path="/live-chat/djitrading"
+                  path="/djittrading/live-chat"
                   element={
                     <ProtectedRoute>
                       <DjitTradingLiveChat />

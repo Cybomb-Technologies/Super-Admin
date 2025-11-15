@@ -255,7 +255,15 @@ export default function Sidebar() {
     { to: "/pdf-works/admin-details", label: "Admin Details" },
   ];
 
-  const livechat = [{ to: "/live-chat/djitrading", label: "Djit Trading" }];
+  const djittrading = [
+    { to: "/djittrading/live-chat", label: "Live Chat" },
+    { to: "/djittrading/dashboard", label: "Dashboard" },
+    { to: "/djittrading/course", label: "Courses" },
+    { to: "/djittrading/users", label: "User" },
+    { to: "/djittrading/Enrollment", label: "Enrollment" },
+    { to: "/djittrading/Coupon-Generator", label: "Coupon Generator" },
+     { to: "/djittrading/Newsletter", label: "Newsletter" },
+  ];
 
   // Prepare counts for Cybomb dropdown - Map to the dropdown's expected keys
   const cybombDropdownCounts = useMemo(() => {
@@ -373,8 +381,8 @@ export default function Sidebar() {
               counts={{}}
             />
             <Dropdown
-              title="Live Chat"
-              items={livechat}
+              title="DjitTrading"
+              items={djittrading}
               icon="💬"
               counts={{}}
             />
