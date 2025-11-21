@@ -47,7 +47,7 @@ exports.login = async (req, res) => {
     // For Super Admin: Direct login without OTP
     if (user.role === "superadmin") {
       const token = jwt.sign(
-        { id: user._id, role: user.role, email: user.email },
+        { id: user._id, role: user.role, email: user.email, name: user.name },
         process.env.JWT_SECRET,
         { expiresIn: "1d" }
       );
@@ -155,7 +155,7 @@ exports.verifyOtp = async (req, res) => {
 
     // Generate final login token
     const finalToken = jwt.sign(
-      { id: user._id, role: user.role, email: user.email },
+      { id: user._id, role: user.role, email: user.email, name: user.name },
       process.env.JWT_SECRET,
       { expiresIn: "1d" }
     );
