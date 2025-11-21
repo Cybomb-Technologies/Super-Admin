@@ -67,7 +67,7 @@ function DjitTradingLiveChat() {
   // ===== FETCH ALL CHATS =====
   const fetchChats = async () => {
     try {
-      const token = localStorage.getItem("adminToken");
+      const token = localStorage.getItem("token");
       const res = await fetch(`${API_URL}/api/livechat/admin/chats?status=${statusFilter}`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -87,7 +87,7 @@ function DjitTradingLiveChat() {
   // ===== FETCH CHAT USERS FOR SIDEBAR =====
   const fetchChatUsers = async () => {
     try {
-      const token = localStorage.getItem("adminToken");
+      const token = localStorage.getItem("token");
       const res = await fetch(`${API_URL}/api/livechat/admin/chat-users`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -108,7 +108,7 @@ function DjitTradingLiveChat() {
   const fetchChatMessages = async (chat) => {
     try {
       setIsLoading(true);
-      const token = localStorage.getItem("adminToken");
+      const token = localStorage.getItem("token");
       const res = await fetch(`${API_URL}/api/livechat/admin/chat/${chat._id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -137,7 +137,7 @@ function DjitTradingLiveChat() {
   // ===== MARK MESSAGES AS READ =====
   const markMessagesAsRead = async (chatId) => {
     try {
-      const token = localStorage.getItem("adminToken");
+      const token = localStorage.getItem("token");
       await fetch(`${API_URL}/api/livechat/admin/chat/${chatId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -149,44 +149,97 @@ function DjitTradingLiveChat() {
   };
 
   // ===== SEND ADMIN REPLY =====
-  const sendAdminReply = async () => {
-    if (!replyMessage.trim() || !selectedChat) return;
+const sendAdminReply = async () => {
+  if (!replyMessage.trim() || !selectedChat) return;
 
-    try {
-      setIsLoading(true);
-      const token = localStorage.getItem("adminToken");
-      const res = await fetch(`${API_URL}/api/livechat/admin/reply`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          chatId: selectedChat._id,
-          message: replyMessage,
-        }),
-      });
-
-      const data = await res.json();
-      if (data.success) {
-        setMessages(data.messages || []);
-        setReplyMessage("");
-        
-        // Refresh chats list to update last activity
-        fetchChatUsers();
-        console.log("✅ Admin reply sent successfully");
+  try {
+    setIsLoading(true);
+    
+    // 🔍 COMPLETE LOCALSTORAGE DEBUGGING
+    console.log("🔍 === ADMIN FRONTEND DEBUGGING ===");
+    
+    // Check all possible token keys
+    const adminToken = localStorage.getItem("token");
+    const token = localStorage.getItem("token");
+    const authToken = localStorage.getItem("authToken");
+    
+    console.log("📱 Token check:");
+    console.log("   adminToken:", adminToken ? "EXISTS" : "NULL");
+    console.log("   token:", token ? "EXISTS" : "NULL");
+    console.log("   authToken:", authToken ? "EXISTS" : "NULL");
+    
+    // Use the first available token
+    const finalToken = adminToken || token || authToken;
+    console.log("📱 Final token to use:", finalToken ? "EXISTS" : "NULL");
+    
+    // List ALL localStorage items
+    console.log("📱 ALL LOCALSTORAGE ITEMS:");
+    if (localStorage.length === 0) {
+      console.log("   ❌ localStorage is EMPTY!");
+    } else {
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        const value = localStorage.getItem(key);
+        console.log(`   ${key}: ${value}`);
       }
-    } catch (error) {
-      console.error("❌ Error sending admin reply:", error);
-    } finally {
-      setIsLoading(false);
     }
-  };
+    
+    console.log("📱 Request details:");
+    console.log("   Selected Chat ID:", selectedChat?._id);
+    console.log("   Message:", replyMessage);
+    console.log("   API URL:", API_URL);
+    
+    if (!finalToken) {
+      console.log("❌ CRITICAL: NO TOKEN FOUND ANYWHERE!");
+      console.log("❌ Admin might not be logged in properly");
+      alert("Please login again - No authentication token found");
+      return;
+    }
+
+    // 🔍 CHECK HEADERS BEING SENT
+    console.log("📤 Headers being sent:");
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${finalToken}`,
+    };
+    console.log("   Content-Type:", headers["Content-Type"]);
+    console.log("   Authorization:", headers["Authorization"]);
+
+    console.log("🔍 === DEBUG END ===\n");
+
+    const res = await fetch(`${API_URL}/api/livechat/admin/reply`, {
+      method: "POST",
+      headers: headers,
+      body: JSON.stringify({
+        chatId: selectedChat._id,
+        message: replyMessage,
+      }),
+    });
+
+    console.log("📱 Response status:", res.status);
+    console.log("📱 Response headers:", res.headers);
+    
+    const data = await res.json();
+    if (data.success) {
+      setMessages(data.messages || []);
+      setReplyMessage("");
+      
+      fetchChatUsers();
+      console.log("✅ Admin reply sent successfully");
+    } else {
+      console.log("❌ API Response error:", data);
+    }
+  } catch (error) {
+    console.error("❌ Error sending admin reply:", error);
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   // ===== UPDATE CHAT STATUS =====
   const updateChatStatus = async (chatId, status) => {
     try {
-      const token = localStorage.getItem("adminToken");
+      const token = localStorage.getItem("token");
       const res = await fetch(`${API_URL}/api/livechat/admin/status`, {
         method: "PUT",
         headers: {
@@ -434,51 +487,48 @@ function DjitTradingLiveChat() {
               </div>
 
               {/* Messages Container */}
-              <div className={styles.messagesContainer}>
-                {messages.length === 0 ? (
-                  <div className={styles.noMessages}>
-                    <div className={styles.noMessagesIcon}>💬</div>
-                    <h4>No messages yet</h4>
-                    <p>Start the conversation by sending a message</p>
-                  </div>
-                ) : (
-                  <div className={styles.messagesList}>
-                    {messages.map((msg, index) => (
-                      <div
-                        key={msg._id || index}
-                        className={`${styles.message} ${
-                          msg.sender === "admin" 
-                            ? styles.adminMessage 
-                            : msg.sender === "user" 
-                            ? styles.userMessage 
-                            : styles.botMessage
-                        }`}
-                      >
-                        <div className={styles.messageBubble}>
-                          <div className={styles.messageText}>{msg.text || "Empty message"}</div>
-                          <div className={styles.messageTime}>
-                            {formatMessageTime(msg.timestamp)}
-                            {msg.sender === "admin" && " • You"}
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-                
-                {isLoading && (
-                  <div className={styles.typingIndicator}>
-                    <div className={styles.typingDots}>
-                      <span></span>
-                      <span></span>
-                      <span></span>
-                    </div>
-                    <span>Loading messages...</span>
-                  </div>
-                )}
-                
-                <div ref={messagesEndRef} />
-              </div>
+              {/* Messages Container */}
+<div className={styles.messagesContainer}>
+  {messages.length === 0 ? (
+    <div className={styles.noMessages}>
+      <div className={styles.noMessagesIcon}>💬</div>
+      <h4>No messages yet</h4>
+      <p>Start the conversation by sending a message</p>
+    </div>
+  ) : (
+    <div className={styles.messagesList}>
+      {messages.map((msg, index) => (
+        <div
+          key={msg._id || index}
+          className={`${styles.message} ${
+            msg.sender === "admin" 
+              ? styles.adminMessage 
+              : msg.sender === "user" 
+              ? styles.userMessage 
+              : styles.botMessage
+          }`}
+        >
+          <div className={styles.messageBubble}>
+            {/* ADD ADMIN NAME DISPLAY */}
+            <div className={styles.messageHeader}>
+              <span className={styles.senderName}>
+                {msg.sender === "admin" 
+                  ? (msg.senderName || "You")  // Show actual admin name
+                  : msg.sender === "user" 
+                  ? (msg.userName || "User")   // Show user name
+                  : "System"}
+              </span>
+              <span className={styles.messageTime}>
+                {formatMessageTime(msg.timestamp)}
+              </span>
+            </div>
+            <div className={styles.messageText}>{msg.text || "Empty message"}</div>
+          </div>
+        </div>
+      ))}
+    </div>
+  )}
+</div>
 
               {/* Reply Section */}
               <div className={styles.replySection}>
