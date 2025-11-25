@@ -25,8 +25,19 @@ import AdminRegister from "./pages/aitals/dashboard/AdminRegister";
 import PDFdashboard from "./pages/pdfworks/dashboard";
 import PDFuser from "./pages/pdfworks/user";
 import Pdfcontact from "./pages/pdfworks/contact";
-import Rankuser from "./pages/rankseo/user";
 import AdminDetails from "./pages/pdfworks/AdminDetails";
+
+// Rank SEO Imports
+import OverviewTab from "./pages/rankseo/OverviewTab";
+import UsersTab from "./pages/rankseo/UsersTab";
+import AuditTab from "./pages/rankseo/AuditTab";
+import PricingTab from "./pages/rankseo/PricingTab";
+import PaymentTab from "./pages/rankseo/PaymentTab";
+import NewsletterTab from "./pages/rankseo/NewsletterTab";
+import SupportTab from "./pages/rankseo/SupportTab";
+
+
+
 import DjitTradingLiveChat from "./pages/live-chat/djit-trading/djit-live-chat";
 
 import ApplicationManagerCybomb from "./pages/cybomb/ApplicationManager";
@@ -47,6 +58,8 @@ import DjittradingUsers from "./pages/djittrading/users";
 import EnrollmentManagement from "./pages/djittrading/EnrollmentManagement";
 import CouponGenerator from "./pages/djittrading/CouponGenerator";
 import NewsletterManagement from "./pages/djittrading/NewsletterManagement";
+
+
 export default function App() {
   const [token, setToken] = useState(localStorage.getItem("token"));
   const location = useLocation();
@@ -302,14 +315,66 @@ export default function App() {
                     </ProtectedRoute>
                   }
                 />
+                
+                {/* Rank SEO Routes */}
                 <Route
-                  path="/rankseo/user"
+                  path="/rankseo/dashboard"
                   element={
                     <ProtectedRoute>
-                      <Rankuser />
+                      <OverviewTab />
                     </ProtectedRoute>
                   }
                 />
+                <Route
+                  path="/rankseo/users"
+                  element={
+                    <ProtectedRoute>
+                      <UsersTab />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/rankseo/audit"
+                  element={
+                    <ProtectedRoute>
+                      <AuditTab />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/rankseo/pricing"
+                  element={
+                    <ProtectedRoute>
+                      <PricingTab />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/rankseo/payments"
+                  element={
+                    <ProtectedRoute>
+                      <PaymentTab />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/rankseo/newsletter"
+                  element={
+                    <ProtectedRoute>
+                      <NewsletterTab />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/rankseo/support"
+                  element={
+                    <ProtectedRoute>
+                      <SupportTab />
+                    </ProtectedRoute>
+                  }
+                />
+                
+
                  <Route
                   path="/djittrading/dashboard"
                   element={
@@ -360,40 +425,6 @@ export default function App() {
                   }
                 />
                 
-               
-                {/* Orders & Products */}
-                {/* <Route
-                  path="/products/list"
-                  element={
-                    <ProtectedRoute>
-                      <ProductList />
-                    </ProtectedRoute>
-                  }
-                /> */}
-                {/* <Route
-                  path="/products/add"
-                  element={
-                    <ProtectedRoute>
-                      <ProductAdd />
-                    </ProtectedRoute>
-                  }
-                /> */}
-                {/* <Route
-                  path="/orders/list"
-                  element={
-                    <ProtectedRoute>
-                      <OrderList />
-                    </ProtectedRoute>
-                  }
-                /> */}
-                {/* <Route
-                  path="/orders/detail"
-                  element={
-                    <ProtectedRoute>
-                      <OrderDetail />
-                    </ProtectedRoute>
-                  }
-                /> */}
                 <Route
                   path="/settings/general"
                   element={

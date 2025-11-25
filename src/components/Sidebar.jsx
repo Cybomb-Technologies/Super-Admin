@@ -6,6 +6,7 @@ import styles from "./Sidebar.module.css";
 
 const API_BASE_URL =
   import.meta.env.VITE_CYBOMB_API_BASE || "http://localhost:5002";
+const VITE_RANKSEO_API_URL = import.meta.env.VITE_RANKSEO_API_URL || "http://localhost:5001";
 
 const Dropdown = ({ title, items, icon, counts = {} }) => {
   const [open, setOpen] = useState(false);
@@ -18,28 +19,30 @@ const Dropdown = ({ title, items, icon, counts = {} }) => {
 
   // Get count for specific route
   const getCountForRoute = (label) => {
-    // Map the human-readable label back to the count key used in cybombDropdownCounts
+    // Map the human-readable label back to the count key used in counts prop
     const keyMap = {
+      // Cybomb Keys
       "Contacts Submission": "contacts",
       "Enquiry Submission": "popupforms",
       "Career Application": "applications",
       "Job Openings": "jobopenings",
       "Blog Management": "blogs",
       "Press Release": "pressreleases",
+      
+      // Rank SEO Keys
+      "Users": "rankUsers",
+      "Support Tickets": "rankSupport",
+      "Newsletter": "rankNewsletter",
+      "Payments": "rankPayments"
     };
 
-    // Only process for Cybomb dropdown, which is the only one passing counts
     const lookupKey = keyMap[label];
-
     return counts[lookupKey] || 0;
   };
 
   return (
     <li className={styles.menuItem}>
-      {" "}
-      {/* Use li wrapper with CSS Module class */}
       <button
-        // Use CSS Module classes for button and open state
         className={`${styles.menuButton} ${open ? styles.menuButtonOpen : ""}`}
         onClick={() => setOpen((s) => !s)}
       >
@@ -47,24 +50,20 @@ const Dropdown = ({ title, items, icon, counts = {} }) => {
           <span className={styles.linkIcon}>{icon}</span>
           <span className={styles.linkText}>{title}</span>
         </div>
-        {/* Use CSS Module classes for arrow animation */}
         <span
           className={`${styles.arrow} ${open ? styles.menuButtonOpen : ""}`}
         >
-          &#9660; {/* Unicode arrow for better styling */}
+          &#9660;
         </span>
       </button>
       {open && (
         <ul className={styles.submenu}>
-          {" "}
-          {/* Use ul with CSS Module class */}
           {items.map((it) => {
             const itemCount = getCountForRoute(it.label);
             return (
               <li key={it.to}>
                 <NavLink
                   to={it.to}
-                  // Use CSS Module classes for link and active state
                   className={({ isActive }) =>
                     `${styles.link} ${isActive ? styles.active : ""}`
                   }
@@ -82,7 +81,6 @@ const Dropdown = ({ title, items, icon, counts = {} }) => {
                 >
                   <span className={styles.linkText}>{it.label}</span>
                   {itemCount > 0 && (
-                    // Keep Tailwind classes for the dynamic badge for simplicity
                     <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full min-w-6 text-center">
                       {itemCount}
                     </span>
@@ -99,7 +97,11 @@ const Dropdown = ({ title, items, icon, counts = {} }) => {
 
 export default function Sidebar() {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  
+  // State for Counts
   const [cybombCounts, setCybombCounts] = useState({});
+  const [rankSeoCounts, setRankSeoCounts] = useState({});
+  
   const [loading, setLoading] = useState(true);
   const [userRole, setUserRole] = useState("");
   const [userName, setUserName] = useState("");
@@ -135,11 +137,9 @@ export default function Sidebar() {
     };
   }, []);
 
-  // Fetch Cybomb data counts
+  // --- FETCH CYBOMB COUNTS ---
   const fetchCybombCounts = async () => {
     try {
-      setLoading(true);
-
       const endpoints = [
         { key: "popupforms", url: `${API_BASE_URL}/api/popup-mail` },
         { key: "contacts", url: `${API_BASE_URL}/api/contact` },
@@ -151,13 +151,24 @@ export default function Sidebar() {
 
       const results = {};
 
-      for (const endpoint of endpoints) {
+      // Set all counts to 0 initially
+      endpoints.forEach(endpoint => {
+        results[endpoint.key] = 0;
+      });
+
+      // Fetch counts in parallel with timeout
+      const fetchPromises = endpoints.map(async (endpoint) => {
         try {
-          const response = await fetch(endpoint.url);
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+          
+          const response = await fetch(endpoint.url, { 
+            signal: controller.signal 
+          });
+          clearTimeout(timeoutId);
+          
           if (response.ok) {
             const data = await response.json();
-
-            // Handle different response structures
             if (endpoint.key === "popupforms") {
               results[endpoint.key] = Array.isArray(data) ? data.length : 0;
             } else {
@@ -167,30 +178,129 @@ export default function Sidebar() {
                 ? data.length
                 : 0;
             }
-          } else {
-            results[endpoint.key] = 0;
           }
         } catch (error) {
-          console.error(`Error fetching ${endpoint.key}:`, error);
-          results[endpoint.key] = 0;
+          if (error.name !== 'AbortError') {
+            console.error(`Error fetching ${endpoint.key}:`, error);
+          }
+          // Keep default 0 value on error
         }
-      }
+      });
 
+      await Promise.allSettled(fetchPromises);
       setCybombCounts(results);
     } catch (error) {
-      console.error("Error fetching Cybomb counts:", error);
-    } finally {
-      setLoading(false);
+      console.error("Error in fetchCybombCounts:", error);
+      // Set empty counts on major error
+      setCybombCounts({});
+    }
+  };
+// --- FETCH RANK SEO COUNTS ---
+  const fetchRankSeoCounts = async () => {
+    try {
+      // Authentication check removed. 
+      // Ensure your backend endpoints are public or this will fail with 401.
+      
+      const headers = { 
+        'Content-Type': 'application/json'
+      };
+
+      // Helper to fetch and count array length
+      const fetchCount = async (url) => {
+        try {
+          const res = await fetch(url, { headers });
+          if(res.ok) {
+            const data = await res.json();
+            // Handle different response structures
+            if (Array.isArray(data)) return data.length;
+            if (Array.isArray(data.users)) return data.users.length;
+            if (Array.isArray(data.payments)) return data.payments.length;
+            if (Array.isArray(data.subscribers)) return data.subscribers.length;
+            if (Array.isArray(data.messages)) return data.messages.length;
+            return 0;
+          }
+          return 0;
+        } catch(e) { 
+          console.log(`Failed to fetch from ${url}:`, e.message);
+          return 0; 
+        }
+      };
+
+      // Helper to fetch stats object
+      const fetchStats = async (url, statKey) => {
+        try {
+          const res = await fetch(url, { headers });
+          if(res.ok) {
+            const data = await res.json();
+            // Navigate nested stats object
+            if (data.stats && data.stats[statKey] !== undefined) {
+              return data.stats[statKey];
+            }
+            // If stats is at root level
+            if (data[statKey] !== undefined) {
+              return data[statKey];
+            }
+          }
+          return 0;
+        } catch(e) { 
+          console.log(`Failed to fetch stats from ${url}:`, e.message);
+          return 0; 
+        }
+      };
+
+      // Fetch counts with error handling for each endpoint
+      const results = {
+        rankUsers: await fetchCount(`${VITE_RANKSEO_API_URL}/api/admin/dashboard`),
+        rankPayments: await fetchCount(`${VITE_RANKSEO_API_URL}/api/admin/payments`),
+        rankSupport: await fetchStats(`${VITE_RANKSEO_API_URL}/api/admin/support/stats`, 'new') || 
+                     await fetchCount(`${VITE_RANKSEO_API_URL}/api/admin/support/messages?status=new`),
+        rankNewsletter: await fetchStats(`${VITE_RANKSEO_API_URL}/api/admin/newsletter/stats`, 'total') ||
+                        await fetchCount(`${VITE_RANKSEO_API_URL}/api/admin/newsletter`)
+      };
+
+      setRankSeoCounts(results);
+
+    } catch (error) {
+      console.error("Error fetching Rank SEO counts:", error);
+      // Set empty counts on error
+      setRankSeoCounts({});
     }
   };
 
   useEffect(() => {
-    fetchCybombCounts();
+    const loadAll = async () => {
+      setLoading(true);
+      try {
+        await Promise.allSettled([fetchCybombCounts(), fetchRankSeoCounts()]);
+      } catch (error) {
+        console.error("Error loading sidebar data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    loadAll();
 
-    // Refresh counts every 30 seconds
-    const interval = setInterval(fetchCybombCounts, 30000);
+    // Refresh counts every 60 seconds instead of 30
+    const interval = setInterval(() => {
+      fetchCybombCounts();
+      fetchRankSeoCounts();
+    }, 60000);
+    
     return () => clearInterval(interval);
   }, []);
+
+  // --- MENU ITEMS DEFINITIONS ---
+
+  const rankSeoItems = [
+    { to: "/rankseo/dashboard", label: "Dashboard" },
+    { to: "/rankseo/users", label: "Users", countKey: "rankUsers" },
+    { to: "/rankseo/audit", label: "Audit Logs" },
+    { to: "/rankseo/pricing", label: "Pricing Plans" },
+    { to: "/rankseo/payments", label: "Payments", countKey: "rankPayments" },
+    { to: "/rankseo/newsletter", label: "Newsletter", countKey: "rankNewsletter" },
+    { to: "/rankseo/support", label: "Support Tickets", countKey: "rankSupport" },
+  ];
 
   const cybombItems = [
     { to: "/cybomb/dashboard-overview", label: "Dashboard" },
@@ -265,16 +375,25 @@ export default function Sidebar() {
      { to: "/djittrading/Newsletter", label: "Newsletter" },
   ];
 
-  // Prepare counts for Cybomb dropdown - Map to the dropdown's expected keys
+  // Prepare counts for Cybomb dropdown
   const cybombDropdownCounts = useMemo(() => {
     return cybombItems.reduce((acc, item) => {
       if (item.countKey && cybombCounts[item.countKey] !== undefined) {
-        // Use the countKey directly as the key for the dropdown component
         acc[item.countKey] = cybombCounts[item.countKey];
       }
       return acc;
     }, {});
   }, [cybombCounts, cybombItems]);
+
+  // Prepare counts for Rank SEO dropdown
+  const rankSeoDropdownCounts = useMemo(() => {
+    return rankSeoItems.reduce((acc, item) => {
+      if (item.countKey && rankSeoCounts[item.countKey] !== undefined) {
+        acc[item.countKey] = rankSeoCounts[item.countKey];
+      }
+      return acc;
+    }, {});
+  }, [rankSeoCounts, rankSeoItems]);
 
   // Get first letter of user's name for avatar
   const firstLetter = userName?.charAt(0)?.toUpperCase() || "A";
@@ -283,7 +402,6 @@ export default function Sidebar() {
     <>
       {/* Mobile Overlay */}
       {isMobileOpen && (
-        // Use CSS Module class for overlay
         <div
           className={styles.mobileOverlay}
           onClick={() => setIsMobileOpen(false)}
@@ -291,7 +409,6 @@ export default function Sidebar() {
       )}
 
       {/* Mobile Header */}
-      {/* Use CSS Module class for mobile header */}
       <div className={styles.mobileHeader}>
         <button
           className={styles.mobileToggle}
@@ -301,25 +418,24 @@ export default function Sidebar() {
         </button>
         <div className={styles.mobileBrand}>
           <div className={styles.brandLogo}>⚡</div>
-          <span className="font-semibold">Cybomb Admin</span>
+          <span className="font-semibold">Rank SEO Admin</span>
         </div>
       </div>
 
       {/* Sidebar */}
       <aside
-        // Use CSS Module classes for the sidebar container
         className={`${styles.sidebar} ${
           isMobileOpen ? styles.sidebarOpen : ""
         }`}
       >
-        {/* Brand Section - Updated to match admin header height */}
+        {/* Brand Section */}
         <div className={styles.brand}>
           <div className={styles.brandLogoContainer}>
             <div className={styles.brandLogo}>⚡</div>
           </div>
           <div className={styles.brandTextContainer}>
             <div className={styles.brandTitle}>
-              {userRole === "superadmin" ? "Super Admin" : "Admin Panel"}
+              Rank SEO Admin
             </div>
             <div className={styles.brandSubtitle}>Administration Panel</div>
           </div>
@@ -332,7 +448,6 @@ export default function Sidebar() {
             <li className={styles.menuItem}>
               <NavLink
                 to="/dashboard"
-                // Use CSS Module classes for link and active state
                 className={({ isActive }) =>
                   `${styles.link} ${isActive ? styles.active : ""}`
                 }
@@ -352,6 +467,14 @@ export default function Sidebar() {
                 counts={{}}
               />
             )}
+
+            {/* Rank SEO Dropdown (NEW) */}
+            <Dropdown
+              title="Rank SEO"
+              items={rankSeoItems}
+              icon="📈"
+              counts={rankSeoDropdownCounts}
+            />
 
             {/* Cybomb Dropdown */}
             <Dropdown
