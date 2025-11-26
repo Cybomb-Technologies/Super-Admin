@@ -1,257 +1,139 @@
-/* Main Container */
-.container {
-  background-color: #151521; /* Deep dark background */
+/* AuditTab.module.css */
+
+/* --- Main Wrapper --- */
+.mainContainer {
+  background-color: #15191f; /* Dark background to match sidebar */
+  color: #e0e0e0;
   min-height: 100vh;
-  color: #e5e5e5;
-  padding: 30px;
+  padding: 20px;
+  border-radius: 8px;
+  /* Added some breathing room at the bottom */
+  padding-bottom: 3rem; 
+  padding-left: 3rem;
 }
 
-/* Statistics Cards Grid */
-.statsGrid {
-  /* FIX: Set a 6-column grid for the stats cards unconditionally to match the screenshot layout */
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 24px;
-  margin-bottom: 30px;
-}
-
-/* Removed media query for statsGrid as it now defaults to 6 columns to match the screenshot */
-/* @media (min-width: 1024px) {
-  .statsGrid {
-    grid-template-columns: repeat(6, 1fr);
-  }
-} */
-
+/* --- Stats Cards --- */
 .statCard {
-  background-color: #1e1e2d; /* Panel color */
+  border: none;
   border-radius: 12px;
-  padding: 24px 20px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  border: 1px solid #2b2b40; /* Subtle border */
+  overflow: hidden;
+  position: relative;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  min-height: 120px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .statCard:hover {
   transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-  border-color: #3b3b55;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
 }
 
-.statNumber {
+/* Gradients */
+.cardBlue { background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%); }
+.cardGreen { background: linear-gradient(135deg, #198754 0%, #157347 100%); }
+.cardCyan { background: linear-gradient(135deg, #0dcaf0 0%, #0aa2c0 100%); }
+.cardYellow { background: linear-gradient(135deg, #ffc107 0%, #ffca2c 100%); color: #000 !important; }
+.cardRed { background: linear-gradient(135deg, #dc3545 0%, #b02a37 100%); }
+.cardPurple { background: linear-gradient(135deg, #6f42c1 0%, #59359a 100%); }
+
+.statValue {
   font-size: 2rem;
   font-weight: 700;
-  color: #ffffff;
-  margin-bottom: 8px;
-  line-height: 1;
+  margin-bottom: 0;
+  line-height: 1.2;
 }
 
 .statLabel {
   font-size: 0.85rem;
-  color: #92929f;
+  opacity: 0.9;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
   font-weight: 500;
-  white-space: nowrap;
 }
 
-/* Filter Section */
-.filterContainer {
-  background-color: #1e1e2d;
+.cardIconOpacity {
+  position: absolute;
+  right: -10px;
+  bottom: -10px;
+  font-size: 5rem;
+  opacity: 0.15;
+  transform: rotate(-15deg);
+  pointer-events: none;
+}
+
+/* --- Glass Filter Panel & Containers (THE FIX) --- */
+.glassPanel {
+  /* Using !important to override Bootstrap's default white .card background */
+  background-color: #212529 !important; 
+  background: linear-gradient(145deg, #2b3035 0%, #212529 100%) !important;
+  color: #e0e0e0 !important;
+  
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 12px;
-  padding: 24px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  border: 1px solid #2b2b40;
-  margin-bottom: 30px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  margin-bottom: 2rem;
 }
 
-.filterGrid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 16px;
-  align-items: center;
-}
-
-@media (min-width: 768px) {
-  .filterGrid {
-    /* Search takes 2 parts, dropdowns take 1 part each */
-    grid-template-columns: 3fr 1fr 1fr; 
-  }
-}
-
-.searchWrapper {
-  position: relative;
-  width: 100%;
-}
-
-.searchInput {
-  width: 100%;
-  padding: 12px 16px 12px 45px; /* Space for icon */
-  border: 1px solid #2b2b40;
+/* Inputs & Selects */
+.searchInput, .customSelect {
+  background-color: #15191f !important; /* Slightly darker than card for contrast */
+  border: 1px solid #495057 !important;
+  color: #fff !important;
   border-radius: 8px;
-  background-color: #151521; /* Darker input bg */
-  color: #ffffff;
-  font-size: 0.9rem;
-  transition: all 0.2s ease;
-}
-
-.searchInput:focus {
-  outline: none;
-  border-color: #6366f1; /* Indigo focus */
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  padding: 10px 15px;
 }
 
 .searchInput::placeholder {
-  color: #6c7293;
+  color: #adb5bd !important;
 }
 
-.searchIcon {
-  width: 18px;
-  height: 18px;
-  color: #6c7293;
-  position: absolute;
-  left: 16px;
-  top: 50%;
-  transform: translateY(-50%);
+.searchInput:focus, .customSelect:focus {
+  background-color: #15191f !important;
+  border-color: #0d6efd !important;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25) !important;
+  color: #fff !important;
 }
 
-.selectInput {
-  width: 100%;
-  padding: 12px 16px;
-  border: 1px solid #2b2b40;
-  border-radius: 8px;
-  background-color: #151521;
-  color: #ffffff;
-  font-size: 0.9rem;
-  appearance: none; /* Custom arrow below */
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236c7293' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
-  background-position: right 0.5rem center;
-  background-repeat: no-repeat;
-  background-size: 1.5em 1.5em;
-  cursor: pointer;
-}
-
-.selectInput:focus {
-  outline: none;
-  border-color: #6366f1;
-}
-
-/* Active Filter Tags */
-.filterStatus {
-  margin-top: 20px;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 10px;
-  padding-top: 16px;
-  border-top: 1px solid #2b2b40;
-}
-
-.filterTag {
-  display: inline-flex;
-  align-items: center;
-  padding: 6px 14px;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: 500;
-  background-color: rgba(16, 185, 129, 0.1);
-  color: #10b981; /* Green */
-  border: 1px solid rgba(16, 185, 129, 0.2);
-}
-
-.blueTag {
-  background-color: rgba(59, 130, 246, 0.1);
-  color: #60a5fa; /* Blue */
-  border: 1px solid rgba(59, 130, 246, 0.2);
-}
-
-.purpleTag {
-  background-color: rgba(139, 92, 246, 0.1);
-  color: #a78bfa; /* Purple */
-  border: 1px solid rgba(139, 92, 246, 0.2);
-}
-
-.filterRemove {
-  margin-left: 8px;
-  background: none;
-  border: none;
-  color: currentColor;
-  cursor: pointer;
-  font-size: 1.1rem;
-  line-height: 0.8;
-  padding: 0;
-  opacity: 0.7;
-}
-
-.filterRemove:hover {
-  opacity: 1;
-}
-
-.resultCount {
-  margin-left: auto;
-  color: #92929f;
-  font-size: 0.85rem;
-}
-
-/* Top Users Section */
-.topUsersContainer {
-  background-color: #1e1e2d;
-  border-radius: 12px;
-  padding: 24px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  border: 1px solid #2b2b40;
-  margin-bottom: 30px;
-}
-
-.topUsersTitle {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #ffffff;
-  margin: 0 0 20px 0;
-}
-
-.topUsersGrid {
-  display: grid;
-  grid-template-columns: repeat(1, 1fr);
-  gap: 16px;
-}
-
-@media (min-width: 768px) {
-  .topUsersGrid {
-    grid-template-columns: repeat(5, 1fr);
-  }
-}
-
+/* --- Top Users Avatar --- */
 .userCard {
-  text-align: center;
-  padding: 16px;
-  background-color: #151521;
-  border-radius: 8px;
-  border: 1px solid #2b2b40;
-  transition: all 0.2s ease;
+  background: #2b3035; /* Darker interior card */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  transition: transform 0.2s;
 }
 
 .userCard:hover {
-  border-color: #6366f1;
-  transform: translateY(-2px);
+  background: #343a40;
+  transform: translateY(-3px);
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
-.userEmail {
-  font-size: 0.9rem;
+.avatarCircle {
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  border-radius: 50%;
+  background: linear-gradient(45deg, #6f42c1, #0d6efd);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+}
+
+.filterBadge {
+  font-size: 0.85rem;
+  padding: 0.6em 1em;
+  border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
   font-weight: 500;
-  color: #e5e5e5;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  margin-bottom: 6px;
-}
-
-.userCount {
-  font-size: 0.8rem;
-  color: #92929f;
-}
-
-/* Global Reset for this component context */
-.container * {
-  box-sizing: border-box;
+  color: #fff;
 }

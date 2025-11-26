@@ -28,7 +28,7 @@ import Pdfcontact from "./pages/pdfworks/contact";
 import AdminDetails from "./pages/pdfworks/AdminDetails";
 
 // Rank SEO Imports
-import OverviewTab from "./pages/rankseo/OverviewTab";
+import  AdminDashboard from "./pages/rankseo/dashboard";
 import UsersTab from "./pages/rankseo/UsersTab";
 import AuditTab from "./pages/rankseo/AuditTab";
 import PricingTab from "./pages/rankseo/PricingTab";
@@ -321,7 +321,7 @@ export default function App() {
                   path="/rankseo/dashboard"
                   element={
                     <ProtectedRoute>
-                      <OverviewTab />
+                       <AdminDashboard />
                     </ProtectedRoute>
                   }
                 />

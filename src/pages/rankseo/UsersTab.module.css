@@ -1,0 +1,311 @@
+/* UsersTab.module.css */
+
+/* --- Main Layout --- */
+.wrapper {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #15191f; /* Global Dark Background */
+  padding: 20px;
+  padding-bottom: 4rem;
+  color: #e0e0e0;
+  padding-left: 3rem;
+  padding-top: 3rem;
+}
+
+/* --- Quick Stats Grid --- */
+.quickStatsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.quickStatsCard {
+  background: #212529; /* Dark card background */
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  overflow: hidden;
+  position: relative;
+}
+
+.quickStatsCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.quickStatsContent {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  position: relative;
+  z-index: 2;
+}
+
+.statValue {
+  font-size: 28px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.2;
+  margin-bottom: 4px;
+}
+
+.statLabel {
+  font-size: 13px;
+  font-weight: 500;
+  color: #adb5bd;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.statIcon {
+  font-size: 32px;
+  opacity: 0.8;
+}
+
+/* Border accents */
+.blueBorder { border-bottom: 3px solid #0d6efd; }
+.greenBorder { border-bottom: 3px solid #198754; }
+.purpleBorder { border-bottom: 3px solid #6f42c1; }
+.orangeBorder { border-bottom: 3px solid #ffc107; }
+
+/* --- Filter & Search Panel --- */
+/* Renamed from .card to .filterPanel to avoid Bootstrap conflicts */
+.filterPanel {
+  background-color: #212529 !important; /* Force Dark */
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.filtersRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-items: flex-end;
+}
+
+.planSelectWrapper, .searchWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.planSelectWrapper { flex: 0 0 250px; }
+.searchWrapper { flex: 1; min-width: 300px; }
+
+.label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #adb5bd;
+}
+
+/* Inputs */
+.select, .input {
+  width: 100%;
+  background-color: #15191f !important; /* Darker than card */
+  border: 1px solid #495057 !important;
+  color: #fff !important;
+  padding: 10px 15px;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.input { padding-left: 40px; } /* Space for icon */
+
+.select:focus, .input:focus {
+  border-color: #0d6efd !important;
+  box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.25);
+}
+
+.input::placeholder { color: #6c757d !important; }
+
+.searchInner { position: relative; }
+
+.searchIcon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #6c757d;
+  pointer-events: none;
+}
+
+.mutedInfo {
+  font-size: 12px;
+  color: #6c757d;
+  margin-top: 4px;
+}
+
+/* --- Active Filters --- */
+.filterMetaRow {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.filterPill, .filterPillWarning {
+  border: none;
+  border-radius: 20px;
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.filterPill { background: #0d6efd; color: white; }
+.filterPillWarning { background: #ffc107; color: #000; }
+
+.filterPill:hover, .filterPillWarning:hover { opacity: 0.9; transform: translateY(-1px); }
+
+.filterClearBtn { font-size: 16px; line-height: 0.5; font-weight: bold; }
+.filterCount { font-size: 13px; color: #adb5bd; margin-left: auto; }
+
+/* --- Users Table Card --- */
+.usersCard {
+  background-color: #212529 !important; /* Force Dark */
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  margin-top: 20px;
+}
+
+/* Header Gradient */
+.usersHeader {
+  background: linear-gradient(90deg, #4f46e5, #8b5cf6, #ec4899); /* Distinct Gradient */
+  padding: 16px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.usersHeaderTitle {
+  font-size: 18px;
+  font-weight: 700;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.usersHeaderSubtitle {
+  margin: 0;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.8);
+  margin-top: 2px;
+}
+
+.headerActions { display: flex; align-items: center; gap: 12px; }
+
+.exportButton {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+
+.exportButton:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.35);
+  transform: translateY(-1px);
+}
+
+/* Table Wrapper */
+.usersBody {
+  background-color: #212529 !important;
+  padding: 0;
+}
+
+.usersTableWrapper {
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+/* Force Table Colors */
+.usersTableWrapper table {
+  margin-bottom: 0;
+  color: #e0e0e0;
+}
+
+.usersTableWrapper :global(thead th) {
+  background-color: #1a1e24 !important; /* Slightly darker header */
+  color: #adb5bd;
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 16px;
+  vertical-align: middle;
+}
+
+.usersTableWrapper :global(tbody td) {
+  background-color: #212529 !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 16px;
+  vertical-align: middle;
+  color: #e0e0e0;
+}
+
+.usersTableWrapper :global(tbody tr:hover td) {
+  background-color: #2c3239 !important; /* Hover effect */
+}
+
+/* Footer */
+.usersFooter {
+  background-color: #212529 !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 16px 24px;
+}
+
+/* --- Badges & Avatars --- */
+.avatarCircle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6f42c1, #0d6efd);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+
+.sortIcon { color: #6c757d; font-size: 10px; margin-left: 4px; }
+.sortIconActive { color: #fff; font-size: 10px; margin-left: 4px; }
+
+/* Responsive */
+@media (max-width: 992px) {
+  .quickStatsGrid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 768px) {
+  .filtersRow { flex-direction: column; align-items: stretch; }
+  .planSelectWrapper, .searchWrapper { width: 100%; flex: auto; }
+}
+@media (max-width: 576px) {
+  .quickStatsGrid { grid-template-columns: 1fr; }
+}

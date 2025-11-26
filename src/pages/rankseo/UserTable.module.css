@@ -1,0 +1,348 @@
+.userTableCard {
+  background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+  border: 1px solid #4b5563;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+}
+
+.tableHeader {
+  background: linear-gradient(135deg, #374151 0%, #4b5563 100%);
+  border-bottom: 1px solid #6b7280;
+  padding: 1.25rem 1.5rem;
+}
+
+.userTable {
+  margin: 0;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.tableHead {
+  background: rgba(55, 65, 81, 0.8);
+  backdrop-filter: blur(10px);
+}
+
+.tableHead th {
+  border-bottom: 2px solid #6b7280;
+  padding: 1rem 1.5rem;
+  font-weight: 600;
+  color: #f9fafb;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.sortableHeader {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  user-select: none;
+}
+
+.sortableHeader:hover {
+  background: rgba(75, 85, 99, 0.5);
+  color: #3b82f6;
+}
+
+.tableRow {
+  transition: all 0.3s ease;
+  border-bottom: 1px solid #374151;
+}
+
+.tableRow:hover {
+  background: linear-gradient(135deg, #374151 0%, #4b5563 100%);
+  transform: translateX(4px);
+}
+
+.selectedRow {
+  background: linear-gradient(135deg, #1e40af 0%, #3730a3 100%) !important;
+  border-left: 4px solid #3b82f6;
+}
+
+/* Cell Styles */
+.checkboxCell {
+  width: 40px;
+  padding: 1rem 0.5rem 1rem 1.5rem;
+}
+
+.userCell {
+  min-width: 250px;
+  padding: 1rem 1.5rem;
+}
+
+.planCell {
+  min-width: 140px;
+  padding: 1rem 1.5rem;
+}
+
+.loginCell {
+  min-width: 120px;
+  padding: 1rem 1.5rem;
+}
+
+.dateCell {
+  min-width: 120px;
+  padding: 1rem 1.5rem;
+}
+
+.actionCell {
+  width: 140px;
+  padding: 1rem 1.5rem;
+}
+
+/* Avatar Styles */
+.avatarContainer {
+  position: relative;
+  margin-right: 1rem;
+}
+
+.userAvatar {
+  width: 45px;
+  height: 45px;
+  border-radius: 10px;
+  object-fit: cover;
+  border: 2px solid #4b5563;
+}
+
+.avatarPlaceholder {
+  width: 45px;
+  height: 45px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  font-size: 0.9rem;
+  border: 2px solid #4b5563;
+}
+
+.statusIndicator {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid #1f2937;
+}
+
+.statusIndicator.verified {
+  background: #10b981;
+}
+
+.statusIndicator.unverified {
+  background: #6b7280;
+}
+
+/* User Info Styles */
+.userInfo {
+  flex: 1;
+}
+
+.userName {
+  color: #f9fafb;
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 0.25rem;
+}
+
+.userEmail {
+  color: #9ca3af;
+  font-size: 0.8rem;
+  margin-bottom: 0.25rem;
+}
+
+.userPhone {
+  color: #6b7280;
+  font-size: 0.75rem;
+}
+
+/* Badge Styles */
+.premiumBadge {
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+  color: white;
+  font-size: 0.75rem;
+  padding: 0.35rem 0.65rem;
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+.freeBadge {
+  background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+  color: white;
+  font-size: 0.75rem;
+  padding: 0.35rem 0.65rem;
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+.statusBadge {
+  font-size: 0.7rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
+}
+
+.loginBadge {
+  font-size: 0.75rem;
+  padding: 0.4rem 0.7rem;
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+/* Date Styles */
+.dateInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.dateValue {
+  color: #f9fafb;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.neverLoggedIn {
+  color: #6b7280;
+  font-size: 0.75rem;
+  font-style: italic;
+}
+
+/* Action Button Styles */
+.viewButton {
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  color: #3b82f6;
+  border-radius: 8px;
+  padding: 0.4rem 0.6rem;
+  transition: all 0.2s ease;
+}
+
+.viewButton:hover {
+  background: rgba(59, 130, 246, 0.2);
+  border-color: #3b82f6;
+  transform: scale(1.05);
+}
+
+.editButton {
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: #10b981;
+  border-radius: 8px;
+  padding: 0.4rem 0.6rem;
+  transition: all 0.2s ease;
+}
+
+.editButton:hover {
+  background: rgba(16, 185, 129, 0.2);
+  border-color: #10b981;
+  transform: scale(1.05);
+}
+
+.moreButton {
+  background: rgba(107, 114, 128, 0.1);
+  border: 1px solid rgba(107, 114, 128, 0.3);
+  color: #9ca3af;
+  border-radius: 8px;
+  padding: 0.4rem 0.6rem;
+  transition: all 0.2s ease;
+}
+
+.moreButton:hover {
+  background: rgba(107, 114, 128, 0.2);
+  border-color: #9ca3af;
+  transform: scale(1.05);
+}
+
+/* Pagination Styles */
+.paginationContainer {
+  padding: 1.25rem 1.5rem;
+  border-top: 1px solid #374151;
+  background: rgba(31, 41, 55, 0.8);
+}
+
+.paginationInfo {
+  color: #9ca3af;
+  font-size: 0.875rem;
+}
+
+.page-link {
+  background: #374151;
+  border: 1px solid #4b5563;
+  color: #f9fafb;
+  padding: 0.5rem 0.75rem;
+  margin: 0 0.25rem;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.page-link:hover {
+  background: #4b5563;
+  border-color: #6b7280;
+  color: #3b82f6;
+}
+
+.page-item.active .page-link {
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  border-color: #3b82f6;
+  color: white;
+}
+
+.page-item.disabled .page-link {
+  background: #1f2937;
+  border-color: #374151;
+  color: #6b7280;
+}
+
+/* Empty State */
+.emptyState {
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .tableHeader {
+    padding: 1rem;
+  }
+  
+  .tableHead th,
+  .tableRow td {
+    padding: 0.75rem 1rem;
+  }
+  
+  .userCell {
+    min-width: 200px;
+  }
+  
+  .userAvatar,
+  .avatarPlaceholder {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .paginationContainer {
+    padding: 1rem;
+  }
+  
+  .paginationInfo {
+    font-size: 0.8rem;
+  }
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.tableRow {
+  animation: fadeIn 0.5s ease;
+}

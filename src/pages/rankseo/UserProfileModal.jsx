@@ -1,160 +1,189 @@
-"use client";
-import React from "react";
-import styles from "./styles.module.css";
+// UserProfileModal.jsx
+import React, { useEffect, useState } from "react";
+import styles from "./UserProfileModal.module.css";
 
 export default function UserProfileModal({ user, isOpen, onClose }) {
+  const [copied, setCopied] = useState(false);
+
+  // Close on Escape key
+  useEffect(() => {
+    const handleEsc = (e) => {
+      if (e.key === "Escape") onClose();
+    };
+    if (isOpen) window.addEventListener("keydown", handleEsc);
+    return () => window.removeEventListener("keydown", handleEsc);
+  }, [isOpen, onClose]);
+
   if (!isOpen || !user) return null;
 
+  // --- Helpers ---
   const formatDate = (dateString) => {
     if (!dateString) return "Never";
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     });
   };
 
-  const getDisplayPlan = () => {
-    if (user.planName && user.planName !== "Free") {
-      return user.planName;
-    }
-    if (user.plan && typeof user.plan === 'object' && user.plan.name) {
-      return user.plan.name;
-    }
-    if (typeof user.plan === 'string' && user.plan.length > 0) {
-      return user.subscriptionStatus === "active" ? "Premium" : "Free";
-    }
-    return user.planName || "Free";
+  const calculateDaysActive = (createdDate) => {
+    if (!createdDate) return 0;
+    const start = new Date(createdDate);
+    const now = new Date();
+    const diffTime = Math.abs(now - start);
+    return Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
   };
 
-  const getStatusColor = (status) => {
-    switch (status?.toLowerCase()) {
-      case "active": return styles.badgeGreen;
-      case "inactive": return styles.badgeGray;
-      case "cancelled": return styles.badgeRed;
-      case "expired": return styles.badgeOrange;
-      default: return styles.badgeGray;
+  const getDisplayPlan = () => {
+    if (user.planName && user.planName !== "Free") return user.planName;
+    if (user.plan?.name) return user.plan.name;
+    return user.subscriptionStatus === "active" ? "Premium" : "Free";
+  };
+
+  const handleCopyEmail = () => {
+    if (user.email) {
+      navigator.clipboard.writeText(user.email);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
     }
   };
+
+  // Status Badge Class
+  const statusClass = styles[`status-${user.subscriptionStatus || "inactive"}`];
 
   return (
-    <div className={styles.modalOverlay}>
-      <div className={styles.modalContent}>
-        <div className={`px-6 py-4 border-b ${styles.borderPrimary} flex justify-between items-center`}>
-          <h3 className={`text-lg font-semibold ${styles.textPrimary}`}>User Details</h3>
-          <button
-            onClick={onClose}
-            className={`${styles.textTertiary} hover:${styles.textPrimary} transition-colors`}
-          >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
+    <div className={styles.backdrop} onClick={onClose}>
+      <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+        
+        {/* 1. Header */}
+        <div className={styles.modalHeader}>
+          <h5 className={styles.title}>
+            <i className="bi bi-person-lines-fill me-2 text-primary"></i>
+            User Profile
+          </h5>
+          <button className={styles.closeBtn} onClick={onClose}>
+            <i className="bi bi-x-lg"></i>
           </button>
         </div>
 
-        <div className="p-6">
-          <div className="text-center mb-6">
-            <div className="flex justify-center mb-4">
+        {/* 2. Body */}
+        <div className={styles.modalBody}>
+          
+          {/* Top Profile Section */}
+          <div className={styles.profileHeader}>
+            <div className={styles.avatarContainer}>
               {user.profilePicture ? (
                 <img
-                  className={`h-20 w-20 ${styles.avatar}`}
+                  className={`${styles.profileImage} rounded-circle`}
                   src={user.profilePicture}
                   alt={user.name}
                 />
               ) : (
-                <div className={`h-20 w-20 ${styles.avatarPlaceholder} flex items-center justify-center`}>
-                  <span className={`${styles.textTertiary} font-medium text-2xl`}>
-                    {user.name?.charAt(0)?.toUpperCase() || user.email?.charAt(0)?.toUpperCase()}
-                  </span>
+                <div className={`${styles.profilePlaceholder} rounded-circle d-flex align-items-center justify-content-center`}>
+                  {user.name?.charAt(0)?.toUpperCase() || user.email?.charAt(0)?.toUpperCase()}
                 </div>
               )}
             </div>
-            <h2 className={`text-xl font-bold ${styles.textPrimary}`}>{user.name || "No Name"}</h2>
-            <p className={styles.textSecondary}>{user.email}</p>
+            
+            <div className={styles.userHeadline}>
+              <h3>{user.name || "No Name Provided"}</h3>
+              <div className={styles.emailRow}>
+                <i className="bi bi-envelope"></i>
+                <span>{user.email}</span>
+                <i 
+                  className={`bi ${copied ? "bi-check-lg text-success" : "bi-copy"} ${styles.copyIcon} ms-2`} 
+                  onClick={handleCopyEmail}
+                  title="Copy Email"
+                ></i>
+              </div>
+              <div className="d-flex gap-2 mt-2">
+                 <span className={`${styles.badge} ${statusClass}`}>
+                    {user.subscriptionStatus || "inactive"}
+                 </span>
+                 {user.isVerified && (
+                    <span className={`${styles.badge}`} style={{background: 'rgba(13, 110, 253, 0.15)', color: '#0d6efd', border: '1px solid rgba(13, 110, 253, 0.2)'}}>
+                        Verified
+                    </span>
+                 )}
+              </div>
+            </div>
           </div>
 
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className={`block text-sm font-medium ${styles.textTertiary}`}>Plan</label>
-                <p className={`mt-1 text-sm font-semibold ${styles.textPrimary}`}>{getDisplayPlan()}</p>
-              </div>
-              <div>
-                <label className={`block text-sm font-medium ${styles.textTertiary}`}>Status</label>
-                <span className={`mt-1 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(user.subscriptionStatus)}`}>
-                  {(user.subscriptionStatus || "inactive").charAt(0).toUpperCase() + 
-                   (user.subscriptionStatus || "inactive").slice(1)}
+          {/* Details Grid */}
+          <div className={styles.infoGrid}>
+            
+            {/* Account Details */}
+            <div className={styles.infoCard}>
+              <div className={styles.cardTitle}>Account Overview</div>
+              
+              <div className={styles.dataRow}>
+                <span className={styles.label}>Login Method</span>
+                <span className={styles.value}>
+                    <i className={`bi bi-${user.loginMethod === 'google' ? 'google' : user.loginMethod === 'github' ? 'github' : 'envelope'} me-2`}></i>
+                    {user.loginMethod || "Email"}
                 </span>
               </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className={`block text-sm font-medium ${styles.textTertiary}`}>Login Method</label>
-                <p className={`mt-1 text-sm ${styles.textPrimary}`}>{user.loginMethod || "Email"}</p>
+              <div className={styles.dataRow}>
+                <span className={styles.label}>User ID</span>
+                <span className={styles.value} style={{fontSize: '0.8rem', opacity: 0.8}}>{user._id || "N/A"}</span>
               </div>
-              <div>
-                <label className={`block text-sm font-medium ${styles.textTertiary}`}>Verified</label>
-                <p className={`mt-1 text-sm ${styles.textPrimary}`}>
-                  {user.isVerified ? "Yes" : "No"}
-                </p>
+              <div className={styles.dataRow}>
+                <span className={styles.label}>Mobile</span>
+                <span className={styles.value}>{user.phone || "-"}</span>
+              </div>
+              <div className={styles.dataRow}>
+                <span className={styles.label}>Member For</span>
+                <span className={styles.value}>{calculateDaysActive(user.createdAt)} days</span>
               </div>
             </div>
 
-            {user.phone && (
-              <div>
-                <label className={`block text-sm font-medium ${styles.textTertiary}`}>Mobile</label>
-                <p className={`mt-1 text-sm ${styles.textPrimary}`}>{user.phone}</p>
+            {/* Subscription & Activity */}
+            <div className={styles.infoCard}>
+              <div className={styles.cardTitle}>Plan & Activity</div>
+              
+              <div className={styles.dataRow}>
+                <span className={styles.label}>Current Plan</span>
+                <span className={styles.value} style={{color: '#ffc107'}}>{getDisplayPlan()}</span>
               </div>
-            )}
-
-            <div>
-              <label className={`block text-sm font-medium ${styles.textTertiary}`}>Last Login</label>
-              <p className={`mt-1 text-sm ${styles.textPrimary}`}>
-                {user.lastLogin ? formatDate(user.lastLogin) : "Never"}
-              </p>
-            </div>
-
-            <div>
-              <label className={`block text-sm font-medium ${styles.textTertiary}`}>Member Since</label>
-              <p className={`mt-1 text-sm ${styles.textPrimary}`}>
-                {user.createdAt ? formatDate(user.createdAt) : "Unknown"}
-              </p>
-            </div>
-
-            {(user.billingCycle || user.planExpiry) && (
-              <div className={`pt-4 border-t ${styles.borderPrimary}`}>
-                <h4 className={`text-sm font-medium ${styles.textTertiary} mb-2`}>Subscription Details</h4>
-                <div className="grid grid-cols-2 gap-4">
-                  {user.billingCycle && (
-                    <div>
-                      <label className={`block text-xs font-medium ${styles.textMuted}`}>Billing Cycle</label>
-                      <p className={`mt-1 text-sm ${styles.textPrimary} capitalize`}>{user.billingCycle}</p>
+              
+              {(user.billingCycle || user.planExpiry) && (
+                 <>
+                    <div className={styles.dataRow}>
+                        <span className={styles.label}>Billing Cycle</span>
+                        <span className={styles.value}>{user.billingCycle || "N/A"}</span>
                     </div>
-                  )}
-                  {user.planExpiry && (
-                    <div>
-                      <label className={`block text-xs font-medium ${styles.textMuted}`}>Plan Expiry</label>
-                      <p className={`mt-1 text-sm ${styles.textPrimary}`}>{formatDate(user.planExpiry)}</p>
+                    <div className={styles.dataRow}>
+                        <span className={styles.label}>Expires</span>
+                        <span className={styles.value}>{user.planExpiry ? formatDate(user.planExpiry).split(',')[0] : "N/A"}</span>
                     </div>
-                  )}
-                </div>
+                 </>
+              )}
+
+              <hr style={{borderColor: 'rgba(255,255,255,0.1)', margin: '10px 0'}} />
+
+              <div className={styles.dataRow}>
+                <span className={styles.label}>Joined Date</span>
+                <span className={styles.value}>{user.createdAt ? formatDate(user.createdAt).split(',')[0] : "Unknown"}</span>
               </div>
-            )}
+              <div className={styles.dataRow}>
+                <span className={styles.label}>Last Login</span>
+                <span className={styles.value}>{user.lastLogin ? formatDate(user.lastLogin) : "Never"}</span>
+              </div>
+            </div>
+
           </div>
         </div>
 
-        <div className={`px-6 py-4 border-t ${styles.borderPrimary} ${styles.bgSecondary} flex justify-end`}>
-          <button
-            onClick={onClose}
-            className={styles.buttonSecondary}
-          >
-            Close
+        {/* 3. Footer */}
+        <div className={styles.modalFooter}>
+          <button className={styles.actionBtn} onClick={onClose}>
+            Done
           </button>
         </div>
+
       </div>
     </div>
   );

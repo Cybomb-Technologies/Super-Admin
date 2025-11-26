@@ -1,39 +1,37 @@
+/* NewsletterTab.module.css */
+
+/* --- Main Layout --- */
 .container {
   min-height: 100vh;
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
-  padding: 1.5rem;
+  background-color: #15191f; /* Deep Dark Background */
+  color: #e0e0e0;
+  padding: 20px;
+  /* Add padding bottom to ensure scroll room */
+  padding-bottom: 4rem;
+  padding-left: 3rem;
 }
 
-.loadingContainer {
-  min-height: 100vh;
-  background-color: var(--bg-primary);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.loadingText {
-  font-size: 1.25rem;
-  color: var(--text-secondary);
-}
-
+/* --- Header --- */
 .header {
   margin-bottom: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
 }
 
 .title {
-  font-size: 1.875rem;
-  font-weight: bold;
-  color: var(--text-primary);
-  margin-bottom: 0.5rem;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 0.25rem;
 }
 
 .subtitle {
-  color: var(--text-secondary);
+  color: #adb5bd;
+  font-size: 0.9rem;
 }
 
-/* Stats Grid */
+/* --- Stats Grid --- */
 .statsGrid {
   display: grid;
   grid-template-columns: repeat(1, 1fr);
@@ -42,23 +40,26 @@
 }
 
 @media (min-width: 768px) {
-  .statsGrid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+  .statsGrid { grid-template-columns: repeat(2, 1fr); }
 }
 
-@media (min-width: 1024px) {
-  .statsGrid {
-    grid-template-columns: repeat(4, 1fr);
-  }
+@media (min-width: 1200px) {
+  .statsGrid { grid-template-columns: repeat(4, 1fr); }
 }
 
 .statCard {
-  background-color: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: 0.75rem;
-  padding: 1.5rem;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  background-color: #212529;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 1.25rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.statCard:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  border-color: rgba(255, 255, 255, 0.15);
 }
 
 .statContent {
@@ -68,51 +69,44 @@
 }
 
 .statLabel {
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--text-secondary);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #adb5bd;
+  margin-bottom: 0.5rem;
 }
 
 .statValue {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: var(--text-primary);
-  margin-top: 0.25rem;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.1;
 }
 
 .statIcon {
-  padding: 0.75rem;
-  border-radius: 0.5rem;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
 }
 
-/* Message Styles */
-.message {
-  margin-bottom: 1.5rem;
-  padding: 1rem;
-  border-radius: 0.5rem;
-  border: 1px solid;
-}
+/* Icon Variants */
+.iconBlue { background: rgba(13, 110, 253, 0.15); color: #0d6efd; }
+.iconGreen { background: rgba(25, 135, 84, 0.15); color: #198754; }
+.iconPurple { background: rgba(111, 66, 193, 0.15); color: #6f42c1; }
+.iconOrange { background: rgba(253, 126, 20, 0.15); color: #fd7e14; }
 
-.messageSuccess {
-  background-color: var(--bg-success);
-  border-color: var(--border-success);
-  color: var(--text-success);
-}
-
-.messageError {
-  background-color: var(--bg-error);
-  border-color: var(--border-error);
-  color: var(--text-error);
-}
-
-/* Action Bar */
+/* --- Action Bar (Control Panel) --- */
 .actionBar {
-  background-color: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: 0.75rem;
+  background-color: #212529;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
   padding: 1.5rem;
   margin-bottom: 1.5rem;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
 }
 
 .actionBarContent {
@@ -121,7 +115,7 @@
   gap: 1rem;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 992px) {
   .actionBarContent {
     flex-direction: row;
     align-items: center;
@@ -131,246 +125,194 @@
 
 .actionButtons {
   display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-@media (min-width: 640px) {
-  .actionButtons {
-    flex-direction: row;
-  }
-}
-
-.searchInput {
-  flex: 1;
-  max-width: 28rem;
-}
-
-/* Add Form */
-.addFormContainer {
-  margin-top: 1.5rem;
-  padding: 1rem;
-  background-color: var(--bg-secondary);
-  border: 1px solid var(--border-color);
-  border-radius: 0.5rem;
-}
-
-.addForm {
-  display: flex;
+  flex-wrap: wrap;
   gap: 0.75rem;
 }
 
-/* Table Styles */
-.tableContainer {
-  background-color: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: 0.75rem;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  overflow: hidden;
+.searchInputWrapper {
+  flex: 1;
+  max-width: 400px;
+  position: relative;
 }
 
-.table {
-  width: 100%;
-  min-width: 100%;
-}
-
-.tableHead {
-  background-color: var(--bg-secondary);
-  border-bottom: 1px solid var(--border-color);
-}
-
-.tableHeader {
-  padding: 0.75rem 1.5rem;
-  text-align: left;
-  font-size: 0.75rem;
-  font-weight: 500;
-  color: var(--text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.tableBody {
-  background-color: var(--bg-card);
-  divide-y: var(--border-color);
-}
-
-.tableRow {
-  transition: background-color 0.2s;
-}
-
-.tableRow:hover {
-  background-color: var(--bg-secondary);
-}
-
-.tableCell {
-  padding: 1rem 1.5rem;
-  white-space: nowrap;
-}
-
-.emailCell {
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--text-primary);
-}
-
-.dateCell {
-  font-size: 0.875rem;
-  color: var(--text-secondary);
-}
-
-.actionCell {
-  font-size: 0.875rem;
-  font-weight: 500;
-}
-
-/* Empty State */
-.emptyState {
-  text-align: center;
-  padding: 3rem 1rem;
-}
-
-.emptyText {
-  color: var(--text-secondary);
-  font-size: 1.125rem;
-  margin-bottom: 1rem;
-}
-
-.emptySubtext {
-  color: var(--text-tertiary);
-  font-size: 0.875rem;
-}
-
-/* Pagination */
-.pagination {
-  background-color: var(--bg-card);
-  padding: 1rem 1.5rem;
-  border-top: 1px solid var(--border-color);
-}
-
-.paginationContent {
-  display: flex;
-  align-items: center;
-  justify-content: between;
-}
-
-.paginationText {
-  font-size: 0.875rem;
-  color: var(--text-secondary);
-}
-
-.paginationButtons {
-  display: flex;
-  gap: 0.5rem;
-}
-
-/* Form Elements */
+/* --- Inputs & Buttons --- */
 .input {
   width: 100%;
-  padding: 0.5rem 1rem;
-  border: 1px solid var(--border-input);
-  border-radius: 0.5rem;
-  background-color: var(--bg-input);
-  color: var(--text-primary);
+  padding: 0.6rem 1rem;
+  background-color: #15191f;
+  border: 1px solid #495057;
+  border-radius: 8px;
+  color: #fff;
   transition: all 0.2s;
 }
 
 .input:focus {
   outline: none;
-  ring: 2px;
-  ring-color: var(--ring-color);
-  border-color: var(--border-focus);
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.25);
 }
 
-.checkbox {
-  border-radius: 0.25rem;
-  border: 1px solid var(--border-input);
-  color: var(--checkbox-color);
-}
-
-.checkbox:focus {
-  ring: 2px;
-  ring-color: var(--ring-color);
-}
-
-/* Button Styles */
 .button {
-  padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
-  font-weight: 500;
-  transition: all 0.2s;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
   border: none;
   cursor: pointer;
-  font-size: 0.875rem;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .button:disabled {
-  opacity: 0.5;
+  opacity: 0.6;
   cursor: not-allowed;
 }
 
-.buttonPrimary {
-  background-color: var(--button-primary-bg);
-  color: var(--button-primary-text);
-}
+.buttonPrimary { background: #0d6efd; color: #fff; }
+.buttonPrimary:hover:not(:disabled) { background: #0b5ed7; transform: translateY(-1px); }
 
-.buttonPrimary:hover:not(:disabled) {
-  background-color: var(--button-primary-hover);
-}
+.buttonSuccess { background: rgba(25, 135, 84, 0.2); color: #20c997; border: 1px solid rgba(32, 201, 151, 0.3); }
+.buttonSuccess:hover:not(:disabled) { background: rgba(25, 135, 84, 0.4); color: #fff; }
 
-.buttonDanger {
-  background-color: var(--button-danger-bg);
-  color: var(--button-danger-text);
-}
+.buttonDanger { background: rgba(220, 53, 69, 0.2); color: #ff6b6b; border: 1px solid rgba(255, 107, 107, 0.3); }
+.buttonDanger:hover:not(:disabled) { background: rgba(220, 53, 69, 0.4); color: #fff; }
 
-.buttonDanger:hover:not(:disabled) {
-  background-color: var(--button-danger-hover);
-}
-
-.buttonSuccess {
-  background-color: var(--button-success-bg);
-  color: var(--button-success-text);
-}
-
-.buttonSuccess:hover:not(:disabled) {
-  background-color: var(--button-success-hover);
-}
-
-.buttonSecondary {
-  background-color: var(--button-secondary-bg);
-  color: var(--button-secondary-text);
-}
-
-.buttonSecondary:hover:not(:disabled) {
-  background-color: var(--button-secondary-hover);
-}
+.buttonSecondary { background: #343a40; color: #e0e0e0; border: 1px solid #495057; }
+.buttonSecondary:hover:not(:disabled) { background: #495057; color: #fff; }
 
 .buttonGhost {
-  background-color: transparent;
-  color: var(--button-ghost-text);
-  padding: 0.25rem 0.5rem;
+  background: transparent;
+  color: #adb5bd;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+}
+.buttonGhost:hover:not(:disabled) { color: #ff6b6b; background: rgba(255,255,255,0.05); }
+
+/* --- Add Form Dropdown --- */
+.addFormContainer {
+  margin-top: 1.5rem;
+  padding: 1.5rem;
+  background-color: #1a1e24; /* Slightly different dark */
+  border-radius: 8px;
+  border: 1px dashed rgba(255,255,255,0.1);
+  animation: slideDown 0.2s ease-out;
 }
 
-.buttonGhost:hover:not(:disabled) {
-  color: var(--button-ghost-hover);
+.addForm {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
 }
 
-/* Icon Colors */
-.iconBlue {
-  background-color: var(--icon-blue-bg);
-  color: var(--icon-blue);
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-.iconGreen {
-  background-color: var(--icon-green-bg);
-  color: var(--icon-green);
+/* --- Table Styles --- */
+.tableCard {
+  background-color: #212529;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
 }
 
-.iconPurple {
-  background-color: var(--icon-purple-bg);
-  color: var(--icon-purple);
+.tableHeaderGradient {
+  background: linear-gradient(90deg, #4f46e5, #8b5cf6, #ec4899);
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.iconOrange {
-  background-color: var(--icon-orange-bg);
-  color: var(--icon-orange);
+.tableTitle {
+  color: white;
+  font-weight: 700;
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.tableContainer {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tableHead th {
+  background-color: #1a1e24;
+  color: #adb5bd;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 1rem 1.5rem;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tableBody td {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  color: #e0e0e0;
+  vertical-align: middle;
+}
+
+.tableRow:hover td {
+  background-color: #2c3239;
+}
+
+.checkbox {
+  width: 16px;
+  height: 16px;
+  accent-color: #0d6efd;
+  cursor: pointer;
+}
+
+.emailText { font-weight: 500; color: #fff; }
+.dateText { font-size: 0.9rem; color: #adb5bd; }
+
+/* --- Pagination & Footer --- */
+.pagination {
+  background-color: #212529;
+  padding: 1rem 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.paginationText { font-size: 0.9rem; color: #adb5bd; }
+.paginationButtons { display: flex; gap: 0.5rem; }
+
+/* --- Messages & Empty States --- */
+.message {
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.messageSuccess { background: rgba(25, 135, 84, 0.2); color: #20c997; border: 1px solid rgba(25, 135, 84, 0.2); }
+.messageError { background: rgba(220, 53, 69, 0.2); color: #ff6b6b; border: 1px solid rgba(220, 53, 69, 0.2); }
+
+.emptyState {
+  padding: 4rem 1rem;
+  text-align: center;
+  color: #6c757d;
+}
+
+.loadingContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 50vh;
+  color: #adb5bd;
 }

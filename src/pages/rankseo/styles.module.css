@@ -1,289 +1,147 @@
-/* styles.module.css */
-.container {
-  min-height: 100vh;
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
-  transition: all 0.3s ease;
-}
-
-/* Light theme variables */
-:root {
-  --bg-primary: #ffffff;
-  --bg-secondary: #f8f9fa;
-  --bg-tertiary: #e9ecef;
-  --bg-card: #ffffff;
-  --border-primary: #e2e8f0;
-  --border-secondary: #cbd5e0;
-  --text-primary: #1a202c;
-  --text-secondary: #4a5568;
-  --text-tertiary: #718096;
-  --text-muted: #a0aec0;
-  --accent-blue: #3182ce;
-  --accent-green: #38a169;
-  --accent-purple: #805ad5;
-  --accent-yellow: #d69e2e;
-  --accent-red: #e53e3e;
-  --accent-orange: #dd6b20;
-  --accent-cyan: #00a3c4;
-  --accent-pink: #d53f8c;
-  --accent-indigo: #5a67d8;
-  --accent-teal: #319795;
-  --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-}
-
-/* Dark theme variables */
-[data-theme="dark"] {
-  --bg-primary: #0f1419;
-  --bg-secondary: #1a202c;
-  --bg-tertiary: #2d3748;
-  --bg-card: #1a202c;
-  --border-primary: #2d3748;
-  --border-secondary: #4a5568;
-  --text-primary: #f7fafc;
-  --text-secondary: #e2e8f0;
-  --text-tertiary: #cbd5e0;
-  --text-muted: #a0aec0;
-  --accent-blue: #63b3ed;
-  --accent-green: #68d391;
-  --accent-purple: #b794f4;
-  --accent-yellow: #faf089;
-  --accent-red: #fc8181;
-  --accent-orange: #fbd38d;
-  --accent-cyan: #76e4f7;
-  --accent-pink: #fbb6ce;
-  --accent-indigo: #7f9cf5;
-  --accent-teal: #81e6d9;
-  --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px 0 rgba(0, 0, 0, 0.2);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
-}
-
-/* Common styles */
-.card {
-  background-color: var(--bg-card);
-  border-radius: 0.5rem;
-  box-shadow: var(--shadow);
-  border: 1px solid var(--border-primary);
-}
-
-.cardHover {
-  transition: all 0.2s ease-in-out;
-}
-
-.cardHover:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-lg);
-}
-
-.table {
-  width: 100%;
-  background-color: var(--bg-card);
-}
-
-.tableHeader {
-  background-color: var(--bg-secondary);
-  border-bottom: 1px solid var(--border-primary);
-}
-
-.tableRow {
-  border-bottom: 1px solid var(--border-primary);
-  transition: background-color 0.2s ease;
-}
-
-.tableRow:hover {
-  background-color: var(--bg-secondary);
-}
-
-.input {
-  background-color: var(--bg-card);
-  border: 1px solid var(--border-primary);
-  color: var(--text-primary);
-  border-radius: 0.375rem;
-  padding: 0.5rem 0.75rem;
-  transition: all 0.2s ease;
-}
-
-.input:focus {
-  outline: none;
-  border-color: var(--accent-blue);
-  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
-}
-
-.select {
-  background-color: var(--bg-card);
-  border: 1px solid var(--border-primary);
-  color: var(--text-primary);
-  border-radius: 0.375rem;
-  padding: 0.5rem 2rem 0.5rem 0.75rem;
-}
-
-.button {
-  background-color: var(--accent-blue);
-  color: white;
-  border: none;
-  border-radius: 0.375rem;
-  padding: 0.5rem 1rem;
-  font-weight: 500;
-  transition: all 0.2s ease;
-  cursor: pointer;
-}
-
-.button:hover {
-  background-color: var(--accent-blue);
-  opacity: 0.9;
-  transform: translateY(-1px);
-}
-
-.buttonSecondary {
-  background-color: var(--bg-tertiary);
-  color: var(--text-primary);
-}
-
-.buttonSecondary:hover {
-  background-color: var(--border-primary);
-}
-
-.badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.25rem 0.75rem;
-  border-radius: 9999px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  line-height: 1;
-}
-
-/* Color variants for badges */
-.badgeBlue { background-color: rgba(49, 130, 206, 0.1); color: var(--accent-blue); }
-.badgeGreen { background-color: rgba(56, 161, 105, 0.1); color: var(--accent-green); }
-.badgePurple { background-color: rgba(128, 90, 213, 0.1); color: var(--accent-purple); }
-.badgeYellow { background-color: rgba(214, 158, 46, 0.1); color: var(--accent-yellow); }
-.badgeRed { background-color: rgba(229, 62, 62, 0.1); color: var(--accent-red); }
-.badgeOrange { background-color: rgba(221, 107, 32, 0.1); color: var(--accent-orange); }
-.badgeCyan { background-color: rgba(0, 163, 196, 0.1); color: var(--accent-cyan); }
-.badgePink { background-color: rgba(213, 63, 140, 0.1); color: var(--accent-pink); }
-.badgeIndigo { background-color: rgba(90, 103, 216, 0.1); color: var(--accent-indigo); }
-.badgeTeal { background-color: rgba(49, 151, 149, 0.1); color: var(--accent-teal); }
-.badgeGray { background-color: var(--bg-tertiary); color: var(--text-secondary); }
-
-/* --- NEW / MODIFIED STATS STYLES --- */
-
-/* Users Quick Stats Card Grid (to match the solid look in image_0da5dc.png) */
-.quickStatsGrid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1.5rem;
-  margin-bottom: 1.5rem;
-}
-
-@media (min-width: 768px) {
-  .quickStatsGrid {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
-.quickStatsCard {
-  background-color: var(--bg-secondary); /* Darker panel background */
-  border-radius: 0.5rem;
-  padding: 1rem;
-  box-shadow: var(--shadow);
-  text-align: center;
-  /* Additional styles for the border color strip to match the image structure */
-  border-top: 4px solid var(--border-primary); 
+.overviewWrapper {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-}
-
-/* User Tab: Specific color borders for the quick stats to match the visual feel */
-.quickStatsCard.blueBorder { border-color: var(--accent-blue); }
-.quickStatsCard.greenBorder { border-color: var(--accent-green); }
-.quickStatsCard.purpleBorder { border-color: var(--accent-purple); }
-.quickStatsCard.orangeBorder { border-color: var(--accent-orange); }
-
-
-/* Overview Stats Grid (Kept default for now as the screenshot is ambiguous, but the new quick stats can be used) */
-.statsGrid {
-  display: grid;
-  grid-template-columns: repeat(1, 1fr);
   gap: 1.5rem;
-  margin-bottom: 1.5rem;
 }
 
-@media (min-width: 768px) {
-  .statsGrid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+/* Layout for RecentUsers + QuickActions row */
+.gridLayout {
+  align-items: stretch;
 }
 
-@media (min-width: 1024px) {
-  /* Default 4-column for large screen, similar to Quick Stats, but uses different styling */
-  .statsGrid {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
-.statsCard {
-  composes: card;
-  padding: 1.5rem;
-  border-left-width: 4px;
-}
-
-/* --- END NEW / MODIFIED STATS STYLES --- */
-
-.modalOverlay {
-  position: fixed;
-  inset: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+/* When screen is large, both columns stretch fully */
+.gridLayout > div {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem;
-  z-index: 50;
 }
 
-.modalContent {
-  composes: card;
-  max-width: 28rem;
+/* Make children cards fill column height */
+.gridLayout > div > :global(.card) {
   width: 100%;
-  max-height: 90vh;
-  overflow-y: auto;
-  box-shadow: var(--shadow-lg);
 }
 
-.avatar {
-  border-radius: 9999px;
-  object-fit: cover;
+/* Quick Actions Card */
+.quickActionsCard {
+  background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+  border-radius: 12px;
+  border: 1px solid #4b5563;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
-.avatarPlaceholder {
-  border-radius: 9999px;
-  background-color: var(--bg-tertiary);
+/* Grid for tiles inside Quick Actions */
+.quickActionsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+/* Primary tiles (Add User, Export CSV) */
+.actionTile {
+  background: #f9fafb;
+  border-radius: 12px;
+  border: 1px dashed #d1d5db;
+  padding: 1.5rem 1rem;
+  text-align: center;
+  cursor: pointer;
+  outline: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.actionTile:hover {
+  background: #ffffff;
+  border-style: solid;
+  border-color: #3b82f6;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  transform: translateY(-2px);
+}
+
+/* Secondary tiles (Email All, Settings) */
+.actionTileSecondary {
+  background: #111827;
+  border-radius: 12px;
+  border: 1px solid #374151;
+  padding: 1.25rem 1rem;
+  text-align: center;
+  cursor: pointer;
+  outline: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.actionTileSecondary:hover {
+  background: #1f2937;
+  border-color: #4b5563;
+  transform: translateY(-2px);
+}
+
+/* Icon circles */
+.actionIconCircle,
+.actionIconCircleSecondary {
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--text-tertiary);
-  font-weight: 500;
+  margin-bottom: 0.25rem;
+  font-size: 1.4rem;
 }
 
-.loading {
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+.actionIconCircle {
+  background: #e5f2ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
 }
 
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+.actionIconCircleSecondary {
+  background: #111827;
+  color: #e5e7eb;
+  border: 1px solid #4b5563;
 }
 
-.textPrimary { color: var(--text-primary); }
-.textSecondary { color: var(--text-secondary); }
-.textTertiary { color: var(--text-tertiary); }
-.textMuted { color: var(--text-muted); }
+.actionTextPrimary {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #111827;
+}
 
-.bgPrimary { background-color: var(--bg-primary); }
-.bgSecondary { background-color: var(--bg-secondary); }
-.bgTertiary { background-color: var(--bg-tertiary); }
-.bgCard { background-color: var(--bg-card); }
+.actionTileSecondary .actionTextPrimary {
+  color: #f9fafb;
+}
 
-.borderPrimary { border-color: var(--border-primary); }
-.borderSecondary { border-color: var(--border-secondary); }
+.actionTextSecondary {
+  font-size: 0.8rem;
+  color: #6b7280;
+  line-height: 1.3;
+}
+
+.actionTileSecondary .actionTextSecondary {
+  color: #9ca3af;
+}
+
+/* Responsive */
+@media (max-width: 991.98px) {
+  .quickActionsGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .overviewWrapper {
+    gap: 1.25rem;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .quickActionsGrid {
+    grid-template-columns: 1fr;
+  }
+}
