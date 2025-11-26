@@ -21,6 +21,7 @@ import JobOpeningManager from "./pages/aitals/dashboard/JobOpeningManager";
 import BlogManager from "./pages/aitals/dashboard/BlogManager";
 import NewsletterManager from "./pages/aitals/dashboard/NewsletterManager";
 import AdminRegister from "./pages/aitals/dashboard/AdminRegister";
+import AitalsAdmin from "./pages/admin/aitals/aitalsadmin";
 
 import PDFdashboard from "./pages/pdfworks/dashboard";
 import PDFuser from "./pages/pdfworks/user";
@@ -48,6 +49,7 @@ import JobOpeningManagerCybomb from "./pages/cybomb/JobOpeningManager";
 import NewsletterManagerCybomb from "./pages/cybomb/NewsletterManager";
 import OverviewCybomb from "./pages/cybomb/Overview";
 import AdminPressreleaseCybomb from "./pages/cybomb/Press-Release";
+import CybombAdmin from "./pages/admin/cybomb/cybombadmin";
 
 import Login from "./pages/login/login";
 import AddAdmin from "./pages/admin/AddAdmin";
@@ -446,6 +448,22 @@ export default function App() {
                   element={
                     <ProtectedRoute>
                       <AddAdmin />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin/cybomb-admin"
+                  element={
+                    <ProtectedRoute>
+                      <CybombAdmin />
+                    </ProtectedRoute>
+                  }
+                />
+                  <Route
+                  path="/admin/aitals-admin"
+                  element={
+                    <ProtectedRoute>
+                      <AitalsAdmin />
                     </ProtectedRoute>
                   }
                 />
