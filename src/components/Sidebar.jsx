@@ -194,7 +194,11 @@ export default function Sidebar({ onRankSeoTabChange, rankSeoData }) {
     { to: "/cybomb/news-letter", label: "Newsletter" },
   ];
 
-  const adminItems = [{ to: "/admin/add-admin", label: "Add Admin" }];
+  const adminItems = [
+    { to: "/admin/add-admin", label: "Add Admin" },
+    { to: "/admin/cybomb-admin", label: "Cybomb Admin" },
+    { to: "/admin/aitals-admin", label: "Aitals Admin" },
+  ];
   const aitals = [
     { to: "/aitals/dashboard", label: "Dashboard" },
     { to: "/aitals/enquiry", label: "Enquiry Data" },

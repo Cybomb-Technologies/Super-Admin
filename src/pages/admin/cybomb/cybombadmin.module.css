@@ -1,0 +1,288 @@
+/* cybombadmin.module.css */
+.container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  color: #e9ecef;
+  padding: 2rem;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 3rem;
+  padding: 2rem 0;
+  border-bottom: 1px solid #444;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #0d6efd 0%, #6f42c1 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  color: #adb5bd;
+  font-size: 1.1rem;
+}
+
+.controls {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.createBtn {
+  background: linear-gradient(135deg, #0d6efd 0%, #0b5ed7 100%);
+  border: none;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.createBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(13, 110, 253, 0.4);
+}
+
+.refreshBtn {
+  border-color: #6c757d;
+  color: #adb5bd;
+  padding: 0.75rem 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.refreshBtn:hover {
+  border-color: #0d6efd;
+  color: #0d6efd;
+  transform: translateY(-1px);
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  color: #0d6efd;
+  font-size: 1.1rem;
+}
+
+.tableContainer {
+  background: #2d2d2d;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  border: 1px solid #444;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #adb5bd;
+}
+
+.emptyState i {
+  color: #6c757d;
+  margin-bottom: 1rem;
+}
+
+.table {
+  margin-bottom: 0;
+  border-color: #444;
+}
+
+.tableHeader {
+  background: linear-gradient(135deg, #2d2d2d 0%, #3d3d3d 100%);
+  border-bottom: 2px solid #0d6efd;
+}
+
+.tableHeader th {
+  border: none;
+  padding: 1rem;
+  font-weight: 600;
+  color: #e9ecef;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+}
+
+.tableRow {
+  transition: all 0.3s ease;
+  border-bottom: 1px solid #444;
+}
+
+.tableRow:hover {
+  background: rgba(13, 110, 253, 0.1);
+  transform: translateX(4px);
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+}
+
+.userInfo i {
+  color: #0d6efd;
+  font-size: 1.1rem;
+}
+
+.emailCell, .passwordCell {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.passwordText {
+  color: #ffc107;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  word-break: break-all;
+}
+
+.copyBtn {
+  border: none;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.8rem;
+  transition: all 0.2s ease;
+  opacity: 0.7;
+}
+
+.copyBtn:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+.date {
+  font-size: 0.85rem;
+  color: #adb5bd;
+}
+
+.actionButtons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.actionButtons .btn {
+  padding: 0.375rem 0.75rem;
+  transition: all 0.3s ease;
+}
+
+.actionButtons .btn:hover {
+  transform: translateY(-1px);
+}
+
+.modal {
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(5px);
+}
+
+.modalContent {
+  background: #2d2d2d;
+  border: 1px solid #444;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.modalHeader {
+  border-bottom: 1px solid #444;
+  padding: 1.5rem;
+}
+
+.modalHeader .modal-title {
+  color: #e9ecef;
+  font-weight: 600;
+}
+
+.closeBtn {
+  filter: invert(1);
+  opacity: 0.8;
+}
+
+.closeBtn:hover {
+  opacity: 1;
+}
+
+.modalBody {
+  padding: 1.5rem;
+}
+
+.modalBody .form-label {
+  color: #e9ecef;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.modalBody .form-control {
+  background: #1a1a1a;
+  border: 1px solid #444;
+  color: #e9ecef;
+  padding: 0.75rem;
+}
+
+.modalBody .form-control:focus {
+  background: #1a1a1a;
+  border-color: #0d6efd;
+  color: #e9ecef;
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+.modalBody .form-text {
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+}
+
+.modalFooter {
+  border-top: 1px solid #444;
+  padding: 1.5rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+  
+  .title {
+    font-size: 2rem;
+  }
+  
+  .controls {
+    flex-direction: column;
+  }
+  
+  .tableContainer {
+    padding: 1rem;
+    overflow-x: auto;
+  }
+  
+  .emailCell, .passwordCell {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+  
+  .actionButtons {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+}
+
+/* Animation for new items */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.tableRow {
+  animation: fadeIn 0.3s ease-out;
+}
