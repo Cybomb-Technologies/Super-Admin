@@ -309,12 +309,12 @@ export default function OverviewCybomb() {
   ];
 
   const quickActions = [
-    { icon: Mail, label: "View Enquiries", route: "/cybomb/enquiries", color: "primary" },
-    { icon: Users, label: "Contacts", route: "/cybomb/contacts", color: "success" },
-    { icon: Briefcase, label: "Job Openings", route: "/cybomb/job-openings", color: "info" },
-    { icon: BookOpen, label: "Blog Manager", route: "/cybomb/blogs", color: "warning" },
+    { icon: Mail, label: "View Enquiries", route: "/cybomb/enquiry-application", color: "primary" },
+    { icon: Users, label: "Contacts", route: "/cybomb/form-submission", color: "success" },
+    { icon: Briefcase, label: "Job Openings", route: "/cybomb/career-application", color: "info" },
+    { icon: BookOpen, label: "Blog Manager", route: "/cybomb/blog-management", color: "warning" },
     { icon: FileText, label: "Press Releases", route: "/cybomb/press-releases", color: "secondary" },
-    { icon: Megaphone, label: "Newsletter", route: "/cybomb/newsletter", color: "purple" },
+    { icon: Megaphone, label: "Newsletter", route: "/cybomb/news-letter", color: "purple" },
   ];
 
   const handleQuickAction = (route) => {

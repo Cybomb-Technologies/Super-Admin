@@ -1,0 +1,71 @@
+.wrapper {
+  /* display: flex; */
+  flex-direction: row;
+  gap: 2rem;
+  padding-left: 2rem;
+}
+.recentCard {
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  /* Removed padding: 2rem; to allow header to span full width */
+  margin: auto;
+}
+
+.userItem {
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+}
+
+.userItem:hover {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+.activeItem {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.avatar, .avatarPlaceholder {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #374151;
+}
+
+.avatarPlaceholder {
+  background: linear-gradient(135deg, #4f46e5, #4338ca);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.verifiedDot {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 12px;
+  height: 12px;
+  background-color: #10b981;
+  border: 2px solid #1f2937;
+  border-radius: 50%;
+}
+
+.expandedDetails {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.85rem;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}

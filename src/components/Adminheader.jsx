@@ -1,13 +1,13 @@
 import { useNavigate } from "react-router-dom";
+import styles from "./Adminheader.module.css"; // Import the module
 
 function Adminheader() {
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("user"));
 
-  const userName = user?.name;
+  const userName = user?.name || "Admin"; // Added fallback
   const firstLetter = userName?.charAt(0)?.toUpperCase();
 
-  // ✅ Logout function
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
@@ -15,34 +15,40 @@ function Adminheader() {
   };
 
   return (
-    <header className="admin-header">
-      <div className="header-content">
-        <div className="header-left">
-          <h1 className="page-title">Dashboard Overview</h1>
+    // Use styles.adminHeader instead of "admin-header"
+    <header className={styles.adminHeader}>
+      <div className={styles.headerContent}>
+        
+        {/* Left Side: Title */}
+        <div className={styles.headerLeft}>
+          <h1 className={styles.pageTitle}>Dashboard Overview</h1>
         </div>
 
-        <div className="header-right">
-          <div className="header-actions">
-            <button className="notification-btn">
-  <i className="fa-solid fa-bell"></i>
-  <span className="notification-badge">3</span>
-</button>
+        {/* Right Side: Actions */}
+        <div className={styles.headerRight}>
+          <div className={styles.headerActions}>
+            
+            {/* Notification Button */}
+            <button className={styles.notificationBtn}>
+              <i className="fa-solid fa-bell"></i>
+              <span className={styles.notificationBadge}>3</span>
+            </button>
 
-
-            <div className="user-menu">
-              <div className="user-avatar">{firstLetter}</div>
-
-              <div className="user-info">
-                <span className="user-name">{userName}</span>
-                <span className="user-role">Administrator</span>
+            {/* User Profile */}
+            <div className={styles.userMenu}>
+              <div className={styles.userAvatar}>{firstLetter}</div>
+              <div className={styles.userInfo}>
+                <span className={styles.userName}>{userName}</span>
+                <span className={styles.userRole}>Administrator</span>
               </div>
             </div>
 
-            {/* ✅ Logout Button */}
-            <button className="logout-btn" onClick={handleLogout}>
+            {/* Logout Button */}
+            <button className={styles.logoutBtn} onClick={handleLogout}>
               <i className="fas fa-sign-out-alt"></i>
               Logout
             </button>
+            
           </div>
         </div>
       </div>
