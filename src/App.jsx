@@ -36,7 +36,7 @@ import PricingTab from "./pages/rankseo/PricingTab";
 import PaymentTab from "./pages/rankseo/PaymentTab";
 import NewsletterTab from "./pages/rankseo/NewsletterTab";
 import SupportTab from "./pages/rankseo/SupportTab";
-
+import RankSeoAdmin from "./pages/admin/rankseo/rankseoadmin";
 
 
 import DjitTradingLiveChat from "./pages/live-chat/djit-trading/djit-live-chat";
@@ -60,8 +60,9 @@ import DjittradingUsers from "./pages/djittrading/users";
 import EnrollmentManagement from "./pages/djittrading/EnrollmentManagement";
 import CouponGenerator from "./pages/djittrading/CouponGenerator";
 import NewsletterManagement from "./pages/djittrading/NewsletterManagement";
+import DJIAdminManager from "./pages/admin/djittrading/djiadmin";
 
-
+import PFDAdminManager from "./pages/admin/pdfworks/PFDAdminManager";
 export default function App() {
   const [token, setToken] = useState(localStorage.getItem("token"));
   const location = useLocation();
@@ -464,6 +465,30 @@ export default function App() {
                   element={
                     <ProtectedRoute>
                       <AitalsAdmin />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin/rankseo-admin"
+                  element={
+                    <ProtectedRoute>
+                      <RankSeoAdmin />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin/djittrading-admin"
+                  element={
+                    <ProtectedRoute>
+                      <DJIAdminManager />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin/pdfworks-admin"
+                  element={
+                    <ProtectedRoute>
+                      <PFDAdminManager />
                     </ProtectedRoute>
                   }
                 />
