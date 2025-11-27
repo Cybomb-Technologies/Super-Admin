@@ -1,0 +1,139 @@
+/* AuditTab.module.css */
+
+/* --- Main Wrapper --- */
+.mainContainer {
+  background-color: #15191f; /* Dark background to match sidebar */
+  color: #e0e0e0;
+  min-height: 100vh;
+  padding: 20px;
+  border-radius: 8px;
+  /* Added some breathing room at the bottom */
+  padding-bottom: 3rem; 
+  padding-left: 3rem;
+}
+
+/* --- Stats Cards --- */
+.statCard {
+  border: none;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.statCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* Gradients */
+.cardBlue { background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%); }
+.cardGreen { background: linear-gradient(135deg, #198754 0%, #157347 100%); }
+.cardCyan { background: linear-gradient(135deg, #0dcaf0 0%, #0aa2c0 100%); }
+.cardYellow { background: linear-gradient(135deg, #ffc107 0%, #ffca2c 100%); color: #000 !important; }
+.cardRed { background: linear-gradient(135deg, #dc3545 0%, #b02a37 100%); }
+.cardPurple { background: linear-gradient(135deg, #6f42c1 0%, #59359a 100%); }
+
+.statValue {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0;
+  line-height: 1.2;
+}
+
+.statLabel {
+  font-size: 0.85rem;
+  opacity: 0.9;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+}
+
+.cardIconOpacity {
+  position: absolute;
+  right: -10px;
+  bottom: -10px;
+  font-size: 5rem;
+  opacity: 0.15;
+  transform: rotate(-15deg);
+  pointer-events: none;
+}
+
+/* --- Glass Filter Panel & Containers (THE FIX) --- */
+.glassPanel {
+  /* Using !important to override Bootstrap's default white .card background */
+  background-color: #212529 !important; 
+  background: linear-gradient(145deg, #2b3035 0%, #212529 100%) !important;
+  color: #e0e0e0 !important;
+  
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  margin-bottom: 2rem;
+}
+
+/* Inputs & Selects */
+.searchInput, .customSelect {
+  background-color: #15191f !important; /* Slightly darker than card for contrast */
+  border: 1px solid #495057 !important;
+  color: #fff !important;
+  border-radius: 8px;
+  padding: 10px 15px;
+}
+
+.searchInput::placeholder {
+  color: #adb5bd !important;
+}
+
+.searchInput:focus, .customSelect:focus {
+  background-color: #15191f !important;
+  border-color: #0d6efd !important;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25) !important;
+  color: #fff !important;
+}
+
+/* --- Top Users Avatar --- */
+.userCard {
+  background: #2b3035; /* Darker interior card */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  transition: transform 0.2s;
+}
+
+.userCard:hover {
+  background: #343a40;
+  transform: translateY(-3px);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.avatarCircle {
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  border-radius: 50%;
+  background: linear-gradient(45deg, #6f42c1, #0d6efd);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+}
+
+.filterBadge {
+  font-size: 0.85rem;
+  padding: 0.6em 1em;
+  border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  font-weight: 500;
+  color: #fff;
+}

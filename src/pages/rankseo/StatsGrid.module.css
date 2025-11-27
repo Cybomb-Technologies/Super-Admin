@@ -1,0 +1,93 @@
+/* components/admin/StatsGrid.module.css */
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding-left: 2rem;
+}
+
+/* Top summary cards */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+@media (min-width: 640px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1024px) { .grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+
+.card {
+  /* Default fallback, overridden by inline styles in JSX for specific colors */
+  background: radial-gradient(circle at top left, #1f2937, #111827);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.cardLabel {
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.025em;
+}
+
+.cardValue {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1;
+  margin-bottom: 0.25rem;
+}
+
+.cardSubtitle {
+  font-size: 0.8rem;
+}
+
+/* Tool usage section */
+.gridTools {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+@media (min-width: 640px) { .gridTools { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1024px) { .gridTools { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+
+.toolCard {
+  background: #1f2937;
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  border: 1px solid rgba(75, 85, 99, 0.4);
+  display: flex;
+  flex-direction: column;
+  transition: all 0.2s ease;
+}
+
+.toolCard:hover {
+  background: #374151;
+  border-color: rgba(96, 165, 250, 0.5);
+  transform: translateY(-2px);
+}
+
+.toolLabel {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.toolValue {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #f3f4f6;
+}

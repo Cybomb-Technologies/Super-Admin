@@ -1,0 +1,147 @@
+.overviewWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Layout for RecentUsers + QuickActions row */
+.gridLayout {
+  align-items: stretch;
+}
+
+/* When screen is large, both columns stretch fully */
+.gridLayout > div {
+  display: flex;
+}
+
+/* Make children cards fill column height */
+.gridLayout > div > :global(.card) {
+  width: 100%;
+}
+
+/* Quick Actions Card */
+.quickActionsCard {
+  background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+  border-radius: 12px;
+  border: 1px solid #4b5563;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Grid for tiles inside Quick Actions */
+.quickActionsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+/* Primary tiles (Add User, Export CSV) */
+.actionTile {
+  background: #f9fafb;
+  border-radius: 12px;
+  border: 1px dashed #d1d5db;
+  padding: 1.5rem 1rem;
+  text-align: center;
+  cursor: pointer;
+  outline: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.actionTile:hover {
+  background: #ffffff;
+  border-style: solid;
+  border-color: #3b82f6;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  transform: translateY(-2px);
+}
+
+/* Secondary tiles (Email All, Settings) */
+.actionTileSecondary {
+  background: #111827;
+  border-radius: 12px;
+  border: 1px solid #374151;
+  padding: 1.25rem 1rem;
+  text-align: center;
+  cursor: pointer;
+  outline: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.actionTileSecondary:hover {
+  background: #1f2937;
+  border-color: #4b5563;
+  transform: translateY(-2px);
+}
+
+/* Icon circles */
+.actionIconCircle,
+.actionIconCircleSecondary {
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.25rem;
+  font-size: 1.4rem;
+}
+
+.actionIconCircle {
+  background: #e5f2ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
+}
+
+.actionIconCircleSecondary {
+  background: #111827;
+  color: #e5e7eb;
+  border: 1px solid #4b5563;
+}
+
+.actionTextPrimary {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.actionTileSecondary .actionTextPrimary {
+  color: #f9fafb;
+}
+
+.actionTextSecondary {
+  font-size: 0.8rem;
+  color: #6b7280;
+  line-height: 1.3;
+}
+
+.actionTileSecondary .actionTextSecondary {
+  color: #9ca3af;
+}
+
+/* Responsive */
+@media (max-width: 991.98px) {
+  .quickActionsGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .overviewWrapper {
+    gap: 1.25rem;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .quickActionsGrid {
+    grid-template-columns: 1fr;
+  }
+}

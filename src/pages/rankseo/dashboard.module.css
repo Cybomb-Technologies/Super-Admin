@@ -1,0 +1,103 @@
+/* dashboard.module.css */
+.dashboard {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  color: #e9ecef;
+  min-height: 100vh;
+}
+
+.content {
+  margin-top: 0;
+  padding: 0;
+}
+
+/* Enhanced dark theme */
+.dark-theme {
+  --bs-body-bg: #0f172a;
+  --bs-body-color: #e9ecef;
+  --bs-dark: #1e293b;
+  --bs-light: #334155;
+}
+
+.dark-theme .card {
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  border: 1px solid #475569;
+  color: #e9ecef;
+  backdrop-filter: blur(10px);
+}
+
+.dark-theme .table {
+  --bs-table-bg: #1e293b;
+  --bs-table-color: #e9ecef;
+  --bs-table-border-color: #475569;
+}
+
+.dark-theme .btn-primary {
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  border: none;
+}
+
+.dark-theme .btn-outline-light {
+  border-color: #64748b;
+  color: #94a3b8;
+}
+
+.dark-theme .btn-outline-light:hover {
+  background: #334155;
+  border-color: #94a3b8;
+  color: #e2e8f0;
+}
+
+.dark-theme .form-control {
+  background: #1e293b;
+  border: 1px solid #475569;
+  color: #e9ecef;
+}
+
+.dark-theme .form-control:focus {
+  background: #1e293b;
+  border-color: #3b82f6;
+  color: #e9ecef;
+  box-shadow: 0 0 0 0.2rem rgba(59, 130, 246, 0.25);
+}
+
+.dark-theme .form-select {
+  background: #1e293b;
+  border: 1px solid #475569;
+  color: #e9ecef;
+}
+
+.dark-theme .form-select:focus {
+  background: #1e293b;
+  border-color: #3b82f6;
+  color: #e9ecef;
+  box-shadow: 0 0 0 0.2rem rgba(59, 130, 246, 0.25);
+}
+
+/* Enhanced badges */
+.dark-theme .badge {
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+/* Smooth transitions */
+.dark-theme * {
+  transition: all 0.3s ease;
+}
+
+/* Custom scrollbar */
+.dark-theme ::-webkit-scrollbar {
+  width: 8px;
+}
+
+.dark-theme ::-webkit-scrollbar-track {
+  background: #1e293b;
+}
+
+.dark-theme ::-webkit-scrollbar-thumb {
+  background: #475569;
+  border-radius: 4px;
+}
+
+.dark-theme ::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}

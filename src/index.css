@@ -10,7 +10,24 @@
 }
 
 *{box-sizing:border-box}
+/* Custom color classes for badges */
+.bg-purple { background-color: #6f42c1 !important; }
+.bg-orange { background-color: #fd7e14 !important; }
+.bg-cyan { background-color: #0dcaf0 !important; }
+.bg-teal { background-color: #20c997 !important; }
 
+/* Dark theme adjustments */
+.dark-theme .table-hover tbody tr:hover {
+  background-color: #374151 !important;
+}
+
+.dark-theme .form-control:focus {
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+.dark-theme .btn-close-white {
+  filter: invert(1) grayscale(100%) brightness(200%);
+}
 body{
   margin:0;
   font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;
