@@ -21,6 +21,7 @@ import JobOpeningManager from "./pages/aitals/dashboard/JobOpeningManager";
 import BlogManager from "./pages/aitals/dashboard/BlogManager";
 import NewsletterManager from "./pages/aitals/dashboard/NewsletterManager";
 import AdminRegister from "./pages/aitals/dashboard/AdminRegister";
+import AitalsAdmin from "./pages/admin/aitals/aitalsadmin";
 
 import PDFdashboard from "./pages/pdfworks/dashboard";
 import PDFuser from "./pages/pdfworks/user";
@@ -35,7 +36,7 @@ import PricingTab from "./pages/rankseo/PricingTab";
 import PaymentTab from "./pages/rankseo/PaymentTab";
 import NewsletterTab from "./pages/rankseo/NewsletterTab";
 import SupportTab from "./pages/rankseo/SupportTab";
-
+import RankSeoAdmin from "./pages/admin/rankseo/rankseoadmin";
 
 
 import DjitTradingLiveChat from "./pages/live-chat/djit-trading/djit-live-chat";
@@ -48,6 +49,7 @@ import JobOpeningManagerCybomb from "./pages/cybomb/JobOpeningManager";
 import NewsletterManagerCybomb from "./pages/cybomb/NewsletterManager";
 import OverviewCybomb from "./pages/cybomb/Overview";
 import AdminPressreleaseCybomb from "./pages/cybomb/Press-Release";
+import CybombAdmin from "./pages/admin/cybomb/cybombadmin";
 
 import Login from "./pages/login/login";
 import AddAdmin from "./pages/admin/AddAdmin";
@@ -58,8 +60,9 @@ import DjittradingUsers from "./pages/djittrading/users";
 import EnrollmentManagement from "./pages/djittrading/EnrollmentManagement";
 import CouponGenerator from "./pages/djittrading/CouponGenerator";
 import NewsletterManagement from "./pages/djittrading/NewsletterManagement";
+import DJIAdminManager from "./pages/admin/djittrading/djiadmin";
 
-
+import PFDAdminManager from "./pages/admin/pdfworks/PFDAdminManager";
 export default function App() {
   const [token, setToken] = useState(localStorage.getItem("token"));
   const location = useLocation();
@@ -446,6 +449,46 @@ export default function App() {
                   element={
                     <ProtectedRoute>
                       <AddAdmin />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin/cybomb-admin"
+                  element={
+                    <ProtectedRoute>
+                      <CybombAdmin />
+                    </ProtectedRoute>
+                  }
+                />
+                  <Route
+                  path="/admin/aitals-admin"
+                  element={
+                    <ProtectedRoute>
+                      <AitalsAdmin />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin/rankseo-admin"
+                  element={
+                    <ProtectedRoute>
+                      <RankSeoAdmin />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin/djittrading-admin"
+                  element={
+                    <ProtectedRoute>
+                      <DJIAdminManager />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin/pdfworks-admin"
+                  element={
+                    <ProtectedRoute>
+                      <PFDAdminManager />
                     </ProtectedRoute>
                   }
                 />
