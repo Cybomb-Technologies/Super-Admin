@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import styles from "./Adminheader.module.css";
 const API_DJITTRADING_URL = import.meta.env.VITE_DJITTRADING_API_URL;
+const API_CYBOMB_URL = import.meta.env.VITE_CYBOMB_API_BASE;
 
 function Adminheader() {
   const navigate = useNavigate();
@@ -14,39 +15,91 @@ function Adminheader() {
   const userName = user?.name || "Admin";
   const firstLetter = userName?.charAt(0)?.toUpperCase();
 
-  // Fetch notifications
+  // Fetch notifications from all sources
   const fetchNotifications = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(`${API_DJITTRADING_URL}/api/notifications`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const endpoints = [
+        {
+          url: `${API_DJITTRADING_URL}/api/notifications`,
+          source: 'djittrading'
         },
+        {
+          url: `${API_CYBOMB_URL}/api/notifications`,
+          source: 'cybomb'
+        }
+        // Add more endpoints here as needed
+      ];
+
+      const promises = endpoints.map(endpoint =>
+        fetch(endpoint.url, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then(response => response.json())
+        .then(data => ({
+          ...data,
+          source: endpoint.source
+        }))
+        .catch(error => {
+          console.error(`Error fetching notifications from ${endpoint.source}:`, error);
+          return { success: false, notifications: [], source: endpoint.source };
+        })
+      );
+
+      const results = await Promise.all(promises);
+      
+      let allNotifications = [];
+      let totalUnread = 0;
+
+      results.forEach(result => {
+        if (result.success) {
+          // Add source information to each notification
+          const notificationsWithSource = result.notifications.map(notification => ({
+            ...notification,
+            source: result.source
+          }));
+          allNotifications = [...allNotifications, ...notificationsWithSource];
+          totalUnread += result.unreadCount || 0;
+        }
       });
-      const data = await response.json();
-      if (data.success) {
-        setNotifications(data.notifications);
-        setUnreadCount(data.unreadCount);
-      }
+
+      // Sort all notifications by date (newest first)
+      allNotifications.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+      setNotifications(allNotifications);
+      setUnreadCount(totalUnread);
     } catch (error) {
       console.error("Error fetching notifications:", error);
     }
   };
 
-  // Mark notification as read
-  const markAsRead = async (notificationId) => {
+  // Mark notification as read based on source
+  const markAsRead = async (notificationId, source) => {
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(
-        `${API_DJITTRADING_URL}/api/notifications/${notificationId}/read`,
-        {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      let url;
+
+      // Determine the API endpoint based on source
+      switch (source) {
+        case 'djittrading':
+          url = `${API_DJITTRADING_URL}/api/notifications/${notificationId}/read`;
+          break;
+        case 'cybomb':
+          url = `${API_CYBOMB_URL}/api/notifications/${notificationId}/read`;
+          break;
+        default:
+          url = `${API_DJITTRADING_URL}/api/notifications/${notificationId}/read`;
+      }
+
+      const response = await fetch(url, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
       const data = await response.json();
       if (data.success) {
         setUnreadCount(data.unreadCount);
@@ -61,25 +114,43 @@ function Adminheader() {
     }
   };
 
-  // Handle notification click
+  // Handle notification click with source-specific routing
   const handleNotificationClick = (notification) => {
-    markAsRead(notification._id);
+    markAsRead(notification._id, notification.source);
 
-    // Redirect based on notification type
-    if (notification.type === "newsletter") {
-      navigate("/djittrading/Newsletter");
-    } else if (notification.type === "coupon") {
-      navigate("/djittrading/Coupon-Generator");
-    } else if (notification.type === "enrollment") {
+    // Redirect based on notification source and type
+    if (notification.source === 'djittrading') {
+      // DJITTRADING routing (existing logic)
+      if (notification.type === "newsletter") {
+        navigate("/djittrading/Newsletter");
+      } else if (notification.type === "coupon") {
+        navigate("/djittrading/Coupon-Generator");
+      } else if (notification.type === "enrollment") {
         navigate("/djittrading/Enrollment");  
-    } else if (notification.type === "user") {
-      navigate("/djittrading/users");
-    } else if (notification.type === "course") { // ADDED: Course notification
-      navigate("/djittrading/course");
+      } else if (notification.type === "user") {
+        navigate("/djittrading/users");
+      } else if (notification.type === "course") {
+        navigate("/djittrading/course");
+      } else if (notification.type === "live-chat") {
+        navigate("/djittrading/live-chat");
+      }
+    } else if (notification.source === 'cybomb') {
+      // CYBOMB routing (new logic)
+      if (notification.type === "cybomb-newsletter") {
+        navigate("/cybomb/news-letter");
+      } else if (notification.type === "cybomb-contact") {
+        navigate("/cybomb/form-submission");
+      } else if (notification.type === "cybomb-appication") {
+        navigate("/cybomb/career-application-manager");
+      } else if (notification.type === "cybomb-blog") {
+        navigate("/cybomb/blog-management");
+      } else if (notification.type === "course") {
+        navigate("/cybomb/course");
+      } else if (notification.type === "live-chat") {
+        navigate("/cybomb/live-chat");
+      }
     }
-    else if (notification.type === "live-chat") { // ADDED: Course notification
-      navigate("/djittrading/live-chat");
-    }
+    // Add more source cases here as needed
 
     setShowNotifications(false);
   };
@@ -105,7 +176,7 @@ function Adminheader() {
   useEffect(() => {
     fetchNotifications();
 
-    // Set up Socket.IO for real-time notifications
+    // Set up Socket.IO for real-time notifications (you might need to handle multiple sources)
     if (window.io) {
       window.io.on('newNotification', (data) => {
         setNotifications(prev => [data.notification, ...prev]);
@@ -169,14 +240,19 @@ function Adminheader() {
                     ) : (
                       notifications.map((notification) => (
                         <div
-                          key={notification._id}
+                          key={`${notification.source}-${notification._id}`}
                           className={`${styles.notificationItem} ${
                             !notification.isRead ? styles.unread : ""
                           }`}
                           onClick={() => handleNotificationClick(notification)}
                         >
                           <div className={styles.notificationContent}>
-                            <h4>{notification.title}</h4>
+                            <div className={styles.notificationHeaderRow}>
+                              <h4>{notification.title}</h4>
+                              <span className={styles.notificationSource}>
+                                {notification.source}
+                              </span>
+                            </div>
                             <p>{notification.message}</p>
                             <span className={styles.notificationTime}>
                               {new Date(
@@ -191,7 +267,6 @@ function Adminheader() {
                       ))
                     )}
                   </div>
-
                 </div>
               )}
             </div>
