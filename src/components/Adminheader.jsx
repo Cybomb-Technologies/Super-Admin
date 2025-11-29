@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import styles from "./Adminheader.module.css";
+const API_DJITTRADING_URL = import.meta.env.VITE_DJITTRADING_API_URL;
 
 function Adminheader() {
   const navigate = useNavigate();
@@ -17,7 +18,7 @@ function Adminheader() {
   const fetchNotifications = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch("http://localhost:5000/api/notifications", {
+      const response = await fetch(`${API_DJITTRADING_URL}/api/notifications`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -37,7 +38,7 @@ function Adminheader() {
     try {
       const token = localStorage.getItem("token");
       const response = await fetch(
-        `http://localhost:5000/api/notifications/${notificationId}/read`,
+        `${API_DJITTRADING_URL}/api/notifications/${notificationId}/read`,
         {
           method: "PUT",
           headers: {
@@ -70,7 +71,14 @@ function Adminheader() {
     } else if (notification.type === "coupon") {
       navigate("/djittrading/Coupon-Generator");
     } else if (notification.type === "enrollment") {
-      navigate("/djittrading/Enrollment");
+        navigate("/djittrading/Enrollment");  
+    } else if (notification.type === "user") {
+      navigate("/djittrading/users");
+    } else if (notification.type === "course") { // ADDED: Course notification
+      navigate("/djittrading/course");
+    }
+    else if (notification.type === "live-chat") { // ADDED: Course notification
+      navigate("/djittrading/live-chat");
     }
 
     setShowNotifications(false);
@@ -184,48 +192,6 @@ function Adminheader() {
                     )}
                   </div>
 
-                  {notifications.length > 0 && (
-                    <div className={styles.notificationFooter}>
-                      <button
-                        className={styles.viewAllBtn}
-                        onClick={() => {
-                          // Show all notification options
-                          setShowNotifications(false);
-                        }}
-                      >
-                        View All Notifications
-                      </button>
-                      <div className={styles.notificationLinks}>
-                        <button
-                          className={styles.linkBtn}
-                          onClick={() => {
-                            navigate("/djittrading/Newsletter");
-                            setShowNotifications(false);
-                          }}
-                        >
-                          Newsletter Subscriptions
-                        </button>
-                        <button
-                          className={styles.linkBtn}
-                          onClick={() => {
-                            navigate("/djittrading/Coupon-Generator");
-                            setShowNotifications(false);
-                          }}
-                        >
-                          Coupon Management
-                        </button>
-                        <button
-                          className={styles.linkBtn}
-                          onClick={() => {
-                            navigate("/djittrading/Enrollment");
-                            setShowNotifications(false);
-                          }}
-                        >
-                          Enrollment Management
-                        </button>
-                      </div>
-                    </div>
-                  )}
                 </div>
               )}
             </div>
