@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import styles from "./Adminheader.module.css";
 const API_DJITTRADING_URL = import.meta.env.VITE_DJITTRADING_API_URL;
 const API_CYBOMB_URL = import.meta.env.VITE_CYBOMB_API_BASE;
+const API_AITALS_URL = import.meta.env.VITE_AITALS_API_URL;
 
 function Adminheader() {
   const navigate = useNavigate();
@@ -27,8 +28,11 @@ function Adminheader() {
         {
           url: `${API_CYBOMB_URL}/api/notifications`,
           source: 'cybomb'
+        },
+        {
+          url: `${API_AITALS_URL}/api/notifications`,
+          source: 'aitals'
         }
-        // Add more endpoints here as needed
       ];
 
       const promises = endpoints.map(endpoint =>
@@ -89,6 +93,9 @@ function Adminheader() {
         case 'cybomb':
           url = `${API_CYBOMB_URL}/api/notifications/${notificationId}/read`;
           break;
+        case 'aitals':
+          url = `${API_AITALS_URL}/api/notifications/${notificationId}/read`;
+          break;
         default:
           url = `${API_DJITTRADING_URL}/api/notifications/${notificationId}/read`;
       }
@@ -135,7 +142,7 @@ function Adminheader() {
         navigate("/djittrading/live-chat");
       }
     } else if (notification.source === 'cybomb') {
-      // CYBOMB routing (new logic)
+      // CYBOMB routing (existing logic)
       if (notification.type === "cybomb-newsletter") {
         navigate("/cybomb/news-letter");
       } else if (notification.type === "cybomb-contact") {
@@ -149,8 +156,18 @@ function Adminheader() {
       } else if (notification.type === "live-chat") {
         navigate("/cybomb/live-chat");
       }
+    } else if (notification.source === 'aitals') {
+      // AITALS routing (new logic)
+      if (notification.type === "aitals-blog") {
+        navigate("/aitals/blog");
+      } else if (notification.type === "aitals-contact") {
+        navigate("/aitals/contact-forms");
+      } else if (notification.type === "aitals-newsletter") {
+        navigate("/aitals/newsletter-subscribers");
+      } else if (notification.type === "aitals-application") {
+        navigate("/aitals/application");
+      }
     }
-    // Add more source cases here as needed
 
     setShowNotifications(false);
   };
@@ -176,7 +193,7 @@ function Adminheader() {
   useEffect(() => {
     fetchNotifications();
 
-    // Set up Socket.IO for real-time notifications (you might need to handle multiple sources)
+    // Set up Socket.IO for real-time notifications
     if (window.io) {
       window.io.on('newNotification', (data) => {
         setNotifications(prev => [data.notification, ...prev]);
