@@ -27,6 +27,10 @@ import PDFdashboard from "./pages/pdfworks/dashboard";
 import PDFuser from "./pages/pdfworks/user";
 import Pdfcontact from "./pages/pdfworks/contact";
 import AdminDetails from "./pages/pdfworks/AdminDetails";
+import PricingManagement from "./pages/pdfworks/PricingManagement";
+import BlogManagerPDF from "./pages/pdfworks/BlogManager";
+import PaymentManagement from "./pages/pdfworks/PaymentManagement";
+import TopupManagement from "./pages/pdfworks/TopupManagement";
 
 // Rank SEO Imports
 import  AdminDashboard from "./pages/rankseo/dashboard";
@@ -318,7 +322,38 @@ export default function App() {
                     </ProtectedRoute>
                   }
                 />
-                
+                <Route
+                  path="/PDF-Works/pricing-management"
+                  element={
+                    <ProtectedRoute>
+                      <PricingManagement/>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/PDF-Works/blog-manager"
+                  element={
+                    <ProtectedRoute>
+                      <BlogManagerPDF/>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/PDF-Works/payment-manager"
+                  element={
+                    <ProtectedRoute>
+                      <PaymentManagement/>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/PDF-Works/topup-manager"
+                  element={
+                    <ProtectedRoute>
+                      <TopupManagement/>
+                    </ProtectedRoute>
+                  }
+                />                
                 {/* Rank SEO Routes */}
                 <Route
                   path="/rankseo/dashboard"

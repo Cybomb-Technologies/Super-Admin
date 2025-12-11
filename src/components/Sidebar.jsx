@@ -226,6 +226,11 @@ export default function Sidebar({ onRankSeoTabChange, rankSeoData }) {
     { to: "/pdf-works/user", label: "User" },
     { to: "/pdf-works/contact-details", label: "Contact Details" },
     { to: "/pdf-works/admin-details", label: "Admin Details" },
+    { to: "/pdf-works/pricing-management", label: "Pricing Management"},
+    { to: "/pdf-works/blog-manager", label: "Blog Manager"},
+    { to: "/pdf-works/payment-manager", label: "Payment Manager"},
+    { to: "/pdf-works/topup-manager", label: "Topup Manager"},
+
   ];
 
   const djittrading = [
