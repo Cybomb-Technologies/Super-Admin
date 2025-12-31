@@ -67,6 +67,14 @@ import NewsletterManagement from "./pages/djittrading/NewsletterManagement";
 import DJIAdminManager from "./pages/admin/djittrading/djiadmin";
 
 import PFDAdminManager from "./pages/admin/pdfworks/PFDAdminManager";
+
+
+// hralva
+import HralvaDashboard from "./pages/hr-alva/Dashboard";
+import ContactQueries from "./pages/hr-alva/ContactQueries";
+import DemoRequest from "./pages/hr-alva/DemoRequestList";
+import Tenant from "./pages/hr-alva/TenantList";
+
 export default function App() {
   const [token, setToken] = useState(localStorage.getItem("token"));
   const location = useLocation();
@@ -411,7 +419,43 @@ export default function App() {
                     </ProtectedRoute>
                   }
                 />
-                
+
+
+                {/* hralva */}
+                <Route
+                  path="/hr-alva/dashboard"
+                  element={
+                    <ProtectedRoute>
+                      <HralvaDashboard />
+                    </ProtectedRoute>
+                  }
+                />
+
+                <Route
+                  path="hr-alva/tenant"
+                  element={
+                    <ProtectedRoute>
+                      <Tenant/>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="hr-alva/contact-query"
+                  element={
+                    <ProtectedRoute>
+                      <ContactQueries/>
+                    </ProtectedRoute>
+                  }
+                />  
+
+                <Route
+                  path="hr-alva/demo-request"
+                  element={
+                    <ProtectedRoute>
+                      <DemoRequest/>
+                    </ProtectedRoute>
+                  }
+                />
 
                  <Route
                   path="/djittrading/dashboard"
