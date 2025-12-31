@@ -70,10 +70,23 @@ export default function UsersTab({ data }) {
 
   // --- Process Data helpers ---
   const getDisplayPlan = (user) => {
-    if (!user) return "Free";
-    if (user.planName && user.planName !== "Free") return user.planName;
-    if (user.plan && typeof user.plan === "object" && user.plan.name) return user.plan.name;
-    return user.subscriptionStatus === "active" ? "Premium" : "Free";
+    // If planName exists and is not empty, use it
+    if (user.planName && user.planName !== "Free") {
+      return user.planName;
+    }
+    
+    // If plan is an object with name property
+    if (user.plan && typeof user.plan === 'object' && user.plan.name) {
+      return user.plan.name;
+    }
+    
+    // If plan is a string (ObjectId), check subscription status
+    if (typeof user.plan === 'string' && user.plan.length > 0) {
+      return user.subscriptionStatus === "active" ? "Premium" : "Free";
+    }
+    
+    // Default fallback
+    return user.planName || "Free";
   };
 
   const formatDate = (dateString) => {

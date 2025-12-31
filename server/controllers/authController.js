@@ -44,36 +44,8 @@ exports.login = async (req, res) => {
     const matched = await bcrypt.compare(password, user.password);
     if (!matched) return res.status(401).json({ error: "Invalid credentials" });
 
-    // For Super Admin: Direct login without OTP
-    if (user.role === "superadmin") {
-      const token = jwt.sign(
-        { id: user._id, role: user.role, email: user.email, name: user.name },
-        process.env.JWT_SECRET,
-        { expiresIn: "1d" }
-      );
-
-      // Save token inside cookie
-      res.cookie("token", token, {
-        httpOnly: true,
-        sameSite: "lax",
-        secure: process.env.NODE_ENV === "production",
-        maxAge: 24 * 60 * 60 * 1000,
-      });
-
-      // Return token in response
-      res.json({
-        msg: "Logged in",
-        token: token,
-        user: {
-          id: user._id,
-          name: user.name,
-          email: user.email,
-          role: user.role,
-        },
-      });
-    }
-    // For Admin: Send OTP for two-step verification
-    else if (user.role === "admin") {
+    // Unified Login with OTP for both Admin and Super Admin
+    if (user.role === "admin" || user.role === "superadmin") {
       // Generate 6-digit OTP
       const otp = Math.floor(100000 + Math.random() * 900000).toString();
       const otpExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes

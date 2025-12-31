@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Eye, EyeOff } from "react-feather";
 import styles from "./login.module.css";
 
 const API_BASE_URL = import.meta.env.VITE_SUPERADMIN_API_URL;
@@ -9,6 +10,7 @@ function Login() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -100,14 +102,20 @@ function Login() {
 
           <div className={styles.inputGroup}>
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               placeholder="Password"
               className={styles.input}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
             />
-            <span className={styles.inputIcon}>🔒</span>
+            <span 
+              className={styles.inputIcon} 
+              onClick={() => setShowPassword(!showPassword)}
+              style={{ cursor: "pointer" }}
+            >
+              {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
+            </span>
           </div>
 
           <button

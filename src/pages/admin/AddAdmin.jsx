@@ -12,8 +12,10 @@ import {
   Eye,
   Settings,
   Key,
-  Calendar
+  Calendar,
+  EyeOff
 } from "react-feather";
+
 import styles from "./AddAdmin.module.css";
 
 const API_BASE_URL = import.meta.env.VITE_SUPERADMIN_API_URL;
@@ -23,6 +25,7 @@ function AddAdmin() {
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [showViewModal, setShowViewModal] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [selectedAdmin, setSelectedAdmin] = useState(null);
   const [editingAdmin, setEditingAdmin] = useState(null);
   const [activeTab, setActiveTab] = useState("admin");
@@ -526,27 +529,42 @@ function AddAdmin() {
               />
             </Form.Group>
 
-            <Form.Group className={styles.formGroup}>
-              <Form.Label className={styles.formLabel}>
-                <Key size={18} className={styles.labelIcon} />
-                Password
-              </Form.Label>
-              <Form.Control
-                type="password"
-                name="password"
-                placeholder={editingAdmin ? "Leave blank to keep current password" : "Enter secure password"}
-                value={formData.password}
-                onChange={handleChange}
-                className={styles.formControl}
-                minLength={editingAdmin ? 0 : 6}
-                required={!editingAdmin}
-              />
-              {editingAdmin && (
-                <Form.Text className={styles.helpText}>
-                  Leave password blank to keep the current password
-                </Form.Text>
-              )}
-            </Form.Group>
+              <Form.Group className={styles.formGroup}>
+                <Form.Label className={styles.formLabel}>
+                  <Key size={18} className={styles.labelIcon} />
+                  Password
+                </Form.Label>
+                <div style={{ position: "relative" }}>
+                  <Form.Control
+                    type={showPassword ? "text" : "password"}
+                    name="password"
+                    placeholder={editingAdmin ? "Leave blank to keep current password" : "Enter secure password"}
+                    value={formData.password}
+                    onChange={handleChange}
+                    className={styles.formControl}
+                    minLength={editingAdmin ? 0 : 6}
+                    required={!editingAdmin}
+                  />
+                  <div 
+                    onClick={() => setShowPassword(!showPassword)}
+                    style={{
+                      position: "absolute",
+                      right: "10px",
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      cursor: "pointer",
+                      color: "#6c757d"
+                    }}
+                  >
+                    {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
+                  </div>
+                </div>
+                {editingAdmin && (
+                  <Form.Text className={styles.helpText}>
+                    Leave password blank to keep the current password
+                  </Form.Text>
+                )}
+              </Form.Group>
 
             <div className={styles.modalActions}>
               <Button
