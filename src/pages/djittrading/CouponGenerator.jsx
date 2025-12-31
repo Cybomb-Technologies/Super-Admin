@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Button, Form, Table, Badge, Card } from "react-bootstrap";
 import axios from "axios";
-
-const API_URL = import.meta.env.VITE_DJITTRADING_API_URL;
-
+const API_URL = import.meta.env.VITE_API_BASE_URL;
 function CouponGenerator() {
   const [show, setShow] = useState(false);
   const [coupons, setCoupons] = useState([]);
@@ -17,56 +15,123 @@ function CouponGenerator() {
     validFrom: "",
     validUntil: "",
     usageLimit: "",
+    courseId: "", 
   });
+  const [courses, setCourses] = useState([]); 
+  const [isEditing, setIsEditing] = useState(false); 
+  const [currentCouponId, setCurrentCouponId] = useState(null); 
 
-  // Axios instance with base URL
-  const api = axios.create({
-    baseURL: API_URL,
-    timeout: 30000,
-  });
+  const token = localStorage.getItem("adminToken");
 
   const fetchCoupons = async () => {
     setLoading(true);
     try {
-      const { data } = await api.get("/api/coupons");
+      const { data } = await axios.get(`${API_URL}/api/coupons`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       if (data.success) {
         setCoupons(data.coupons);
       }
     } catch (err) {
-      console.error("Error fetching coupons:", err);
+      console.error(err);
     } finally {
       setLoading(false);
     }
   };
 
+  const fetchCourses = async () => {
+    try {
+      const { data } = await axios.get(`${API_URL}/api/courses`);
+      if (data.success) {
+        setCourses(data.courses);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   useEffect(() => {
     fetchCoupons();
+    fetchCourses();
   }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const { data } = await api.post("/api/coupons/create", formData);
-      if (data.success) {
-        setCoupons([data.coupon, ...coupons]);
-        setShow(false);
-        setFormData({
-          code: "",
-          discountType: "percentage",
-          discountValue: "",
-          minPurchase: "",
-          maxDiscount: "",
-          validFrom: "",
-          validUntil: "",
-          usageLimit: "",
+      if (isEditing) {
+        // Update existing coupon
+        const { data } = await axios.put(`${API_URL}/api/coupons/${currentCouponId}`, formData, {
+          headers: { Authorization: `Bearer ${token}` },
         });
+        if (data.success) {
+          setCoupons(coupons.map(c => c._id === currentCouponId ? data.coupon : c));
+          handleClose();
+        }
+      } else {
+        // Create new coupon
+        const { data } = await axios.post(`${API_URL}/api/coupons/create`, formData, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (data.success) {
+          setCoupons([data.coupon, ...coupons]);
+          handleClose();
+        }
       }
     } catch (err) {
-      console.error("Error creating coupon:", err);
+      console.error(err);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleDelete = async (id) => {
+    if (window.confirm("Are you sure you want to delete this coupon?")) {
+      try {
+        const { data } = await axios.delete(`${API_URL}/api/coupons/${id}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (data.success) {
+          setCoupons(coupons.filter(c => c._id !== id));
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  };
+
+  const handleEdit = (coupon) => {
+    setFormData({
+      code: coupon.code,
+      discountType: coupon.discountType,
+      discountValue: coupon.discountValue,
+      minPurchase: coupon.minPurchase || "",
+      maxDiscount: coupon.maxDiscount || "",
+      validFrom: coupon.validFrom.split('T')[0],
+      validUntil: coupon.validUntil.split('T')[0],
+      usageLimit: coupon.usageLimit || "",
+      courseId: coupon.courseId?._id || coupon.courseId || "", // Handle populated or ID
+    });
+    setCurrentCouponId(coupon._id);
+    setIsEditing(true);
+    setShow(true);
+  };
+
+  const handleClose = () => {
+    setShow(false);
+    setIsEditing(false);
+    setCurrentCouponId(null);
+    setFormData({
+      code: "",
+      discountType: "percentage",
+      discountValue: "",
+      minPurchase: "",
+      maxDiscount: "",
+      validFrom: "",
+      validUntil: "",
+      usageLimit: "",
+      courseId: "",
+    });
   };
 
   const handleChange = (e) => {
@@ -210,8 +275,10 @@ function CouponGenerator() {
                     <th>Valid From</th>
                     <th>Valid Until</th>
                     <th>Usage Limit</th>
+                    <th>Course</th>
                     <th>Used</th>
                     <th>Status</th>
+                    <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -229,9 +296,9 @@ function CouponGenerator() {
                             borderLeft:
                               status.label === "Active"
                                 ? "4px solid #28a745"
-                                : status.label === "Expired"
-                                ? "4px solid #dc3545"
-                                : "4px solid #ffc107",
+                                : status.label === "Deactivated"
+                                  ? "4px solid #ffc107"
+                                  : "4px solid #dc3545",
                           }}
                         >
                           <td>
@@ -270,6 +337,16 @@ function CouponGenerator() {
                           <td>{new Date(c.validUntil).toLocaleDateString()}</td>
                           <td>{c.usageLimit || "Unlimited"}</td>
                           <td>
+                            {c.courseId && c.courseId.title ? (
+                              <Badge bg="info">{c.courseId.title}</Badge>
+                            ) : c.courseId ? (
+                              // Fallback if courseId is present but not populated (should be populated now via controller update)
+                              <Badge bg="info">Specific Course</Badge>
+                            ) : (
+                              <Badge bg="secondary">All Courses</Badge>
+                            )}
+                          </td>
+                          <td>
                             <span
                               style={{
                                 fontWeight: "600",
@@ -282,6 +359,23 @@ function CouponGenerator() {
                           </td>
                           <td>
                             <Badge bg={status.variant}>{status.label}</Badge>
+                          </td>
+                          <td>
+                            <Button
+                              variant="outline-primary"
+                              size="sm"
+                              className="me-2"
+                              onClick={() => handleEdit(c)}
+                            >
+                              <i className="fas fa-edit"></i>
+                            </Button>
+                            <Button
+                              variant="outline-danger"
+                              size="sm"
+                              onClick={() => handleDelete(c._id)}
+                            >
+                              <i className="fas fa-trash"></i>
+                            </Button>
                           </td>
                         </tr>
                       );
@@ -313,7 +407,7 @@ function CouponGenerator() {
         </Card>
 
         {/* Modal for Coupon Creation */}
-        <Modal show={show} onHide={() => setShow(false)} centered style={modalStyle}>
+        <Modal show={show} onHide={handleClose} centered style={modalStyle}>
           <Modal.Header
             closeButton
             style={{
@@ -324,7 +418,7 @@ function CouponGenerator() {
           >
             <Modal.Title>
               <i className="fas fa-magic me-2"></i>
-              Generate New Coupon
+              {isEditing ? "Edit Coupon" : "Generate New Coupon"}
             </Modal.Title>
           </Modal.Header>
           <Modal.Body style={{ padding: "30px" }}>
@@ -458,6 +552,26 @@ function CouponGenerator() {
 
               <Form.Group className="mb-4">
                 <Form.Label style={{ fontWeight: "600", color: "#2c3e50" }}>
+                  <i className="fas fa-book me-2"></i>
+                  Applicable Course
+                </Form.Label>
+                <Form.Select
+                  name="courseId"
+                  value={formData.courseId}
+                  onChange={handleChange}
+                  style={formControlStyle}
+                >
+                  <option value="">All Courses</option>
+                  {courses.map((course) => (
+                    <option key={course._id} value={course._id}>
+                      {course.title}
+                    </option>
+                  ))}
+                </Form.Select>
+              </Form.Group>
+
+              <Form.Group className="mb-4">
+                <Form.Label style={{ fontWeight: "600", color: "#2c3e50" }}>
                   <i className="fas fa-users me-2"></i>
                   Usage Limit
                 </Form.Label>
@@ -474,7 +588,7 @@ function CouponGenerator() {
               <div className="text-end">
                 <Button
                   variant="outline-secondary"
-                  onClick={() => setShow(false)}
+                  onClick={handleClose}
                   className="me-2"
                   style={{
                     borderRadius: "25px",
@@ -503,7 +617,6 @@ function CouponGenerator() {
                     </>
                   ) : (
                     <>
-                      <i className="fas fa-bolt me-2"></i>
                       Generate Coupon
                     </>
                   )}
