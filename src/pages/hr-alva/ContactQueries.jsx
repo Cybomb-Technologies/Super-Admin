@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/dialog";
 import { useToast } from "@/components/ui/use-toast";
 import { Loader2, Mail, Trash2, Eye } from "lucide-react";
+import styles from './hralva.module.css';
 
 const API_URL = import.meta.env.VITE_HRALVA_API_URL;
 
@@ -119,17 +120,15 @@ const ContactQueries = () => {
     };
 
     return (
-        <div className="space-y-6">
-            <div className="flex justify-between items-center">
-                <div>
-                    <h1 className="text-3xl font-bold tracking-tight text-[#003C43]">Contact Inquiries</h1>
-                    <p className="text-muted-foreground mt-1">
-                        View and manage messages from the contact form.
-                    </p>
-                </div>
+        <div className={styles.container}>
+            <div className={styles.header}>
+                <h1 className={styles.title}>Contact Inquiries</h1>
+                <p className={styles.subtitle}>
+                    View and manage messages from the contact form.
+                </p>
             </div>
 
-            <div className="rounded-md border bg-card">
+            <div className={styles.tableCard}>
                 <Table>
                     <TableHeader>
                         <TableRow>
@@ -145,7 +144,7 @@ const ContactQueries = () => {
                         {loading ? (
                             <TableRow>
                                 <TableCell colSpan={6} className="h-24 text-center">
-                                    <Loader2 className="w-6 h-6 animate-spin mx-auto text-[#003C43]" />
+                                    <Loader2 className="w-6 h-6 animate-spin mx-auto text-[#6666cc]" />
                                 </TableCell>
                             </TableRow>
                         ) : contacts.length === 0 ? (

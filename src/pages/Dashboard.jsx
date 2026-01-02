@@ -112,15 +112,6 @@ export default function Dashboard() {
           ))}
         </div>
       </div>
-
-      {/* Quick Actions */}
-      <div className={styles.quickActions}>
-        <button className={styles.actionButton}>Launch New Project</button>
-        <button className={styles.actionButton}>View Analytics</button>
-        <button className={styles.actionButton}>Team Management</button>
-        <button className={styles.actionButton}>Settings & Configuration</button>
-      </div>
-
       {/* Footer */}
       <div className={styles.footer}>
         <p className={styles.footerText}>
