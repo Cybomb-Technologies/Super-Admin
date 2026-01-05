@@ -35,7 +35,14 @@ exports.addAdmin = async (req, res) => {
 
     // Validate role
     const validRoles = ["superadmin", "admin"];
-    if (!validRoles.includes(role)) {
+    const normalizedRole = (role || "").trim().toLowerCase();
+
+    if (!validRoles.includes(normalizedRole)) {
+      console.log("❌ Add Admin failed: Invalid role received:", {
+        received: role,
+        normalized: normalizedRole,
+        body: req.body
+      });
       return res.status(400).json({ error: "Invalid role" });
     }
 

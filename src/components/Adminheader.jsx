@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import styles from "./Adminheader.module.css";
 const API_DJITTRADING_URL = import.meta.env.VITE_DJITTRADING_API_URL;
@@ -7,7 +7,21 @@ const API_AITALS_URL = import.meta.env.VITE_AITALS_API_URL;
 
 function Adminheader() {
   const navigate = useNavigate();
+  const location = useLocation();
   const user = JSON.parse(localStorage.getItem("user"));
+
+  // Dynamic Title based on route
+  const getPageTitle = (path) => {
+    if (path.includes("/startup-builder/users")) return "Startup Builder";
+    if (path.includes("/startup-builder/analytics")) return "Analytics";
+    if (path.includes("/startup-builder/pricing")) return "Pricing Manager";
+    if (path.includes("/pdf-works")) return "PDF Works";
+    if (path.includes("/cybomb")) return "Cybomb Admin";
+    if (path.includes("/djittrading")) return "DJI Trading";
+    if (path.includes("/rankseo")) return "Rank SEO";
+    return "Dashboard Overview";
+  };
+
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [showNotifications, setShowNotifications] = useState(false);
@@ -15,6 +29,8 @@ function Adminheader() {
 
   const userName = user?.name || "Admin";
   const firstLetter = userName?.charAt(0)?.toUpperCase();
+  // ... (rest of the fetching logic remains)
+  // Skipping to line 212 for the return statement update
 
   // Fetch notifications from all sources
   const fetchNotifications = async () => {
@@ -41,19 +57,19 @@ function Adminheader() {
             Authorization: `Bearer ${token}`,
           },
         })
-        .then(response => response.json())
-        .then(data => ({
-          ...data,
-          source: endpoint.source
-        }))
-        .catch(error => {
-          console.error(`Error fetching notifications from ${endpoint.source}:`, error);
-          return { success: false, notifications: [], source: endpoint.source };
-        })
+          .then(response => response.json())
+          .then(data => ({
+            ...data,
+            source: endpoint.source
+          }))
+          .catch(error => {
+            console.error(`Error fetching notifications from ${endpoint.source}:`, error);
+            return { success: false, notifications: [], source: endpoint.source };
+          })
       );
 
       const results = await Promise.all(promises);
-      
+
       let allNotifications = [];
       let totalUnread = 0;
 
@@ -133,7 +149,7 @@ function Adminheader() {
       } else if (notification.type === "coupon") {
         navigate("/djittrading/Coupon-Generator");
       } else if (notification.type === "enrollment") {
-        navigate("/djittrading/Enrollment");  
+        navigate("/djittrading/Enrollment");
       } else if (notification.type === "user") {
         navigate("/djittrading/users");
       } else if (notification.type === "course") {
@@ -213,7 +229,7 @@ function Adminheader() {
       <div className={styles.headerContent}>
         {/* Left Side: Title */}
         <div className={styles.headerLeft}>
-          <h1 className={styles.pageTitle}>Dashboard Overview</h1>
+          <h1 className={styles.pageTitle}>{getPageTitle(location.pathname)}</h1>
         </div>
 
         {/* Right Side: Actions */}
@@ -241,7 +257,7 @@ function Adminheader() {
               {showNotifications && (
                 <div className={styles.notificationPopup}>
                   <div className={styles.notificationHeader}>
-                    <h3>Notifications</h3>
+                    <h3 style={{ color: "black" }}>Notifications</h3>
                     {unreadCount > 0 && (
                       <span className={styles.unreadCount}>
                         {unreadCount} unread
@@ -258,9 +274,8 @@ function Adminheader() {
                       notifications.map((notification) => (
                         <div
                           key={`${notification.source}-${notification._id}`}
-                          className={`${styles.notificationItem} ${
-                            !notification.isRead ? styles.unread : ""
-                          }`}
+                          className={`${styles.notificationItem} ${!notification.isRead ? styles.unread : ""
+                            }`}
                           onClick={() => handleNotificationClick(notification)}
                         >
                           <div className={styles.notificationContent}>

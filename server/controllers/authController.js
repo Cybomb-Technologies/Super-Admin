@@ -3,15 +3,25 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { sendOtpEmail } = require("../utils/emailService");
 
+console.log("📂 authController.js loaded from:", __filename);
+
 // Register (only for setup → superadmin create)
 exports.register = async (req, res) => {
+  console.log("📥 Incoming Registration Request:", req.body);
   try {
-    const { name, email, password, role } = req.body;
+    const { name, email, password } = req.body;
+    let { role } = req.body;
 
     const validRoles = ["superadmin", "admin"];
-    if (!validRoles.includes(role)) {
-      return res.status(400).json({ error: "Invalid role" });
+
+    // Default to admin if role is missing or invalid
+    if (!role || !validRoles.includes(role.trim().toLowerCase())) {
+      console.log(`⚠️  Warning: Invalid or missing role "${role}". Defaulting to "admin".`);
+      role = "admin";
     }
+
+    const normalizedRole = role.trim().toLowerCase();
+    console.log(`🔍 Registration check: email="${email}", role="${normalizedRole}"`);
 
     const hashed = await bcrypt.hash(password, 10);
 
@@ -24,6 +34,7 @@ exports.register = async (req, res) => {
 
     res.status(201).json({ msg: "User created", userId: user._id });
   } catch (err) {
+    console.error("🔥 Registration error details:", err);
     res.status(400).json({ error: err.message });
   }
 };
