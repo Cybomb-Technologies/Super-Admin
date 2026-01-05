@@ -1,0 +1,154 @@
+.container {
+    padding: 2.5rem;
+    min-height: 100vh;
+    background: #f8fafc;
+}
+
+.header {
+    margin-bottom: 2.5rem;
+    position: relative;
+    padding: 3rem;
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    border-radius: 2.5rem;
+    overflow: hidden;
+    box-shadow: 0 25px 50px -12px rgba(79, 70, 229, 0.25);
+}
+
+.headerTitle {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.iconWrapper {
+    width: 4.5rem;
+    height: 4.5rem;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.titleMain {
+    font-size: 2.25rem;
+    font-weight: 900;
+    color: white;
+    letter-spacing: -0.05em;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+}
+
+.titleSub {
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.addSection {
+    background: white;
+    border-radius: 2rem;
+    padding: 2.5rem;
+    border: 1px solid #e2e8f0;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.sectionTitle {
+    font-size: 1.25rem;
+    font-weight: 900;
+    color: #0f172a;
+    margin-bottom: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.inputGroup {
+    display: flex;
+    gap: 1rem;
+}
+
+.input {
+    flex: 1;
+    height: 4rem;
+    padding: 0 1.5rem;
+    border-radius: 1.25rem;
+    border: 2px solid #e2e8f0;
+    background: #f8fafc;
+    font-weight: 700;
+    transition: all 0.2s;
+    outline: none;
+    font-size: 1rem;
+}
+
+.input:focus {
+    border-color: #6366f1;
+    background: white;
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+}
+
+.list {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.levelItem {
+    background: white;
+    border-radius: 1.5rem;
+    padding: 1.5rem;
+    border: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.3s ease;
+}
+
+.levelItem:hover {
+    transform: translateX(8px);
+    border-color: #6366f1;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+}
+
+.levelInfo {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+}
+
+.levelIcon {
+    width: 3.5rem;
+    height: 3.5rem;
+    background: #f5f3ff;
+    border-radius: 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6366f1;
+}
+
+.levelName {
+    font-size: 1.125rem;
+    font-weight: 900;
+    color: #0f172a;
+}
+
+.levelDesc {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #64748b;
+}
+
+.levelActions {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.editForm {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex: 1;
+}

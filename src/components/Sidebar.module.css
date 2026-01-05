@@ -12,7 +12,11 @@
   border-right: 1px solid #333;
   box-shadow: 4px 0 20px rgba(0, 0, 0, 0.5);
   z-index: 1000;
-  transition: transform 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sidebarCollapsed {
+  width: var(--sidebar-collapsed-width);
 }
 
 /* Mobile Header */
@@ -72,6 +76,12 @@
   background: rgba(255, 255, 255, 0.05);
   height: 80px;
   gap: 12px;
+  transition: padding 0.3s ease;
+}
+
+.brandCollapsed {
+  padding: 1rem;
+  justify-content: center;
 }
 
 .brandLogoContainer {
@@ -191,6 +201,54 @@
 
 .linkText {
   flex: 1;
+  white-space: nowrap;
+  opacity: 1;
+  transition: opacity 0.2s ease;
+}
+
+.collapsedHide {
+  opacity: 0;
+  width: 0;
+  pointer-events: none;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+.toggleBtn {
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+  border: none;
+  color: white;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: absolute;
+  right: -16px;
+  top: 24px;
+  z-index: 1001;
+  box-shadow: 0 4px 15px rgba(139, 92, 246, 0.5);
+  font-size: 14px;
+}
+
+.toggleBtn:hover {
+  transform: scale(1.15) rotate(180deg);
+  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.6);
+}
+
+.collapsedToggle {
+  right: -16px;
+  top: 24px;
+  transform: none;
+  position: absolute;
+}
+
+.collapsedToggle:hover {
+  transform: scale(1.15) rotate(-180deg);
 }
 
 /* Dropdown Menu */
@@ -336,6 +394,7 @@
     opacity: 0;
     transform: translateY(-10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
