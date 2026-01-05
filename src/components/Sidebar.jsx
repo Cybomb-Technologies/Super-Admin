@@ -264,6 +264,13 @@ export default function Sidebar({ onRankSeoTabChange, rankSeoData, isCollapsed, 
     { to: "/startup-builder/user-access", label: "User Access" },
   ];
 
+  const hralva = [
+    {to: "/hr-alva/dashboard", label: "Dashboard"},
+    {to: "/hr-alva/tenant", label: "tenant"},
+    {to: "/hr-alva/contact-query", label: "contact query"},
+    {to: "/hr-alva/demo-request", label: "demo request"},
+  ]
+
   const cybombDropdownCounts = useMemo(() => {
     return cybombItems.reduce((acc, item) => {
       if (item.countKey && cybombCounts[item.countKey] !== undefined) {
@@ -344,6 +351,13 @@ export default function Sidebar({ onRankSeoTabChange, rankSeoData, isCollapsed, 
             <Dropdown title="Social Media" items={socialmedia} icon="💹" counts={{}} onTabChange={onRankSeoTabChange} isCollapsed={isCollapsed} />
             <Dropdown title="DjitTrading" items={djittrading} icon="💬" counts={{}} onTabChange={onRankSeoTabChange} isCollapsed={isCollapsed} />
             <Dropdown title="Startup Builder" items={startupbuilder} icon="🏗️" counts={{}} onTabChange={onRankSeoTabChange} isCollapsed={isCollapsed} />
+            <Dropdown title="Rank SEO" items={rankSeoItems} icon="📈" counts={rankSeoDropdownCounts} onTabChange={onRankSeoTabChange} />
+            <Dropdown title="Cybomb" items={cybombItems} icon="🚀" counts={cybombDropdownCounts} onTabChange={onRankSeoTabChange} />
+            <Dropdown title="Aitals Tech" items={aitals} icon="📄" counts={{}} onTabChange={onRankSeoTabChange} />
+            <Dropdown title="PDF Works" items={pdfworks} icon="📄" counts={{}} onTabChange={onRankSeoTabChange} />
+            <Dropdown title="Social Media" items={socialmedia} icon="💹" counts={{}} onTabChange={onRankSeoTabChange} />
+            <Dropdown title="DjitTrading" items={djittrading} icon="💬" counts={{}} onTabChange={onRankSeoTabChange} />
+            <Dropdown title="Hralva" items={hralva} icon="💬" counts={{}} onTabChange={onRankSeoTabChange} />
           </ul>
         </nav>
 

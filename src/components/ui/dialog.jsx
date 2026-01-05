@@ -1,46 +1,50 @@
 import * as React from "react"
-import { createPortal } from "react-dom"
 import { cn } from "@/lib/utils"
-import { X } from "lucide-react"
 
 const Dialog = ({ children, open, onOpenChange }) => {
     if (!open) return null;
     return (
-        <DialogPortal>
-            <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
-                <div
-                    className="fixed inset-0 bg-black/60 backdrop-blur-md animate-in fade-in duration-300"
+        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/50">
+            <div className="relative w-full max-w-lg p-6 bg-white rounded-lg shadow-lg">
+                {children}
+                <button
                     onClick={() => onOpenChange(false)}
-                />
-                <div className="relative z-[10000] w-full max-w-3xl animate-in zoom-in-95 duration-300">
-                    {children}
-                </div>
+                    className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+                >
+                    ✕
+                </button>
             </div>
-        </DialogPortal>
+        </div>
     );
 };
 
-const DialogPortal = ({ children }) => {
-    return createPortal(children, document.body);
+const DialogTrigger = ({ children, asChild, ...props }) => {
+    return React.cloneElement(children, props);
 };
 
-const DialogContent = ({ className, children }) => (
-    <div className={cn("bg-white rounded-[3.5rem] overflow-hidden shadow-2xl", className)}>
+const DialogContent = ({ children, className, ...props }) => (
+    <div className={cn("mt-4", className)} {...props}>
         {children}
     </div>
 );
 
 const DialogHeader = ({ className, ...props }) => (
-    <div className={cn("flex flex-col space-y-1.5", className)} {...props} />
+    <div className={cn("mb-4", className)} {...props} />
 );
 
 const DialogTitle = ({ className, ...props }) => (
-    <h3 className={cn("text-lg font-semibold", className)} {...props} />
+    <h2 className={cn("text-xl font-bold", className)} {...props} />
+);
+
+const DialogFooter = ({ className, ...props }) => (
+    <div className={cn("mt-6 flex justify-end space-x-2", className)} {...props} />
 );
 
 export {
     Dialog,
+    DialogTrigger,
     DialogContent,
     DialogHeader,
     DialogTitle,
+    DialogFooter,
 }
