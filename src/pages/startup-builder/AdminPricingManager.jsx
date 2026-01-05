@@ -33,6 +33,7 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
+import styles from './AdminPricingManager.module.css';
 import { getAuthHeaders } from '@/utils/startupBuilderAuth';
 
 const API_BASE_URL = import.meta.env.VITE_PAPLIXO_API_URL;
@@ -228,7 +229,7 @@ const AdminPricingManager = () => {
           </div>
         </div>
         {!isCreating && !editingPlan && (
-          <Button onClick={handleCreate} className="bg-slate-900 hover:bg-slate-800 text-white rounded-2xl font-bold h-12 px-6 shadow-lg transition-all active:scale-95">
+          <Button onClick={handleCreate} variant="ghost" className={styles.createButton}>
             <Plus className="w-4 h-4 mr-2" />
             Create New Plan
           </Button>
@@ -243,11 +244,11 @@ const AdminPricingManager = () => {
             exit={{ opacity: 0, y: -20 }}
             className={styles.formCard}
           >
-            <div className="flex justify-between items-center mb-8 pb-4 border-b border-slate-100">
-              <h3 className="text-xl font-black text-slate-900 uppercase tracking-tight">
+            <div className="flex justify-between items-center mb-8 pb-4 px-6 mx-6 border-b border-white/10">
+              <h3 className="text-xl font-black text-white uppercase tracking-tight">
                 {isCreating ? 'Configure New Tier' : 'Edit Plan Details'}
               </h3>
-              <Button variant="ghost" onClick={() => { setIsCreating(false); setEditingPlan(null); }} className="rounded-full w-10 h-10 p-0 text-slate-400 hover:text-slate-900">
+              <Button variant="ghost" onClick={() => { setIsCreating(false); setEditingPlan(null); }} className="rounded-full w-10 h-10 p-0 text-slate-400 hover:text-white hover:bg-white/10 transition-all active:scale-90">
                 <X className="w-5 h-5" />
               </Button>
             </div>
@@ -260,7 +261,7 @@ const AdminPricingManager = () => {
                     value={formData.name}
                     onChange={e => handleInputChange('name', e.target.value)}
                     placeholder="e.g. Enterprise Elite"
-                    className="h-12 rounded-2xl bg-slate-50/50"
+                    className={`${styles.formInput} h-12`}
                   />
                 </div>
                 <div className={styles.inputGroup}>
@@ -270,7 +271,7 @@ const AdminPricingManager = () => {
                     onChange={e => handleInputChange('planId', e.target.value)}
                     placeholder="e.g. enterprise_v2"
                     disabled={!!editingPlan}
-                    className="h-12 rounded-2xl bg-slate-50/50"
+                    className={`${styles.formInput} h-12 disabled:opacity-50`}
                   />
                 </div>
               </div>
@@ -281,22 +282,22 @@ const AdminPricingManager = () => {
                   value={formData.description}
                   onChange={e => handleInputChange('description', e.target.value)}
                   placeholder="What makes this plan special?"
-                  className="rounded-2xl bg-slate-50/50"
+                  className={`${styles.formTextarea} min-h-[100px]`}
                 />
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className={styles.inputGroup}>
                   <label className={styles.inputLabel}>Monthly (₹)</label>
-                  <Input type="number" value={formData.monthlyPrice} onChange={e => handleInputChange('monthlyPrice', e.target.value)} className="h-12 rounded-2xl bg-slate-50/50" />
+                  <Input type="number" value={formData.monthlyPrice} onChange={e => handleInputChange('monthlyPrice', e.target.value)} className={`${styles.formInput} h-12`} />
                 </div>
                 <div className={styles.inputGroup}>
                   <label className={styles.inputLabel}>Yearly (₹)</label>
-                  <Input type="number" value={formData.yearlyPrice} onChange={e => handleInputChange('yearlyPrice', e.target.value)} className="h-12 rounded-2xl bg-slate-50/50" />
+                  <Input type="number" value={formData.yearlyPrice} onChange={e => handleInputChange('yearlyPrice', e.target.value)} className={`${styles.formInput} h-12`} />
                 </div>
                 <div className={styles.inputGroup}>
                   <label className={styles.inputLabel}>Annual Discount (%)</label>
-                  <Input type="number" value={formData.annualDiscount} onChange={e => handleInputChange('annualDiscount', e.target.value)} className="h-12 rounded-2xl bg-slate-50/50" />
+                  <Input type="number" value={formData.annualDiscount} onChange={e => handleInputChange('annualDiscount', e.target.value)} className={`${styles.formInput} h-12`} />
                 </div>
               </div>
 
@@ -304,12 +305,12 @@ const AdminPricingManager = () => {
                 <div className={styles.inputGroup}>
                   <label className={styles.inputLabel}>Visual Theme</label>
                   <Select value={formData.color} onValueChange={v => handleInputChange('color', v)}>
-                    <SelectTrigger className="h-12 rounded-2xl bg-slate-50/50">
+                    <SelectTrigger className={styles.selectTrigger}>
                       <SelectValue placeholder="Pick a theme" />
                     </SelectTrigger>
-                    <SelectContent className="rounded-2xl">
+                    <SelectContent className="rounded-2xl bg-slate-900 border-white/10 text-white">
                       {colorOptions.map(c => (
-                        <SelectItem key={c.value} value={c.value}>
+                        <SelectItem key={c.value} value={c.value} className="focus:bg-white/10 focus:text-white cursor-pointer">
                           <div className="flex items-center gap-2">
                             <div className={`w-3 h-3 rounded-full bg-gradient-to-br ${c.gradient}`} />
                             {c.label}
@@ -322,12 +323,12 @@ const AdminPricingManager = () => {
                 <div className={styles.inputGroup}>
                   <label className={styles.inputLabel}>Design Icon</label>
                   <Select value={formData.icon} onValueChange={v => handleInputChange('icon', v)}>
-                    <SelectTrigger className="h-12 rounded-2xl bg-slate-50/50">
+                    <SelectTrigger className={styles.selectTrigger}>
                       <SelectValue placeholder="Identity" />
                     </SelectTrigger>
-                    <SelectContent className="rounded-2xl">
+                    <SelectContent className="rounded-2xl bg-slate-900 border-white/10 text-white">
                       {Object.keys(icons).map(i => (
-                        <SelectItem key={i} value={i}>{i}</SelectItem>
+                        <SelectItem key={i} value={i} className="focus:bg-white/10 focus:text-white cursor-pointer">{i}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
@@ -335,22 +336,22 @@ const AdminPricingManager = () => {
               </div>
 
               <div className="space-y-4">
-                <div className="flex justify-between items-center">
+                <div className="flex justify-between py-2 items-center">
                   <label className={styles.inputLabel}>Inclusions & Features</label>
-                  <Button type="button" variant="outline" size="sm" onClick={addFeature} className="rounded-xl font-bold border-indigo-100 text-indigo-600 hover:bg-indigo-50">
+                  <Button type="button" variant="ghost" size="sm" onClick={addFeature} className="rounded-xl text-white font-bold border border-white/10 hover:bg-white/10 hover:text-white bg-transparent active:scale-95 transition-all">
                     <Plus className="w-4 h-4 mr-1" /> Add Inclusion
                   </Button>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {formData.features.map((f, i) => (
-                    <div key={i} className="flex items-center gap-3 p-3 bg-slate-50 rounded-[1.5rem] border border-slate-100">
+                    <div key={i} className="flex items-center gap-3 p-3 bg-white/5 rounded-[1.5rem] border border-white/5">
                       <Input
                         value={f.name}
                         onChange={e => handleFeatureChange(i, 'name', e.target.value)}
-                        className="border-none bg-transparent h-8 focus-visible:ring-0 font-medium"
+                        className={`${styles.formInput} ${styles.featureInput} h-10 border-none bg-transparent focus-visible:ring-0 font-medium text-white placeholder:text-slate-600`}
                         placeholder="Feature name..."
                       />
-                      <Button variant="ghost" size="sm" onClick={() => removeFeature(i)} className="text-slate-400 hover:text-red-500 rounded-full h-8 w-8 p-0">
+                      <Button variant="ghost" size="sm" onClick={() => removeFeature(i)} className="text-slate-500 hover:text-red-400 hover:bg-red-500/10 rounded-full h-8 w-8 p-0 transition-all active:scale-90">
                         <Trash2 className="w-4 h-4" />
                       </Button>
                     </div>
@@ -359,21 +360,21 @@ const AdminPricingManager = () => {
               </div>
 
               <div className="flex items-center gap-6 pt-4">
-                <div className="flex items-center gap-3 bg-slate-50 px-5 py-3 rounded-2xl border border-slate-100">
+                <div className="flex items-center gap-3 bg-white/5 px-5 py-3 rounded-2xl border border-white/5 text-white">
                   <Switch checked={formData.active} onCheckedChange={v => handleInputChange('active', v)} />
-                  <span className="text-sm font-bold text-slate-700">Marketplace Visible</span>
+                  <span className="text-sm font-bold text-slate-300">Marketplace Visible</span>
                 </div>
-                <div className="flex items-center gap-3 bg-blue-50 px-5 py-3 rounded-2xl border border-blue-100">
+                <div className="flex items-center gap-3 bg-blue-500/10 px-5 py-3 rounded-2xl border border-blue-500/20">
                   <Switch checked={formData.popular} onCheckedChange={v => handleInputChange('popular', v)} />
-                  <span className="text-sm font-bold text-blue-700 uppercase tracking-wider">Most Popular</span>
+                  <span className="text-sm font-bold text-blue-400 uppercase tracking-wider">Most Popular</span>
                 </div>
               </div>
 
-              <div className="flex justify-end gap-3 pt-6 border-t border-slate-100">
-                <Button variant="outline" type="button" onClick={() => { setIsCreating(false); setEditingPlan(null); }} className="rounded-2xl font-bold h-12 px-8">
+              <div className="flex justify-end gap-6 pt-6 border-t border-white/10">
+                <Button variant="ghost" type="button" onClick={() => { setIsCreating(false); setEditingPlan(null); }} className={styles.cancelButton}>
                   Cancel
                 </Button>
-                <Button type="submit" className="bg-slate-900 hover:bg-slate-800 text-white rounded-2xl font-bold h-12 px-12 shadow-xl">
+                <Button variant="ghost" type="submit" className={styles.submitButton}>
                   {isCreating ? 'Deploy Plan' : 'Commit Changes'}
                 </Button>
               </div>
@@ -402,7 +403,7 @@ const AdminPricingManager = () => {
                 <h3 className={styles.planTitle}>{plan.name}</h3>
               </div>
 
-              <p className="text-slate-500 font-medium text-sm line-clamp-2 min-h-[2.5rem] mb-6">
+              <p className="text-slate-400 font-medium text-sm line-clamp-2 min-h-[2.5rem] mb-6">
                 {plan.description}
               </p>
 
@@ -412,12 +413,12 @@ const AdminPricingManager = () => {
                 <span className={styles.period}>/mo</span>
               </div>
 
-              <div className="bg-slate-50 -mx-10 px-10 py-6 mb-8">
+              <div className="bg-black/20 -mx-10 px-10 py-6 mb-8 border-y border-white/5">
                 <div className={styles.featuresList}>
                   {plan.features.slice(0, 5).map((f, i) => (
                     <div key={i} className={styles.featureItem}>
                       <div className={styles.featureIcon}>
-                        <Zap className="w-2.5 h-2.5 text-blue-600 shadow-sm" />
+                        <Zap className="w-2.5 h-2.5 text-blue-400 shadow-sm" />
                       </div>
                       {f.name}
                     </div>
@@ -426,19 +427,19 @@ const AdminPricingManager = () => {
               </div>
 
               <div className={styles.actionsSection}>
-                <Button onClick={() => handleEdit(plan)} className="flex-1 bg-white hover:bg-slate-50 text-slate-900 border-slate-200 rounded-2xl font-bold h-12 shadow-sm transition-all active:scale-95">
-                  <Edit className="w-4 h-4 mr-2" /> Edit
+                <Button variant="ghost" onClick={() => handleEdit(plan)} className={styles.editBtn}>
+                  <Edit className="w-3 h-3 mr-2" /> Edit
                 </Button>
-                <Button
+                {/* <Button
+                  variant="ghost"
                   onClick={() => handleToggleStatus(plan.planId)}
-                  variant="outline"
-                  className={`flex-1 rounded-2xl font-bold h-12 transition-all active:scale-95 ${plan.active ? 'hover:bg-amber-50 hover:text-amber-600 hover:border-amber-200' : 'hover:bg-green-50 hover:text-green-600 hover:border-green-200'}`}
+                  className={plan.active ? styles.hideBtn : styles.showBtn}
                 >
-                  {plan.active ? <EyeOff className="w-4 h-4 mr-2" /> : <Eye className="w-4 h-4 mr-2" />}
+                  {plan.active ? <EyeOff className="w-3 h-3 mr-2" /> : <Eye className="w-3 h-3 mr-2" />}
                   {plan.active ? 'Hide' : 'Show'}
-                </Button>
-                <Button onClick={() => handleDelete(plan.planId)} variant="destructive" className="w-12 h-12 rounded-2xl p-0 transition-all active:scale-95">
-                  <Trash2 className="w-4 h-4" />
+                </Button> */}
+                <Button variant="ghost" onClick={() => handleDelete(plan.planId)} className={styles.deleteBtn}>
+                  <Trash2 className="w-3 h-3 mr-2" />Delete
                 </Button>
               </div>
             </motion.div>

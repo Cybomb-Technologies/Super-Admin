@@ -1,3 +1,4 @@
+import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import styles from './Payments.module.css';
 import {
@@ -26,6 +27,13 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 import * as XLSX from "xlsx";
 import { getAuthHeaders } from "@/utils/startupBuilderAuth";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 
 const API_BASE_URL = import.meta.env.VITE_PAPLIXO_API_URL;
 
@@ -54,6 +62,7 @@ const PaymentManager = () => {
     const [newStatus, setNewStatus] = useState('');
     const [isInvoiceModalOpen, setIsInvoiceModalOpen] = useState(false);
     const [isExporting, setIsExporting] = useState(false);
+    const [localSearch, setLocalSearch] = useState(filters.search);
 
     // Tax rate (18% included in the total amount)
     const TAX_RATE = 0.18; // 18% GST
@@ -141,6 +150,16 @@ const PaymentManager = () => {
             setLoading(false);
         }
     }, [filters, toast]);
+
+    // ✅ Debounce search
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            if (localSearch !== filters.search) {
+                handleFilterChange('search', localSearch);
+            }
+        }, 500); // Increased slightly for smoother backspacing
+        return () => clearTimeout(timer);
+    }, [localSearch]);
 
     // ✅ Load payment stats
     const loadStats = async () => {
@@ -498,127 +517,126 @@ const PaymentManager = () => {
         const invoiceData = generateInvoiceData(selectedPayment);
 
         return (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-                <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-                    <div className="p-6">
-                        <div className="flex items-center justify-between mb-4">
-                            <h3 className="text-lg font-semibold">Tax Invoice</h3>
+            <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+                <div className="bg-slate-900 rounded-[2rem] max-w-4xl w-full max-h-[90vh] overflow-y-auto border border-white/10 shadow-2xl">
+                    <div className="p-8">
+                        <div className="flex items-center justify-between mb-8">
+                            <h3 className="text-xl font-bold text-white">Tax Invoice</h3>
                             <button
                                 onClick={() => setIsInvoiceModalOpen(false)}
-                                className="text-gray-400 hover:text-gray-600"
+                                className="text-slate-400 hover:text-white transition-colors bg-white/5 p-2 rounded-full hover:bg-white/10"
                             >
-                                ✕
+                                <XCircle className="w-6 h-6" />
                             </button>
                         </div>
 
                         {/* Invoice Header */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8 pb-8 border-b border-white/5">
                             {/* Company Info */}
                             <div className="space-y-2">
-                                <div className="flex items-center gap-2">
-                                    <Receipt className="w-5 h-5 text-blue-600" />
-                                    <h4 className="font-semibold">{invoiceData.company.name}</h4>
+                                <div className="flex items-center gap-3 mb-4">
+                                    <div className="w-10 h-10 rounded-xl bg-blue-500/20 flex items-center justify-center">
+                                        <Receipt className="w-5 h-5 text-blue-400" />
+                                    </div>
+                                    <h4 className="font-bold text-xl text-white">{invoiceData.company.name}</h4>
                                 </div>
-                                <p className="text-sm text-gray-600">{invoiceData.company.address}</p>
-                                <p className="text-sm text-gray-600">{invoiceData.company.city}</p>
-                                <p className="text-sm text-gray-600">{invoiceData.company.email}</p>
-                                <p className="text-sm text-gray-600">{invoiceData.company.website}</p>
-                                <p className="text-sm text-gray-500">GSTIN: {invoiceData.company.gstin}</p>
+                                <div className="bg-white/5 p-4 rounded-2xl border border-white/5 space-y-1">
+                                    <p className="text-sm text-slate-400">{invoiceData.company.address}</p>
+                                    <p className="text-sm text-slate-400">{invoiceData.company.city}</p>
+                                    <p className="text-sm text-slate-400">{invoiceData.company.email}</p>
+                                    <p className="text-sm text-slate-400">{invoiceData.company.website}</p>
+                                    <p className="text-sm text-slate-500 font-mono mt-2 pt-2 border-t border-white/5">GSTIN: {invoiceData.company.gstin}</p>
+                                </div>
                             </div>
 
                             {/* Invoice Info */}
-                            <div className="text-right space-y-2">
-                                <h2 className="text-2xl font-bold">TAX INVOICE</h2>
-                                <div className="inline-block px-3 py-1 bg-blue-100 text-blue-800 rounded text-sm">
+                            <div className="text-right space-y-4">
+                                <h2 className="text-3xl font-black text-white tracking-tight">TAX INVOICE</h2>
+                                <div className={`inline-block px-4 py-1.5 rounded-full text-sm font-bold border ${
+                                    invoiceData.status === 'success' 
+                                        ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' 
+                                        : 'bg-amber-500/10 text-amber-400 border-amber-500/20'
+                                }`}>
                                     {invoiceData.status.toUpperCase()}
                                 </div>
-                                <div className="space-y-1 text-sm">
-                                    <p>Invoice #: {invoiceData.invoiceNumber}</p>
-                                    <p>Date: {new Date(invoiceData.date).toLocaleDateString()}</p>
+                                <div className="space-y-1 text-sm bg-white/5 p-4 rounded-2xl border border-white/5 inline-block text-left min-w-[200px]">
+                                    <div className="flex justify-between gap-4">
+                                        <span className="text-slate-500">Invoice #:</span>
+                                        <span className="text-white font-mono">{invoiceData.invoiceNumber}</span>
+                                    </div>
+                                    <div className="flex justify-between gap-4">
+                                        <span className="text-slate-500">Date:</span>
+                                        <span className="text-white">{new Date(invoiceData.date).toLocaleDateString()}</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
                         {/* Bill To Section */}
-                        <div className="mb-8 p-4 bg-gray-50 rounded-lg">
-                            <h4 className="font-medium mb-2">Bill To:</h4>
+                        <div className="mb-8 p-6 bg-white/5 rounded-3xl border border-white/5">
+                            <h4 className="font-bold text-slate-400 uppercase tracking-wider text-xs mb-4">Bill To</h4>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
-                                    <p className="font-medium">{invoiceData.customer.name}</p>
-                                    <p className="text-sm text-gray-600">{invoiceData.customer.email}</p>
-                                    <p className="text-sm text-gray-500">Customer ID: {invoiceData.customer.userId}</p>
+                                    <p className="font-bold text-lg text-white mb-1">{invoiceData.customer.name}</p>
+                                    <p className="text-sm text-slate-400">{invoiceData.customer.email}</p>
+                                    <p className="text-sm text-slate-500 font-mono mt-1">ID: {invoiceData.customer.userId}</p>
                                 </div>
                             </div>
                         </div>
 
                         {/* Invoice Items Table */}
                         <div className="mb-8">
-                            <h4 className="font-medium mb-4">Invoice Items</h4>
-                            <table className="w-full border border-gray-200 rounded-lg overflow-hidden">
-                                <thead className="bg-gray-50">
-                                    <tr>
-                                        <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Description</th>
-                                        <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Billing Period</th>
-                                        <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Unit Price (excl. tax)</th>
-                                        <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Qty</th>
-                                        <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Amount (excl. tax)</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {invoiceData.items.map((item) => (
-                                        <tr key={item.id} className="border-t border-gray-200">
-                                            <td className="px-4 py-3">{item.description}</td>
-                                            <td className="px-4 py-3">{item.billingPeriod}</td>
-                                            <td className="px-4 py-3">{formatCurrency(item.unitPrice, invoiceData.currency)}</td>
-                                            <td className="px-4 py-3">{item.quantity}</td>
-                                            <td className="px-4 py-3 font-medium">
-                                                {formatCurrency(item.amount, invoiceData.currency)}
-                                            </td>
+                            <h4 className="font-bold text-white mb-4">Items</h4>
+                            <div className="w-full rounded-2xl overflow-hidden border border-white/10">
+                                <table className="w-full">
+                                    <thead className="bg-white/5">
+                                        <tr>
+                                            <th className="px-6 py-4 text-left text-xs font-bold text-slate-400 uppercase tracking-wider">Description</th>
+                                            <th className="px-6 py-4 text-left text-xs font-bold text-slate-400 uppercase tracking-wider">Billing Period</th>
+                                            <th className="px-6 py-4 text-right text-xs font-bold text-slate-400 uppercase tracking-wider">Unit Price</th>
+                                            <th className="px-6 py-4 text-right text-xs font-bold text-slate-400 uppercase tracking-wider">Qty</th>
+                                            <th className="px-6 py-4 text-right text-xs font-bold text-slate-400 uppercase tracking-wider">Amount</th>
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody className="divide-y divide-white/5">
+                                        {invoiceData.items.map((item) => (
+                                            <tr key={item.id} className="bg-transparent hover:bg-white/[0.02]">
+                                                <td className="px-6 py-4 text-white font-medium">{item.description}</td>
+                                                <td className="px-6 py-4 text-slate-400">{item.billingPeriod}</td>
+                                                <td className="px-6 py-4 text-right text-slate-300 font-mono">{formatCurrency(item.unitPrice, invoiceData.currency)}</td>
+                                                <td className="px-6 py-4 text-right text-slate-300">{item.quantity}</td>
+                                                <td className="px-6 py-4 text-right font-bold text-white font-mono">
+                                                    {formatCurrency(item.amount, invoiceData.currency)}
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
 
                         {/* Invoice Summary */}
                         <div className="flex justify-end">
-                            <div className="w-80 space-y-3">
-                                <div className="flex justify-between">
-                                    <span className="text-gray-600">Subtotal (excl. tax):</span>
-                                    <span className="font-medium">
-                                        {formatCurrency(invoiceData.baseAmount, invoiceData.currency)}
-                                    </span>
-                                </div>
-                                <div className="flex justify-between">
-                                    <span className="text-gray-600 flex items-center">
-                                        <Percent className="w-3 h-3 mr-1" />
-                                        GST ({invoiceData.taxRate}%):
-                                    </span>
-                                    <span className="font-medium">
-                                        {formatCurrency(invoiceData.taxAmount, invoiceData.currency)}
-                                    </span>
-                                </div>
-                                <div className="flex justify-between pt-3 border-t border-gray-300">
-                                    <span className="text-lg font-semibold">Total Amount:</span>
-                                    <span className="text-xl font-bold">
-                                        {formatCurrency(invoiceData.totalAmount, invoiceData.currency)}
-                                    </span>
-                                </div>
-
-                                {/* Breakdown */}
-                                <div className="mt-4 p-3 bg-blue-50 rounded text-xs">
-                                    <p className="font-medium mb-2">Amount Breakdown:</p>
-                                    <div className="grid grid-cols-2 gap-1">
-                                        <span>Base Amount:</span>
-                                        <span className="text-right">
+                            <div className="w-96 space-y-4">
+                                <div className="space-y-3 p-6 bg-white/5 rounded-3xl border border-white/5">
+                                    <div className="flex justify-between items-center text-sm">
+                                        <span className="text-slate-400">Subtotal</span>
+                                        <span className="font-mono text-white">
                                             {formatCurrency(invoiceData.baseAmount, invoiceData.currency)}
                                         </span>
-                                        <span>GST ({invoiceData.taxRate}%):</span>
-                                        <span className="text-right">
+                                    </div>
+                                    <div className="flex justify-between items-center text-sm">
+                                        <span className="text-slate-400 flex items-center">
+                                            <Percent className="w-3 h-3 mr-1" />
+                                            GST ({invoiceData.taxRate}%)
+                                        </span>
+                                        <span className="font-mono text-white">
                                             {formatCurrency(invoiceData.taxAmount, invoiceData.currency)}
                                         </span>
-                                        <span className="font-semibold">Total Paid:</span>
-                                        <span className="text-right font-semibold">
+                                    </div>
+                                    <div className="flex justify-between items-center pt-4 border-t border-white/10">
+                                        <span className="text-lg font-bold text-white">Total Amount</span>
+                                        <span className="text-xl font-black text-white font-mono">
                                             {formatCurrency(invoiceData.totalAmount, invoiceData.currency)}
                                         </span>
                                     </div>
@@ -626,50 +644,30 @@ const PaymentManager = () => {
                             </div>
                         </div>
 
-                        {/* Payment Information */}
-                        <div className="mt-8 p-4 bg-gray-50 rounded-lg">
-                            <h4 className="font-medium mb-3">Payment Information</h4>
-                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                                <div>
-                                    <p className="text-sm text-gray-500">Payment Method</p>
-                                    <p className="font-medium">{invoiceData.paymentMethod}</p>
-                                </div>
-                                <div>
-                                    <p className="text-sm text-gray-500">Plan</p>
-                                    <p className="font-medium">{invoiceData.plan}</p>
-                                </div>
-                                <div>
-                                    <p className="text-sm text-gray-500">Billing Cycle</p>
-                                    <p className="font-medium capitalize">{invoiceData.billingCycle}</p>
-                                </div>
-                            </div>
-                        </div>
-
                         {/* Footer */}
-                        <div className="mt-8 pt-6 border-t border-gray-200 text-center text-sm text-gray-500">
-                            <p>This is a computer-generated invoice and does not require a signature.</p>
+                        <div className="mt-12 pt-8 border-t border-white/10 text-center text-xs text-slate-600">
+                            <p className="mb-1">This is a computer-generated invoice and does not require a signature.</p>
                             <p>GST @ {invoiceData.taxRate}% is included in the total amount.</p>
                         </div>
 
                         {/* Action Buttons */}
-                        <div className="flex gap-2 justify-end mt-8 pt-6 border-t">
+                        <div className="flex gap-4 justify-end mt-8 border-t border-white/10 pt-8">
                             <button
                                 onClick={() => setIsInvoiceModalOpen(false)}
-                                className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                                className="px-6 py-3 border border-white/10 rounded-xl text-slate-300 hover:bg-white/5 font-bold transition-all"
                             >
                                 Close
                             </button>
                             <button
                                 onClick={() => {
-                                    // Here you can implement PDF download functionality
                                     toast({
                                         title: "Invoice Downloaded",
                                         description: "Invoice PDF has been generated",
                                     });
                                 }}
-                                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
+                                className="px-8 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-bold shadow-lg shadow-blue-900/20 flex items-center gap-2 transition-all"
                             >
-                                <Receipt className="w-4 h-4" />
+                                <Download className="w-4 h-4" />
                                 Download PDF
                             </button>
                         </div>
@@ -683,8 +681,8 @@ const PaymentManager = () => {
     if (loading && payments.length === 0) {
         return (
             <div className="flex flex-col items-center justify-center h-[60vh] gap-4">
-                <div className="w-16 h-16 border-4 border-sky-500/20 border-t-sky-500 rounded-full animate-spin"></div>
-                <div className="font-black text-slate-400 uppercase tracking-[0.2em] text-xs">Synchronizing Ledger...</div>
+                <div className="w-16 h-16 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin"></div>
+                <div className="font-black text-slate-500 uppercase tracking-[0.2em] text-xs">Synchronizing Ledger...</div>
             </div>
         );
     }
@@ -694,8 +692,8 @@ const PaymentManager = () => {
             <div className={styles.header}>
                 <div className={styles.headerInner}>
                     <div className={styles.headerTitle}>
-                        <div className={styles.iconWrapper}>
-                            <Receipt className="w-8 h-8" />
+                        <div className={styles.iconWrapper} style={{ borderRadius: '1.5rem' }}>
+                            <Receipt className="w-8 h-8 text-white" />
                         </div>
                         <div>
                             <h1 className={styles.titleMain}>Revenue Ledger</h1>
@@ -706,7 +704,7 @@ const PaymentManager = () => {
                         <button 
                             onClick={exportToExcel}
                             disabled={isExporting || payments.length === 0}
-                            className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl h-14 px-8 font-black shadow-xl shadow-emerald-900/20 flex items-center justify-center transition-all disabled:opacity-50"
+                            className={styles.exportButton}
                         >
                             {isExporting ? <RefreshCw className="w-5 h-5 animate-spin mr-2" /> : <Download className="w-5 h-5 mr-2" />}
                             Export Excel
@@ -720,31 +718,31 @@ const PaymentManager = () => {
                     <div className={styles.statCard}>
                         <div className={styles.statHeader}>
                             <span className={styles.statLabel}>Total Revenue</span>
-                            <div className={styles.statIcon} style={{ background: '#f0f9ff', color: '#0ea5e9' }}>
+                            <div className={styles.statIcon} style={{ background: 'rgba(14, 165, 233, 0.1)', color: '#38bdf8' }}>
                                 <DollarSign className="w-5 h-5 font-bold" />
                             </div>
                         </div>
                         <div className={styles.statValue}>{formatCurrency(stats.totalRevenue)}</div>
-                        <div className={`${styles.statTrend} text-emerald-600`}>
+                        <div className={`${styles.statTrend} text-emerald-400`}>
                             <ArrowUpRight className="w-3 h-3" /> +12% growth
                         </div>
                     </div>
                     <div className={styles.statCard}>
                         <div className={styles.statHeader}>
                             <span className={styles.statLabel}>Success Rate</span>
-                            <div className={styles.statIcon} style={{ background: '#ecfdf5', color: '#10b981' }}>
+                            <div className={styles.statIcon} style={{ background: 'rgba(16, 185, 129, 0.1)', color: '#34d399' }}>
                                 <TrendingUp className="w-5 h-5 font-bold" />
                             </div>
                         </div>
                         <div className={styles.statValue}>{stats.successRate}%</div>
-                        <div className={`${styles.statTrend} text-emerald-600`}>
+                        <div className={`${styles.statTrend} text-emerald-400`}>
                             <CheckCircle className="w-3 h-3" /> Healthy status
                         </div>
                     </div>
                     <div className={styles.statCard}>
                         <div className={styles.statHeader}>
                             <span className={styles.statLabel}>Active Subs</span>
-                            <div className={styles.statIcon} style={{ background: '#f5f3ff', color: '#8b5cf6' }}>
+                            <div className={styles.statIcon} style={{ background: 'rgba(139, 92, 246, 0.1)', color: '#a78bfa' }}>
                                 <RefreshCw className="w-5 h-5 font-bold" />
                             </div>
                         </div>
@@ -756,12 +754,12 @@ const PaymentManager = () => {
                     <div className={styles.statCard}>
                         <div className={styles.statHeader}>
                             <span className={styles.statLabel}>Renewals</span>
-                            <div className={styles.statIcon} style={{ background: '#fffbeb', color: '#f59e0b' }}>
+                            <div className={styles.statIcon} style={{ background: 'rgba(245, 158, 11, 0.1)', color: '#fbbf24' }}>
                                 <Calendar className="w-5 h-5 font-bold" />
                             </div>
                         </div>
                         <div className={styles.statValue}>{stats.upcomingRenewals?.length || 0}</div>
-                        <div className={`${styles.statTrend} text-orange-600`}>
+                        <div className={`${styles.statTrend} text-amber-500`}>
                             Upcoming 7 days
                         </div>
                     </div>
@@ -770,26 +768,29 @@ const PaymentManager = () => {
 
             <div className={styles.filterBar}>
                 <div className={styles.searchBox}>
-                    <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
+                    <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-white/30" />
                     <input 
-                        className="w-full h-14 pl-14 pr-6 rounded-2xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-4 focus:ring-sky-500/10 outline-none font-bold transition-all text-slate-900"
+                        className={styles.searchInput}
                         placeholder="Filter by transaction ref or user email..."
-                        value={filters.search}
-                        onChange={e => handleFilterChange('search', e.target.value)}
+                        value={localSearch}
+                        onChange={e => setLocalSearch(e.target.value)}
                     />
                 </div>
-                <div className="flex gap-4">
-                    <select
-                        className="h-14 px-6 rounded-2xl border border-slate-200 bg-slate-50 font-bold focus:bg-white focus:ring-4 focus:ring-sky-500/10 outline-none transition-all cursor-pointer text-slate-900"
-                        value={filters.status}
-                        onChange={(e) => handleFilterChange('status', e.target.value)}
-                    >
-                        <option value="">All Transactions</option>
-                        <option value="success">Successful Only</option>
-                        <option value="pending">Pending Review</option>
-                        <option value="failed">Failed Logs</option>
-                    </select>
-                </div>
+
+                <Select 
+                    value={filters.status || "all"} 
+                    onValueChange={(val) => handleFilterChange('status', val === "all" ? "" : val)}
+                >
+                    <SelectTrigger className="w-[240px] h-14 bg-black border-white/10 text-white rounded-2xl font-bold">
+                        <SelectValue placeholder="All Transactions" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-black">
+                        <SelectItem value="all">All Transactions</SelectItem>
+                        <SelectItem value="success">Successful Only</SelectItem>
+                        <SelectItem value="pending">Pending Review</SelectItem>
+                        <SelectItem value="failed">Failed Logs</SelectItem>
+                    </SelectContent>
+                </Select>
             </div>
 
             <div className={styles.tableContainer}>
@@ -803,18 +804,18 @@ const PaymentManager = () => {
                 {payments.map((payment) => (
                     <div key={payment.id} className={styles.tableRow} onClick={() => handleViewInvoice(payment)}>
                         <div className="flex items-center gap-4">
-                            <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center font-black text-slate-400 border border-slate-200">
+                            <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center font-black text-white/40 border border-white/10">
                                 {payment.user?.username?.charAt(0) || 'U'}
                             </div>
                             <div>
-                                <div className="font-black text-slate-900 leading-none mb-1">{payment.user?.username || 'Guest'}</div>
-                                <div className="text-[10px] font-black text-sky-600 uppercase tracking-widest leading-none">{payment.planName}</div>
+                                <div className="font-bold text-white leading-none mb-1 text-sm">{payment.user?.username || 'Guest'}</div>
+                                <div className="text-[10px] font-black text-sky-400 uppercase tracking-widest leading-none">{payment.planName}</div>
                             </div>
                         </div>
-                        <div className="font-mono text-xs font-bold text-slate-400 truncate pr-4">
+                        <div className={styles.orderIdCell}>
                             {payment.transactionId}
                         </div>
-                        <div className="text-slate-600 font-bold">
+                        <div className="text-white/60 font-medium text-sm">
                             {new Date(payment.createdAt).toLocaleDateString()}
                         </div>
                         <div className={styles.amountCell}>
@@ -834,24 +835,24 @@ const PaymentManager = () => {
                 ))}
             </div>
 
-            <div className="flex items-center justify-between mt-8 mb-20 px-4">
-                <span className="text-xs font-black text-slate-400 uppercase tracking-widest">
+            <div className="flex items-center justify-between mt-8 mb-20 px-8">
+                <span className="text-xs font-black text-white/30 uppercase tracking-widest">
                     Ledger Page {pagination.currentPage} / {pagination.totalPages}
                 </span>
-                <div className="flex gap-2">
+                <div className="flex gap-4">
                     <button 
-                        className="h-12 px-6 rounded-xl border border-slate-200 font-black text-slate-600 hover:bg-slate-50 transition-all disabled:opacity-20 flex items-center gap-2"
+                        className={styles.paginationBtn}
                         disabled={pagination.currentPage <= 1}
                         onClick={() => handleFilterChange('page', pagination.currentPage - 1)}
                     >
-                        <ChevronLeft className="w-4 h-4" /> Prev
+                        <ChevronLeft className="w-4 h-4 mr-2" /> Previous
                     </button>
                     <button 
-                        className="h-12 px-6 rounded-xl border border-slate-200 font-black text-slate-600 hover:bg-slate-50 transition-all disabled:opacity-20 flex items-center gap-2"
+                        className={styles.paginationBtn}
                         disabled={pagination.currentPage >= pagination.totalPages}
                         onClick={() => handleFilterChange('page', pagination.currentPage + 1)}
                     >
-                        Next <ChevronRight className="w-4 h-4" />
+                        Next <ChevronRight className="w-4 h-4 ml-2" />
                     </button>
                 </div>
             </div>
@@ -866,70 +867,68 @@ const PaymentManager = () => {
                             className={styles.modalContent}
                             onClick={e => e.stopPropagation()}
                         >
-                            <div className="p-10">
-                                <div className="flex justify-between items-start mb-12">
-                                    <div>
-                                        <div className="flex items-center gap-3 text-slate-900 mb-6 font-black tracking-tighter text-3xl">
-                                            <div className="bg-slate-900 text-white p-2 rounded-xl">
-                                                <Receipt className="w-6 h-6" />
-                                            </div>
-                                            TAX INVOICE
+                            <div className={styles.modalHeader}>
+                                <div>
+                                    <div className="flex items-center gap-3 text-white mb-6 font-black tracking-tighter text-3xl">
+                                        <div className="bg-sky-500/20 text-sky-400 p-2 rounded-xl border border-sky-500/20">
+                                            <Receipt className="w-6 h-6" />
                                         </div>
-                                        <div className="text-slate-400 font-bold uppercase tracking-widest text-[10px] mb-1">REFERENCE NO.</div>
-                                        <div className="font-mono font-black text-slate-900">{selectedPayment.transactionId}</div>
+                                        TAX INVOICE
                                     </div>
-                                    <div className="text-right">
-                                        <div className={`inline-flex items-center gap-2 px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest mb-6 ${
-                                            selectedPayment.status === 'success' ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'
-                                        }`}>
-                                            Digital Receipt {selectedPayment.status}
-                                        </div>
-                                        <div className="text-slate-400 font-bold uppercase tracking-widest text-[10px] mb-1">SETTLEMENT DATE</div>
-                                        <div className="font-black text-slate-900">{new Date(selectedPayment.createdAt).toLocaleDateString()}</div>
-                                    </div>
+                                    <div className={styles.modalLabel}>REFERENCE NO.</div>
+                                    <div className={`${styles.modalValue} ${styles.modalId}`}>{selectedPayment.transactionId}</div>
                                 </div>
+                                <div className="text-right">
+                                    <div className={`inline-flex items-center gap-2 px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest mb-6 ${
+                                        selectedPayment.status === 'success' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-red-500/10 text-red-400 border border-red-500/20'
+                                    }`}>
+                                        Digital Receipt {selectedPayment.status}
+                                    </div>
+                                    <div className={styles.modalLabel}>SETTLEMENT DATE</div>
+                                    <div className={styles.modalValue}>{new Date(selectedPayment.createdAt).toLocaleDateString()}</div>
+                                </div>
+                            </div>
 
-                                <div className="grid grid-cols-2 gap-20 mb-12 border-y border-slate-100 py-10">
-                                    <div>
-                                        <h4 className="text-slate-400 font-bold uppercase tracking-widest text-[10px] mb-4">BILL TO</h4>
-                                        <div className="text-xl font-black text-slate-900 mb-1">{selectedPayment.user?.username}</div>
-                                        <div className="font-bold text-slate-500">{selectedPayment.user?.email}</div>
-                                        <div className="text-xs text-slate-400 mt-2 font-bold tracking-tight">User UID: {selectedPayment.user?._id || selectedPayment.userId}</div>
-                                    </div>
-                                    <div>
-                                        <h4 className="text-slate-400 font-bold uppercase tracking-widest text-[10px] mb-4">PRODUCT DETAILS</h4>
-                                        <div className="text-xl font-black text-slate-900 mb-1">{selectedPayment.planName}</div>
-                                        <div className="font-bold text-slate-500 uppercase text-xs tracking-widest">{selectedPayment.billingCycle} Subscription</div>
-                                        <div className="text-xs text-slate-400 mt-2 font-bold tracking-tight">Active Coverage until {new Date(selectedPayment.expiryDate).toLocaleDateString()}</div>
-                                    </div>
+                            <div className={styles.modalGrid}>
+                                <div>
+                                    <h4 className={styles.modalLabel}>BILL TO</h4>
+                                    <div className="text-xl font-black text-white mb-1">{selectedPayment.user?.username}</div>
+                                    <div className="font-bold text-white/60">{selectedPayment.user?.email}</div>
+                                    <div className="text-[10px] text-white/30 mt-3 font-bold tracking-tight bg-white/5 inline-block px-3 py-1 rounded-lg">User UID: {selectedPayment.user?._id || selectedPayment.userId}</div>
                                 </div>
+                                <div>
+                                    <h4 className={styles.modalLabel}>PRODUCT DETAILS</h4>
+                                    <div className="text-xl font-black text-white mb-1">{selectedPayment.planName}</div>
+                                    <div className="font-bold text-sky-400 uppercase text-[10px] tracking-widest bg-sky-400/10 px-3 py-1 rounded-lg inline-block">{selectedPayment.billingCycle} Subscription</div>
+                                    <div className="text-[10px] text-white/30 mt-3 font-bold tracking-tight block">Active Coverage until {new Date(selectedPayment.expiryDate).toLocaleDateString()}</div>
+                                </div>
+                            </div>
 
-                                <div className="bg-slate-50 rounded-[2.5rem] p-10 mb-12 border border-slate-200/50">
-                                    <div className="flex justify-between items-center mb-6 pb-6 border-b border-slate-200/60">
-                                        <span className="font-bold text-slate-500 uppercase text-xs tracking-widest">SUBTOTAL (EXCL. TAX)</span>
-                                        <span className="font-black text-slate-900 text-xl">{formatCurrency(calculateAmountBreakdown(selectedPayment.amount).baseAmount)}</span>
-                                    </div>
-                                    <div className="flex justify-between items-center mb-10">
-                                        <span className="font-bold text-slate-500 uppercase text-xs tracking-widest">GOVERNMENT TAX (GST 18%)</span>
-                                        <span className="font-black text-slate-900 text-xl">{formatCurrency(calculateAmountBreakdown(selectedPayment.amount).taxAmount)}</span>
-                                    </div>
-                                    <div className="flex justify-between items-center pt-10 border-t-4 border-white">
-                                        <div className="flex flex-col">
-                                            <span className="text-2xl font-black text-slate-900 tracking-tighter leading-none mb-1 uppercase">Total Final Paid</span>
-                                            <span className="text-[10px] font-black text-sky-600 uppercase tracking-widest">Inclusive of all local taxes</span>
-                                        </div>
-                                        <div className="text-5xl font-black text-slate-900 tracking-tighter">{formatCurrency(selectedPayment.amount)}</div>
-                                    </div>
+                            <div className={styles.modalSection}>
+                                <div className="flex justify-between items-center mb-6 pb-6 border-b border-white/5">
+                                    <span className={styles.modalLabel}>SUBTOTAL (EXCL. TAX)</span>
+                                    <span className="font-black text-white text-xl font-mono">{formatCurrency(calculateAmountBreakdown(selectedPayment.amount).baseAmount)}</span>
                                 </div>
+                                <div className="flex justify-between items-center mb-10">
+                                    <span className={styles.modalLabel}>GOVERNMENT TAX (GST 18%)</span>
+                                    <span className="font-black text-white text-xl font-mono">{formatCurrency(calculateAmountBreakdown(selectedPayment.amount).taxAmount)}</span>
+                                </div>
+                                <div className="flex justify-between items-center pt-8 border-t-2 border-white/10">
+                                    <div className="flex flex-col">
+                                        <span className="text-xl font-black text-white tracking-tighter leading-none mb-1 uppercase">Total Paid</span>
+                                        <span className="text-[10px] font-black text-sky-400 uppercase tracking-widest">Inclusive of all taxes</span>
+                                    </div>
+                                    <div className="text-5xl font-black text-white tracking-tighter font-mono">{formatCurrency(selectedPayment.amount)}</div>
+                                </div>
+                            </div>
 
-                                <div className="flex gap-4">
-                                    <button className="flex-1 h-16 rounded-[1.25rem] bg-slate-900 hover:bg-black text-white font-black text-lg transition-all active:scale-[0.98] shadow-2xl shadow-slate-900/20 flex items-center justify-center gap-3">
-                                        <Download className="w-5 h-5" /> Download Tax Invoice
-                                    </button>
-                                    <button className="h-16 px-10 rounded-[1.25rem] border-2 border-slate-200 font-black text-slate-600 hover:bg-slate-50 transition-all" onClick={() => setIsInvoiceModalOpen(false)}>
-                                        Dismiss
-                                    </button>
-                                </div>
+                            <div className={styles.modalActionRow}>
+                                <button className={styles.primaryBtn}>
+                                    <Download className="w-5 h-5" /> Download Tax Invoice
+                                </button>
+                                <button className={styles.secondaryBtn} onClick={() => setIsInvoiceModalOpen(false)}>
+                                    Dismiss
+                                </button>
                             </div>
                         </motion.div>
                     </div>

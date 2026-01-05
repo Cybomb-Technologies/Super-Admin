@@ -23,6 +23,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
 import { Loader2, Plus, Building, Database, ExternalLink, Pencil, Eye } from "lucide-react";
 import axios from "axios";
+import styles from './hralva.module.css';
 
 const API_URL = import.meta.env.VITE_HRALVA_API_URL;
 
@@ -207,20 +208,20 @@ const TenantList = () => {
     };
 
     return (
-        <div className="space-y-6">
-            <div className="flex justify-between items-center">
+        <div className={styles.container}>
+            <div className={`flex justify-between items-center ${styles.header}`}>
                 <div>
-                    <h1 className="text-3xl font-bold tracking-tight text-[#003C43]">Tenant Management</h1>
-                    <p className="text-muted-foreground mt-1">
+                    <h1 className={styles.title}>Tenant Management</h1>
+                    <p className={styles.subtitle}>
                         Manage organizations and their isolated databases.
                     </p>
                 </div>
                 <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
                     <DialogTrigger asChild>
-                        <Button className="bg-[#003C43] hover:bg-[#003C43]/90">
-                            <Plus className="w-4 h-4 mr-2" />
+                        <button className={styles.actionButton}>
+                            <Plus className="w-4 h-4" />
                             Create Tenant
-                        </Button>
+                        </button>
                     </DialogTrigger>
                     <DialogContent className="sm:max-w-[500px]">
                         <DialogHeader>
@@ -309,7 +310,7 @@ const TenantList = () => {
                                 <Button type="button" variant="outline" onClick={() => setIsCreateOpen(false)}>
                                     Cancel
                                 </Button>
-                                <Button type="submit" disabled={creating} className="bg-[#003C43]">
+                                <Button type="submit" disabled={creating} className="bg-[#6666cc]">
                                     {creating && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
                                     Provision Tenant
                                 </Button>
@@ -319,7 +320,7 @@ const TenantList = () => {
                 </Dialog>
             </div>
 
-            <div className="rounded-md border bg-card">
+            <div className={styles.tableCard}>
                 <Table>
                     <TableHeader>
                         <TableRow>
@@ -337,7 +338,7 @@ const TenantList = () => {
                         {loading ? (
                             <TableRow>
                                 <TableCell colSpan={6} className="h-24 text-center">
-                                    <Loader2 className="w-6 h-6 animate-spin mx-auto text-[#003C43]" />
+                                    <Loader2 className="w-6 h-6 animate-spin mx-auto text-[#6666cc]" />
                                 </TableCell>
                             </TableRow>
                         ) : tenants.length === 0 ? (
@@ -384,10 +385,10 @@ const TenantList = () => {
                                     <TableCell>
                                         <div className="flex items-center space-x-2">
                                             <Button variant="ghost" size="sm" onClick={() => handleViewClick(tenant)} title="View Details">
-                                                <Eye className="w-4 h-4 text-gray-500 hover:text-[#003C43]" />
+                                                <Eye className="w-4 h-4 text-gray-500 hover:text-[#6666cc]" />
                                             </Button>
                                             <Button variant="ghost" size="sm" onClick={() => handleEditClick(tenant)} title="Edit Tenant">
-                                                <Pencil className="w-4 h-4 text-gray-500 hover:text-[#003C43]" />
+                                                <Pencil className="w-4 h-4 text-gray-500 hover:text-[#6666cc]" />
                                             </Button>
                                         </div>
                                     </TableCell>

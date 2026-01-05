@@ -1,7 +1,11 @@
 .container {
-    padding: 1.5rem;
+    padding: 3rem 4rem;
     max-width: 1400px;
     margin: 0 auto;
+    min-height: 100vh;
+    font-family: 'Inter', sans-serif;
+    color: white;
+    background-color: #0f172a;
 }
 
 /* Header */
@@ -21,42 +25,45 @@
 .iconWrapper {
     width: 3.5rem;
     height: 3.5rem;
-    background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(59, 130, 246, 0.1));
+    border: 1px solid rgba(16, 185, 129, 0.3);
     border-radius: 1.25rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 10px 20px -5px rgba(16, 185, 129, 0.4);
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
+    backdrop-filter: blur(10px);
 }
 
 .titleText {
     font-size: 2rem;
     font-weight: 900;
-    color: #1e293b;
+    color: white;
     letter-spacing: -0.025em;
     margin: 0;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
 }
 
 .subtitle {
-    color: #64748b;
+    color: rgba(255, 255, 255, 0.6);
     font-weight: 500;
     margin: 0.25rem 0 0 0;
 }
 
 /* Form Section */
 .formCard {
-    background: white;
+    background: linear-gradient(135deg, #1e293b, #0f172a);
     padding: 2rem;
     border-radius: 2rem;
-    border: 1px solid #e2e8f0;
+    border: 1px solid rgba(255, 255, 255, 0.1);
     margin-bottom: 2.5rem;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
 }
 
 .formTitle {
     font-size: 1rem;
     font-weight: 800;
-    color: #1e293b;
+    color: white;
     margin-bottom: 1.5rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -84,7 +91,7 @@
 .inputLabel {
     font-size: 0.75rem;
     font-weight: 800;
-    color: #64748b;
+    color: rgba(255, 255, 255, 0.5);
     text-transform: uppercase;
     letter-spacing: 0.05em;
     padding-left: 0.25rem;
@@ -104,10 +111,11 @@
 }
 
 .listItem {
-    background: white;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
+    backdrop-filter: blur(12px);
     padding: 1.25rem;
     border-radius: 1.5rem;
-    border: 1px solid #e2e8f0;
+    border: 1px solid rgba(255, 255, 255, 0.1);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -116,8 +124,9 @@
 
 .listItem:hover {
     transform: translateX(5px);
-    border-color: #cbd5e1;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.3);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.05));
 }
 
 .itemInfo {
@@ -129,18 +138,20 @@
 .itemIcon {
     width: 3rem;
     height: 3rem;
-    background: #f8fafc;
-    border-radius: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 9999px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #64748b;
+    color: rgba(255, 255, 255, 0.6);
     transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .listItem:hover .itemIcon {
-    background: #f1f5f9;
-    color: #3b82f6;
+    background: rgba(59, 130, 246, 0.2);
+    color: #60a5fa;
+    border-color: rgba(59, 130, 246, 0.3);
 }
 
 .itemText {
@@ -151,12 +162,12 @@
 .itemName {
     font-size: 1rem;
     font-weight: 700;
-    color: #1e293b;
+    color: white;
 }
 
 .itemMeta {
     font-size: 0.75rem;
-    color: #94a3b8;
+    color: rgba(255, 255, 255, 0.5);
     font-weight: 500;
 }
 
@@ -168,9 +179,34 @@
 .actionBtn {
     width: 2.25rem;
     height: 2.25rem;
-    border-radius: 0.75rem;
+    border-radius: 9999px;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.2s ease;
+}
+
+/* Button Styles */
+.addButton {
+    height: 3rem !important;
+    border-radius: 9999px !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    background: linear-gradient(135deg, #000000, #0f0c29) !important;
+    color: white !important;
+    font-weight: 800 !important;
+    padding: 0 2rem !important;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4) !important;
+    transition: all 0.3s ease !important;
+}
+
+.addButton:hover {
+    background: linear-gradient(135deg, #1a1a2e, #302b63) !important;
+    transform: scale(1.05);
+    box-shadow: 0 12px 30px rgba(99, 102, 241, 0.4) !important;
+}
+
+.addButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: scale(1) !important;
 }

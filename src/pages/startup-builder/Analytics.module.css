@@ -5,6 +5,9 @@
     min-height: 100vh;
     position: relative;
     overflow-x: hidden;
+    background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+    font-family: 'Inter', sans-serif;
+    color: white;
 }
 
 /* Add decorative backgrounds */
@@ -17,7 +20,7 @@
     border-radius: 50%;
     filter: blur(120px);
     opacity: 0.15;
-    z-index: -1;
+    z-index: 0;
     pointer-events: none;
 }
 
@@ -40,6 +43,7 @@
     justify-content: space-between;
     align-items: center;
     position: relative;
+    z-index: 10;
 }
 
 .headerTitle {
@@ -51,14 +55,16 @@
 .iconWrapper {
     width: 4rem;
     height: 4rem;
-    background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(168, 85, 247, 0.1));
+    border: 1px solid rgba(99, 102, 241, 0.3);
     border-radius: 1.25rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 15px 30px -5px rgba(99, 102, 241, 0.4);
+    box-shadow: 0 15px 30px -5px rgba(99, 102, 241, 0.2);
     transform: rotate(-5deg);
     transition: transform 0.3s ease;
+    backdrop-filter: blur(10px);
 }
 
 .headerTitle:hover .iconWrapper {
@@ -68,17 +74,14 @@
 .titleText {
     font-size: 2.5rem;
     font-weight: 900;
-    color: #1e293b;
+    color: white;
     letter-spacing: -0.04em;
     margin: 0;
-    background: linear-gradient(135deg, #1e293b 0%, #475569 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
 }
 
 .subtitle {
-    color: #64748b;
+    color: rgba(255, 255, 255, 0.6);
     font-weight: 600;
     margin: 0.25rem 0 0 0;
     font-size: 1rem;
@@ -90,6 +93,8 @@
     grid-template-columns: repeat(1, 1fr);
     gap: 1.5rem;
     margin-bottom: 2.5rem;
+    position: relative;
+    z-index: 10;
 }
 
 @media (min-width: 768px) {
@@ -105,29 +110,29 @@
 }
 
 .statCard {
-    background: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(20px) saturate(160%);
-    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     padding: 1.75rem;
-    border-radius: 2.5rem;
-    border: 1px solid rgba(255, 255, 255, 0.8);
+    border-radius: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow:
-        0 4px 6px -1px rgba(0, 0, 0, 0.05),
-        0 10px 15px -3px rgba(0, 0, 0, 0.02);
+        0 4px 6px -1px rgba(0, 0, 0, 0.1),
+        0 10px 15px -3px rgba(0, 0, 0, 0.1);
 }
 
 .statCard:hover {
     transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 25px 40px -10px rgba(0, 0, 0, 0.08);
-    background: rgba(255, 255, 255, 0.85);
-    border-color: rgba(99, 102, 241, 0.2);
+    box-shadow: 0 25px 40px -10px rgba(0, 0, 0, 0.3);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+    border-color: rgba(99, 102, 241, 0.4);
 }
 
 .statIcon {
     width: 3.5rem;
     height: 3.5rem;
-    border-radius: 1.25rem;
+    border-radius: 9999px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -142,14 +147,15 @@
 .statValue {
     font-size: 2.5rem;
     font-weight: 900;
-    color: #0f172a;
+    color: white;
     line-height: 1;
     margin-bottom: 0.5rem;
     letter-spacing: -0.02em;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
 
 .statLabel {
-    color: #64748b;
+    color: rgba(255, 255, 255, 0.6);
     font-weight: 700;
     font-size: 0.8rem;
     text-transform: uppercase;
@@ -164,10 +170,10 @@
     font-weight: 800;
     margin-top: 1.25rem;
     padding: 0.5rem 1rem;
-    background: rgba(255, 255, 255, 0.5);
-    border: 1px solid rgba(0, 0, 0, 0.03);
-    border-radius: 2rem;
+    border-radius: 9999px;
     width: fit-content;
+    border-width: 1px;
+    border-style: solid;
 }
 
 /* Main Content Area */
@@ -175,6 +181,8 @@
     display: grid;
     grid-template-columns: 1fr;
     gap: 2rem;
+    position: relative;
+    z-index: 10;
 }
 
 @media (min-width: 1024px) {
@@ -184,13 +192,13 @@
 }
 
 .chartCard {
-    background: rgba(255, 255, 255, 0.6);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border-radius: 3rem;
-    border: 1px solid rgba(255, 255, 255, 0.8);
+    border-radius: 2.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
     padding: 2.5rem;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
 }
 
 .cardHeader {
@@ -203,7 +211,7 @@
 .cardTitle {
     font-size: 1.5rem;
     font-weight: 900;
-    color: #1e293b;
+    color: white;
     letter-spacing: -0.02em;
 }
 
@@ -211,13 +219,13 @@
 .chartContainer {
     height: 350px;
     width: 100%;
-    background: rgba(248, 250, 252, 0.3);
+    background: rgba(0, 0, 0, 0.2);
     border-radius: 2rem;
     display: flex;
     align-items: flex-end;
     gap: 1.25rem;
     padding: 2rem;
-    border: 1px solid rgba(226, 232, 240, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .bar {
@@ -236,13 +244,13 @@
 
 /* Activity List */
 .activityCard {
-    background: rgba(255, 255, 255, 0.6);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border-radius: 3rem;
-    border: 1px solid rgba(255, 255, 255, 0.8);
+    border-radius: 2.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
     padding: 2.5rem;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
 }
 
 .activityList {
@@ -275,23 +283,24 @@
 }
 
 .activityItem:hover {
-    background: rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 0.05);
     transform: translateX(5px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .activityIcon {
     width: 3.5rem;
     height: 3.5rem;
     min-width: 3.5rem;
-    border-radius: 1.25rem;
-    background: white;
+    border-radius: 9999px;
+    background: rgba(255, 255, 255, 0.05);
     display: flex;
     align-items: center;
     justify-content: center;
     color: #6366f1;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-    border: 1px solid rgba(0, 0, 0, 0.02);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .activityContent {
@@ -301,12 +310,76 @@
 .activityTitle {
     font-size: 0.95rem;
     font-weight: 800;
-    color: #1e293b;
+    color: white;
     margin: 0;
 }
 
 .activityTime {
     font-size: 0.8rem;
-    color: #94a3b8;
+    color: rgba(255, 255, 255, 0.5);
     font-weight: 600;
+}
+
+/* Button Styles */
+.headerActions {
+    display: flex;
+    gap: 1rem;
+}
+
+.dateButton {
+    height: 3.5rem !important;
+    border-radius: 9999px !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02)) !important;
+    backdrop-filter: blur(12px) !important;
+    font-weight: 800 !important;
+    padding: 0 1.5rem !important;
+    color: white !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+    transition: all 0.3s ease !important;
+}
+
+.dateButton:hover {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05)) !important;
+    transform: scale(1.02);
+    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.3) !important;
+    color: white !important;
+}
+
+.exportButton {
+    height: 3.5rem !important;
+    border-radius: 9999px !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    background: linear-gradient(135deg, #000000, #0f0c29) !important;
+    font-weight: 800 !important;
+    padding: 0 2rem !important;
+    color: white !important;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4) !important;
+    transition: all 0.3s ease !important;
+}
+
+.exportButton:hover {
+    background: linear-gradient(135deg, #1a1a2e, #302b63) !important;
+    transform: scale(1.05);
+    box-shadow: 0 12px 30px rgba(99, 102, 241, 0.4) !important;
+    color: white !important;
+}
+
+.auditButton {
+    width: 100% !important;
+    margin-top: 2rem !important;
+    height: 3.5rem !important;
+    border-radius: 9999px !important;
+    border: 2px dashed rgba(99, 102, 241, 0.2) !important;
+    background: transparent !important;
+    font-weight: 800 !important;
+    color: #818cf8 !important;
+    transition: all 0.3s ease !important;
+}
+
+.auditButton:hover {
+    background: rgba(99, 102, 241, 0.1) !important;
+    border-color: rgba(99, 102, 241, 0.4) !important;
+    transform: scale(1.02);
+    color: #a5b4fc !important;
 }

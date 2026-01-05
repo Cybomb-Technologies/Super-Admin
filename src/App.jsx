@@ -69,7 +69,6 @@ import DJIAdminManager from "./pages/admin/djittrading/djiadmin";
 
 import PFDAdminManager from "./pages/admin/pdfworks/PFDAdminManager";
 
-<<<<<<< HEAD
 // Startup Builder Imports
 import StartupAnalytics from "./pages/startup-builder/Analytics";
 import StartupUsers from "./pages/startup-builder/Users";
@@ -82,15 +81,6 @@ import StartupSubCategories from "./pages/startup-builder/SubCategories";
 import StartupTemplates from "./pages/startup-builder/Templates";
 import StartupUserAccess from "./pages/startup-builder/UserAccess";
 import StartupPlaceholder from "./pages/startup-builder/Placeholder";
-=======
-
-// hralva
-import HralvaDashboard from "./pages/hr-alva/Dashboard";
-import ContactQueries from "./pages/hr-alva/ContactQueries";
-import DemoRequest from "./pages/hr-alva/DemoRequestList";
-import Tenant from "./pages/hr-alva/TenantList";
-
->>>>>>> 9a0b38cca6093484bee18ab646270931a48cf235
 export default function App() {
   const [token, setToken] = useState(localStorage.getItem("token"));
   const location = useLocation();
@@ -455,46 +445,6 @@ export default function App() {
                     </ProtectedRoute>
                   }
                 />
-<<<<<<< HEAD
-=======
-
-
-                {/* hralva */}
-                <Route
-                  path="/hr-alva/dashboard"
-                  element={
-                    <ProtectedRoute>
-                      <HralvaDashboard />
-                    </ProtectedRoute>
-                  }
-                />
-
-                <Route
-                  path="hr-alva/tenant"
-                  element={
-                    <ProtectedRoute>
-                      <Tenant/>
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="hr-alva/contact-query"
-                  element={
-                    <ProtectedRoute>
-                      <ContactQueries/>
-                    </ProtectedRoute>
-                  }
-                />  
-
-                <Route
-                  path="hr-alva/demo-request"
-                  element={
-                    <ProtectedRoute>
-                      <DemoRequest/>
-                    </ProtectedRoute>
-                  }
-                />
->>>>>>> 9a0b38cca6093484bee18ab646270931a48cf235
 
 
                 <Route

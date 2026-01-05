@@ -63,27 +63,29 @@ const UsersPage = () => {
 
     useEffect(() => {
         loadUsers();
-    }, [filters]);
+    }, []);
 
     const loadUsers = async () => {
         try {
             setLoading(true);
-            const params = new URLSearchParams();
-            if (filters?.search) params.append('search', filters.search);
-            if (filters?.plan !== 'all') params.append('plan', filters.plan);
-            if (filters?.status !== 'all') params.append('status', filters.status);
-
-            const queryString = params.toString();
-            const url = `${API_BASE_URL}/api/admin/users${queryString ? `?${queryString}` : ''}`;
-
             const headers = getAuthHeaders();
             if (!headers || Object.keys(headers).length === 0) return;
 
+            const url = `${API_BASE_URL}/api/admin/users`;
             const response = await fetch(url, { headers });
+            
             if (response.ok) {
                 const data = await response.json();
-                setRegisteredUsers(Array.isArray(data.users) ? data.users : []);
-                setAvailablePlans(Array.isArray(data.filters?.plans) ? data.filters.plans : []);
+                const users = Array.isArray(data.users) ? data.users : [];
+                setRegisteredUsers(users);
+                
+                // Extract plans from users if not provided by backend
+                if (data.filters?.plans) {
+                    setAvailablePlans(data.filters.plans);
+                } else {
+                    const plans = [...new Set(users.map(u => u.planId).filter(Boolean))];
+                    setAvailablePlans(plans);
+                }
                 setCurrentPage(1);
             }
         } catch (error) {
@@ -146,11 +148,27 @@ const UsersPage = () => {
         return { bg: 'linear-gradient(135deg, #94a3b8, #475569)', icon: Package, dark: '#64748b' };
     };
 
-    const paginatedUsers = useMemo(() => {
-        return registeredUsers.slice((currentPage - 1) * USERS_PER_PAGE, currentPage * USERS_PER_PAGE);
-    }, [registeredUsers, currentPage]);
+    const filteredUsers = useMemo(() => {
+        return registeredUsers.filter(u => {
+            const matchesSearch = !filters.search || 
+                (u.username && u.username.toLowerCase().includes(filters.search.toLowerCase())) ||
+                (u.email && u.email.toLowerCase().includes(filters.search.toLowerCase())) ||
+                (u._id && u._id.toLowerCase().includes(filters.search.toLowerCase()));
+            
+            const matchesPlan = filters.plan === 'all' || u.planId === filters.plan;
+            
+            const matchesStatus = filters.status === 'all' || 
+                (filters.status === 'active' ? u.isActive : !u.isActive);
 
-    const totalPages = Math.ceil(registeredUsers.length / USERS_PER_PAGE);
+            return matchesSearch && matchesPlan && matchesStatus;
+        });
+    }, [registeredUsers, filters]);
+
+    const paginatedUsers = useMemo(() => {
+        return filteredUsers.slice((currentPage - 1) * USERS_PER_PAGE, currentPage * USERS_PER_PAGE);
+    }, [filteredUsers, currentPage]);
+
+    const totalPages = Math.ceil(filteredUsers.length / USERS_PER_PAGE);
 
     return (
         <div className={styles.container}>
@@ -165,17 +183,18 @@ const UsersPage = () => {
                     </div>
                     <div>
                         <h1 className={styles.titleText}>Identity Hub</h1>
-                        <p className={styles.subtitle}>Supervising <span className="text-indigo-600 font-black">{registeredUsers.length}</span> verified entities</p>
+                        <p className={styles.subtitle}>Supervising <span className="text-indigo-400 font-black">{filteredUsers.length}</span> verified entities</p>
                     </div>
                 </motion.div>
 
                 <motion.div initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} className={styles.actions}>
-                    <Button onClick={loadUsers} variant="outline" className="h-14 px-8 rounded-2xl font-black bg-white/60 border-2 border-indigo-50 text-indigo-700 hover:bg-white hover:shadow-lg transition-all">
-                        <RefreshCw className={`w-5 h-5 mr-3 ${loading ? 'animate-spin' : ''}`} />
+                    <Button onClick={loadUsers} variant="ghost" className="h-12 px-6 bg-black rounded-full font-bold text-white shadow-2xl hover:shadow-indigo-500/20 transition-all active:scale-95 hover:scale-105 border border-white/10">
+                        <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
                         Refresh Web
                     </Button>
-                    <Button onClick={exportToExcel} className="h-14 px-8 rounded-2xl font-black bg-slate-900 text-white shadow-2xl hover:scale-105 transition-transform">
-                        <Download className="w-5 h-5 mr-3" />
+                    <div className="w-2" /> {/* Spacer */}
+                    <Button onClick={exportToExcel} variant="ghost" className="h-12 bg-black rounded-full px-6 font-bold text-white shadow-2xl hover:shadow-indigo-500/20 transition-all active:scale-95 hover:scale-105 border border-white/10">
+                        <Download className="w-4 h-4 mr-2" />
                         Export Census
                     </Button>
                 </motion.div>
@@ -203,13 +222,16 @@ const UsersPage = () => {
                     {/* Tier Filter */}
                     <Select value={filters.plan} onValueChange={(val) => setFilters(p => ({ ...p, plan: val }))}>
                         <SelectTrigger className={styles.compactTrigger}>
-                            <Package className="w-4 h-4 mr-2 text-indigo-500" />
-                            <SelectValue placeholder="Access" />
+                            <div className="flex items-center gap-2">
+                                <Package className="w-4 h-4 text-indigo-400" />
+                                <SelectValue placeholder="Access" />
+                            </div>
+                            <ChevronDown className="w-4 h-4 opacity-50" />
                         </SelectTrigger>
-                        <SelectContent className="rounded-2xl border-none shadow-2xl bg-white/95 p-2">
-                            <SelectItem value="all" className="rounded-xl font-bold p-3">Global Access</SelectItem>
+                        <SelectContent className="min-w-[200px] bg-black">
+                            <SelectItem value="all">Global Access</SelectItem>
                             {availablePlans.map(p => (
-                                <SelectItem key={p} value={p} className="rounded-xl font-bold p-3 uppercase">{String(p)}</SelectItem>
+                                <SelectItem key={p} value={p}>{String(p).toUpperCase()}</SelectItem>
                             ))}
                         </SelectContent>
                     </Select>
@@ -217,20 +239,25 @@ const UsersPage = () => {
                     {/* Status Filter */}
                     <Select value={filters.status} onValueChange={(val) => setFilters(p => ({ ...p, status: val }))}>
                         <SelectTrigger className={styles.compactTrigger}>
-                            <Activity className="w-4 h-4 mr-2 text-emerald-500" />
-                            <SelectValue placeholder="Vitality" />
+                            <div className="flex items-center gap-2">
+                                <Activity className="w-4 h-4 text-emerald-400" />
+                                <SelectValue placeholder="Vitality" />
+                            </div>
+                            <ChevronDown className="w-4 h-4 opacity-50" />
                         </SelectTrigger>
-                        <SelectContent className="rounded-2xl border-none shadow-2xl bg-white/95 p-2">
-                            <SelectItem value="all" className="rounded-xl font-bold p-3">Standard View</SelectItem>
-                            <SelectItem value="active" className="rounded-xl font-bold p-3 text-emerald-600">Active</SelectItem>
-                            <SelectItem value="inactive" className="rounded-xl font-bold p-3 text-rose-600">Inactive</SelectItem>
+                        <SelectContent className="min-w-[200px] bg-black">
+                            <SelectItem value="all">Standard View</SelectItem>
+                            <SelectItem value="active" className="text-emerald-400 hover:text-emerald-300">Active</SelectItem>
+                            <SelectItem value="inactive" className="text-rose-400 hover:text-rose-300">Inactive</SelectItem>
                         </SelectContent>
                     </Select>
+
+                    <div className={styles.dividerHidden} />
 
                     <Button
                         variant="ghost"
                         onClick={() => setFilters({ search: '', plan: 'all', status: 'all' })}
-                        className="h-10 px-4 rounded-xl font-bold text-slate-400 hover:text-rose-600 hover:bg-rose-50"
+                        className={styles.clearButton}
                     >
                         <Trash2 className="w-4 h-4 mr-2" />
                         Clear
@@ -241,17 +268,17 @@ const UsersPage = () => {
             {/* Table Area */}
             <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2 }} className={styles.tableWrapper}>
                 {(loading || modalLoading) && (
-                    <div className="absolute inset-0 z-[20] bg-white/60 backdrop-blur-md flex items-center justify-center">
+                    <div className="absolute inset-0 z-[20] bg-slate-900/60 backdrop-blur-md flex items-center justify-center">
                         <div className="flex flex-col items-center gap-6">
-                            <div className="w-16 h-16 border-4 border-indigo-600/20 border-t-indigo-600 rounded-full animate-spin" />
-                            <p className="text-sm font-black text-indigo-600 uppercase tracking-[0.3em] animate-pulse">Syncing Citidel...</p>
+                            <div className="w-16 h-16 border-4 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin" />
+                            <p className="text-sm font-black text-indigo-400 uppercase tracking-[0.3em] animate-pulse">Syncing Citidel...</p>
                         </div>
                     </div>
                 )}
 
                 {registeredUsers.length === 0 ? (
                     <div className="py-44 text-center">
-                        <h2 className="text-4xl font-black text-slate-900 mb-4 opacity-10">NO DATA FOUND</h2>
+                        <h2 className="text-4xl font-black text-white mb-4 opacity-10">NO DATA FOUND</h2>
                     </div>
                 ) : (
                     <div className={styles.tableContainer}>
@@ -299,7 +326,7 @@ const UsersPage = () => {
                                                     </div>
                                                 </td>
                                                 <td className={styles.td}>
-                                                    <span className="font-bold text-slate-500 text-xs">{formatDate(u.createdAt)}</span>
+                                                    <span className="font-bold text-slate-400 text-xs">{formatDate(u.createdAt)}</span>
                                                 </td>
                                                 <td className={styles.td}>
                                                     <button onClick={() => loadUserDetails(u._id)} className={styles.detailsBtn}>
@@ -320,7 +347,7 @@ const UsersPage = () => {
                 {totalPages > 1 && (
                     <div className={styles.pagination}>
                         <div className={styles.paginationInfo}>
-                            Node <span className="font-black text-slate-900">{(currentPage - 1) * USERS_PER_PAGE + 1} - {Math.min(currentPage * USERS_PER_PAGE, registeredUsers.length)}</span>
+                            Node <span className="font-black text-white">{(currentPage - 1) * USERS_PER_PAGE + 1} - {Math.min(currentPage * USERS_PER_PAGE, filteredUsers.length)}</span>
                         </div>
                         <div className={styles.paginationControls}>
                             <button onClick={() => setCurrentPage(p => Math.max(1, p - 1))} className={styles.navBtn} disabled={currentPage === 1}>
@@ -336,15 +363,15 @@ const UsersPage = () => {
 
             {/* Modal */}
             <Dialog open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
-                <DialogContent className="max-w-2xl border-none p-0 overflow-hidden bg-white shadow-[0_50px_100px_-20px_rgba(0,0,0,0.5)] rounded-[3.5rem]">
+                <DialogContent className="max-w-2xl border border-white/10 p-0 overflow-hidden bg-slate-900 shadow-[0_50px_100px_-20px_rgba(0,0,0,0.5)] rounded-[3.5rem] text-white">
                     {selectedUser && (
                         <div className="relative">
-                            <div className="h-40 bg-slate-900 relative">
+                            <div className="h-40 bg-slate-950 relative">
                                 <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, #6366f1 1px, transparent 0)', backgroundSize: '16px 16px' }} />
-                                <button onClick={() => setIsPreviewOpen(false)} className="absolute top-8 right-8 w-12 h-12 bg-white/10 hover:bg-white/20 text-white rounded-2xl flex items-center justify-center backdrop-blur-md">
+                                <button onClick={() => setIsPreviewOpen(false)} className="absolute top-8 right-8 w-12 h-12 bg-white/10 hover:bg-white/20 text-white rounded-2xl flex items-center justify-center backdrop-blur-md transition-all">
                                     <X className="w-6 h-6" />
                                 </button>
-                                <div className="absolute -bottom-12 left-12 p-1.5 bg-white rounded-[2.5rem] shadow-2xl">
+                                <div className="absolute -bottom-12 left-12 p-1.5 bg-slate-900 rounded-[2.5rem] shadow-2xl border border-white/10">
                                     <div className="w-24 h-24 rounded-[2rem] flex items-center justify-center text-white text-3xl font-black" style={{ background: getPlanConfig(selectedUser.planId).bg }}>
                                         {(selectedUser.username || selectedUser.email || 'U')[0].toUpperCase()}
                                     </div>
@@ -354,34 +381,34 @@ const UsersPage = () => {
                             <div className="pt-20 p-12">
                                 <div className="flex justify-between items-start mb-10">
                                     <div>
-                                        <h2 className="text-4xl font-black text-slate-900 tracking-tight leading-none mb-3 italic">{selectedUser.username || 'IDENTITY_UNSET'}</h2>
-                                        <div className="flex items-center gap-3 text-slate-500 font-bold">
-                                            <Mail className="w-5 h-5 text-indigo-500" />
+                                        <h2 className="text-4xl font-black text-white tracking-tight leading-none mb-3 italic">{selectedUser.username || 'IDENTITY_UNSET'}</h2>
+                                        <div className="flex items-center gap-3 text-slate-400 font-bold">
+                                            <Mail className="w-5 h-5 text-indigo-400" />
                                             {selectedUser.email}
                                         </div>
                                     </div>
-                                    <div className={`px-5 py-2.5 rounded-2xl font-black text-[10px] tracking-widest border-2 ${selectedUser.isActive ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 'bg-rose-50 text-rose-600 border-rose-100'}`}>
+                                    <div className={`px-5 py-2.5 rounded-2xl font-black text-[10px] tracking-widest border-2 ${selectedUser.isActive ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-rose-500/10 text-rose-400 border-rose-500/20'}`}>
                                         {selectedUser.isActive ? 'OPERATIONAL' : 'OFFLINE'}
                                     </div>
                                 </div>
 
                                 <div className="grid grid-cols-2 gap-4 mb-10">
-                                    <div className="p-6 bg-slate-50 rounded-[2.5rem] border-2 border-slate-100 flex items-center gap-4">
-                                        <div className="p-3 bg-white rounded-2xl shadow-sm">
-                                            <Shield className="w-6 h-6 text-indigo-600" />
+                                    <div className="p-6 bg-white/5 rounded-[2.5rem] border-2 border-white/5 flex items-center gap-4">
+                                        <div className="p-3 bg-white/10 rounded-2xl shadow-sm">
+                                            <Shield className="w-6 h-6 text-indigo-400" />
                                         </div>
                                         <div>
                                             <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Privilege</p>
-                                            <p className="font-black text-slate-900 uppercase">{selectedUser.planId || 'Basic'}</p>
+                                            <p className="font-black text-white uppercase">{selectedUser.planId || 'Basic'}</p>
                                         </div>
                                     </div>
-                                    <div className="p-6 bg-slate-50 rounded-[2.5rem] border-2 border-slate-100 flex items-center gap-4">
-                                        <div className="p-3 bg-white rounded-2xl shadow-sm">
-                                            <Calendar className="w-6 h-6 text-indigo-600" />
+                                    <div className="p-6 bg-white/5 rounded-[2.5rem] border-2 border-white/5 flex items-center gap-4">
+                                        <div className="p-3 bg-white/10 rounded-2xl shadow-sm">
+                                            <Calendar className="w-6 h-6 text-indigo-400" />
                                         </div>
                                         <div>
                                             <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Genesis</p>
-                                            <p className="font-black text-slate-900 uppercase">{formatDate(selectedUser.createdAt)}</p>
+                                            <p className="font-black text-white uppercase">{formatDate(selectedUser.createdAt)}</p>
                                         </div>
                                     </div>
                                 </div>
