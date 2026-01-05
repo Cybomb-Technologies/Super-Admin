@@ -252,7 +252,7 @@ export default function Sidebar({ onRankSeoTabChange, rankSeoData, isCollapsed, 
   ];
 
   const startupbuilder = [
-    { to: "/startup-builder/analytics", label: "Analytics" },
+    // { to: "/startup-builder/analytics", label: "Analytics" },
     { to: "/startup-builder/users", label: "Users" },
     { to: "/startup-builder/pricing", label: "Pricing Manager" },
     { to: "/startup-builder/payments", label: "Payment Manager" },

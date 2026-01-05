@@ -1,36 +1,52 @@
 .container {
     padding: 2.5rem;
     min-height: 100vh;
-    background: #f8fafc;
+    font-family: 'Inter', sans-serif;
+    color: white;
+    background-color: #0f172a;
 }
 
 .header {
     margin-bottom: 2.5rem;
     position: relative;
     padding: 3rem;
-    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    background: linear-gradient(135deg, #312e81 0%, #4338ca 100%);
     border-radius: 2.5rem;
     overflow: hidden;
-    box-shadow: 0 25px 50px -12px rgba(79, 70, 229, 0.25);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
 }
 
 .headerTitle {
     display: flex;
     align-items: center;
     gap: 1.5rem;
+    position: relative;
+    z-index: 1;
 }
 
 .iconWrapper {
     width: 4.5rem;
     height: 4.5rem;
-    background: rgba(255, 255, 255, 0.2);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 1.5rem;
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
 }
 
 .titleMain {
@@ -40,6 +56,7 @@
     letter-spacing: -0.05em;
     line-height: 1;
     margin-bottom: 0.5rem;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
 }
 
 .titleSub {
@@ -49,18 +66,18 @@
 }
 
 .addSection {
-    background: white;
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
     border-radius: 2rem;
     padding: 2.5rem;
-    border: 1px solid #e2e8f0;
+    border: 1px solid rgba(255, 255, 255, 0.1);
     margin-bottom: 2rem;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.5);
 }
 
 .sectionTitle {
     font-size: 1.25rem;
     font-weight: 900;
-    color: #0f172a;
+    color: white;
     margin-bottom: 1.5rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -76,18 +93,23 @@
     height: 4rem;
     padding: 0 1.5rem;
     border-radius: 1.25rem;
-    border: 2px solid #e2e8f0;
-    background: #f8fafc;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
     font-weight: 700;
     transition: all 0.2s;
     outline: none;
     font-size: 1rem;
+    color: white;
+}
+
+.input::placeholder {
+    color: rgba(255, 255, 255, 0.3);
 }
 
 .input:focus {
     border-color: #6366f1;
-    background: white;
-    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
 }
 
 .list {
@@ -96,20 +118,22 @@
 }
 
 .levelItem {
-    background: white;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
     border-radius: 1.5rem;
     padding: 1.5rem;
-    border: 1px solid #e2e8f0;
+    border: 1px solid rgba(255, 255, 255, 0.1);
     display: flex;
     align-items: center;
     justify-content: space-between;
     transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
 }
 
 .levelItem:hover {
     transform: translateX(8px);
-    border-color: #6366f1;
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+    border-color: rgba(99, 102, 241, 0.5);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
 }
 
 .levelInfo {
@@ -121,24 +145,25 @@
 .levelIcon {
     width: 3.5rem;
     height: 3.5rem;
-    background: #f5f3ff;
+    background: rgba(99, 102, 241, 0.1);
     border-radius: 1.25rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #6366f1;
+    color: #818cf8;
+    border: 1px solid rgba(99, 102, 241, 0.2);
 }
 
 .levelName {
     font-size: 1.125rem;
     font-weight: 900;
-    color: #0f172a;
+    color: white;
 }
 
 .levelDesc {
     font-size: 0.875rem;
     font-weight: 600;
-    color: #64748b;
+    color: rgba(255, 255, 255, 0.5);
 }
 
 .levelActions {
@@ -151,4 +176,30 @@
     align-items: center;
     gap: 0.75rem;
     flex: 1;
+}
+
+/* Button Styles */
+.provisionButton {
+    height: 4rem !important;
+    border-radius: 9999px !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    background: linear-gradient(135deg, #000000, #0f0c29) !important;
+    color: white !important;
+    font-weight: 900 !important;
+    font-size: 1.125rem !important;
+    padding: 0 2.5rem !important;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4) !important;
+    transition: all 0.3s ease !important;
+}
+
+.provisionButton:hover {
+    background: linear-gradient(135deg, #1a1a2e, #302b63) !important;
+    transform: scale(1.05);
+    box-shadow: 0 12px 30px rgba(99, 102, 241, 0.4) !important;
+}
+
+.provisionButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: scale(1) !important;
 }

@@ -70,8 +70,8 @@ const Categories = () => {
     if (loading) {
         return (
             <div className="flex flex-col justify-center items-center h-[50vh] gap-4">
-                <div className="w-10 h-10 border-4 border-blue-600/20 border-t-blue-600 rounded-full animate-spin" />
-                <p className="text-slate-500 font-medium">Loading platform taxonomy...</p>
+                <div className="w-10 h-10 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin" />
+                <p className="text-slate-400 font-medium">Loading platform taxonomy...</p>
             </div>
         );
     }
@@ -103,14 +103,14 @@ const Categories = () => {
                             value={newCategory}
                             onChange={(e) => setNewCategory(e.target.value)}
                             placeholder="e.g. Artificial Intelligence, Digital Marketing"
-                            className="h-12 rounded-2xl bg-slate-50 border-slate-100"
+                            className="h-12 rounded-2xl bg-white/5 border-white/10 text-white placeholder:text-slate-500 focus:border-blue-500/50"
                             onKeyPress={e => e.key === 'Enter' && handleCreateCategory()}
                         />
                     </div>
                     <Button
                         onClick={handleCreateCategory}
                         disabled={!newCategory.trim()}
-                        className="bg-slate-900 hover:bg-slate-800 text-white rounded-2xl h-12 px-8 font-bold shadow-lg"
+                        className={styles.addButton}
                     >
                         <Plus className="w-4 h-4 mr-2" />
                         Add Category
@@ -120,9 +120,9 @@ const Categories = () => {
 
             <div className={styles.listContainer}>
                 {categories.length === 0 ? (
-                    <div className="md:col-span-2 text-center py-12 bg-slate-50 rounded-[2rem] border-2 border-dashed border-slate-200">
-                        <FolderOpen className="w-12 h-12 mx-auto mb-3 text-slate-300" />
-                        <p className="text-slate-500 font-bold">No categories mapped yet</p>
+                    <div className="md:col-span-2 text-center py-12 bg-white/5 rounded-[2rem] border-2 border-dashed border-white/10">
+                        <FolderOpen className="w-12 h-12 mx-auto mb-3 text-slate-500" />
+                        <p className="text-slate-400 font-bold">No categories mapped yet</p>
                     </div>
                 ) : (
                     categories.map((category) => (
@@ -144,7 +144,7 @@ const Categories = () => {
                             <div className={styles.itemActions}>
                                 <Button
                                     variant="ghost"
-                                    className={styles.actionBtn + " hover:bg-blue-50 hover:text-blue-600"}
+                                    className={styles.actionBtn + " hover:bg-blue-500/10 hover:text-blue-400 text-slate-400"}
                                     onClick={() => {
                                         setEditingId(category._id);
                                         setEditValue(category.name);
@@ -154,7 +154,7 @@ const Categories = () => {
                                 </Button>
                                 <Button
                                     variant="ghost"
-                                    className={styles.actionBtn + " hover:bg-red-50 hover:text-red-600"}
+                                    className={styles.actionBtn + " hover:bg-red-500/10 hover:text-red-400 text-slate-400"}
                                     onClick={() => {
                                         if (!confirm('Are you sure?')) return;
                                     }}

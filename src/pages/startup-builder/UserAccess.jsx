@@ -200,7 +200,7 @@ const UserAccess = () => {
         return (
             <div className="flex flex-col items-center justify-center h-[60vh] gap-4">
                 <div className="w-16 h-16 border-4 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin"></div>
-                <div className="font-black text-slate-400 uppercase tracking-[0.2em] text-xs">Loading Access Levels...</div>
+                <div className="font-black text-slate-500 uppercase tracking-[0.2em] text-xs">Loading Access Levels...</div>
             </div>
         );
     }
@@ -227,12 +227,12 @@ const UserAccess = () => {
                         value={newAccessLevel}
                         onChange={(e) => setNewAccessLevel(e.target.value)}
                         placeholder="e.g. Free Tier, Diamond Member, Admin Core"
-                        className={styles.input}
+                        className={`${styles.input} h-16 rounded-2xl bg-white/5 border border-white/10 text-white placeholder:text-slate-500 focus:outline-none focus:border-indigo-500/50 px-6 font-bold`}
                     />
                     <Button
                         onClick={handleCreateAccessLevel}
                         disabled={!newAccessLevel.trim()}
-                        className="h-16 px-10 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl font-black text-lg shadow-xl shadow-indigo-900/20 transition-all"
+                        className={styles.provisionButton}
                     >
                         <Plus className="w-6 h-6 mr-2" />
                         Provision
@@ -242,9 +242,9 @@ const UserAccess = () => {
 
             <div className={styles.list}>
                 {accessLevels.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center p-20 bg-white rounded-[2.5rem] border border-dashed border-slate-200">
-                        <Users className="w-20 h-20 text-slate-200 mb-6" />
-                        <h4 className="text-xl font-black text-slate-900 uppercase tracking-tighter">No Protocols Defined</h4>
+                    <div className="flex flex-col items-center justify-center p-20 bg-white/5 rounded-[2.5rem] border border-dashed border-white/10">
+                        <Users className="w-20 h-20 text-slate-600 mb-6" />
+                        <h4 className="text-xl font-black text-white uppercase tracking-tighter">No Protocols Defined</h4>
                         <p className="text-slate-500 font-bold mt-2">Start by provisioning your first access hierarchy.</p>
                     </div>
                 ) : (
@@ -259,14 +259,14 @@ const UserAccess = () => {
                                         autoFocus
                                     />
                                     <Button
-                                        className="h-16 px-8 bg-indigo-600 text-white rounded-2xl font-black"
+                                        className="h-16 px-8 bg-indigo-600 text-white rounded-2xl font-black hover:bg-indigo-500 transition-all"
                                         onClick={() => handleUpdateAccessLevel(accessLevel._id)}
                                     >
                                         Apply
                                     </Button>
                                     <Button
                                         variant="outline"
-                                        className="h-16 px-8 rounded-2xl border-slate-200 font-black"
+                                        className="h-16 px-8 rounded-2xl border-white/10 font-black text-slate-400 hover:bg-white/5 hover:text-white"
                                         onClick={cancelEditing}
                                     >
                                         Abort
@@ -286,14 +286,14 @@ const UserAccess = () => {
                                     <div className={styles.levelActions}>
                                         <Button
                                             variant="outline"
-                                            className="w-14 h-14 p-0 rounded-2xl border-slate-200 text-slate-600 hover:bg-slate-50"
+                                            className="w-14 h-14 p-0 rounded-2xl border-white/10 text-slate-400 hover:bg-indigo-500/10 hover:text-indigo-400 hover:border-indigo-500/50 bg-transparent"
                                             onClick={() => startEditing(accessLevel)}
                                         >
                                             <Edit className="w-6 h-6" />
                                         </Button>
                                         <Button
                                             variant="outline"
-                                            className="w-14 h-14 p-0 rounded-2xl border-slate-200 text-red-500 hover:bg-red-50 hover:text-red-600"
+                                            className="w-14 h-14 p-0 rounded-2xl border-white/10 text-slate-400 hover:bg-red-500/10 hover:text-red-400 hover:border-red-500/50 bg-transparent"
                                             onClick={() => handleDeleteAccessLevel(accessLevel._id)}
                                         >
                                             <Trash2 className="w-6 h-6" />

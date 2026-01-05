@@ -22,13 +22,13 @@ const GlobalSearch = () => {
         <div className="w-full max-w-2xl mx-auto">
             <form onSubmit={handleSearch} className="relative">
                 <div className="relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
                     <Input
                         type="text"
                         placeholder="Search across templates, users, categories..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="pl-10 pr-10 py-3 text-lg border-2 border-gray-200 focus:border-blue-500 rounded-xl"
+                        className="pl-10 pr-10 py-6 text-lg border-2 border-white/10 focus:border-blue-500 rounded-xl bg-white/5 text-white placeholder:text-slate-500"
                     />
                     {searchQuery && (
                         <Button
@@ -36,7 +36,7 @@ const GlobalSearch = () => {
                             variant="ghost"
                             size="sm"
                             onClick={clearSearch}
-                            className="absolute right-2 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0"
+                            className="absolute right-2 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0 text-slate-400 hover:text-white hover:bg-white/10 rounded-full"
                         >
                             <X className="w-4 h-4" />
                         </Button>

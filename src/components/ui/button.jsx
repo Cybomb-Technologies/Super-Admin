@@ -3,12 +3,12 @@ import React from 'react';
 
 const Button = React.forwardRef(({ className, variant = 'default', size = 'default', asChild = false, ...props }, ref) => {
 	const variants = {
-		default: 'bg-primary text-primary-foreground hover:bg-primary/90',
-		destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/90',
-		outline: 'border border-input bg-background hover:bg-accent hover:text-accent-foreground',
-		secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
-		ghost: 'hover:bg-accent hover:text-accent-foreground',
-		link: 'text-primary underline-offset-4 hover:underline',
+		default: 'bg-indigo-600 text-white hover:bg-indigo-700',
+		destructive: 'bg-red-600 text-white hover:bg-red-700',
+		outline: 'border border-slate-700 bg-transparent hover:bg-slate-800 hover:text-white text-slate-200',
+		secondary: 'bg-slate-800 text-slate-200 hover:bg-slate-700',
+		ghost: 'hover:bg-slate-800 hover:text-white text-slate-300',
+		link: 'text-indigo-400 underline-offset-4 hover:underline',
 	};
 
 	const sizes = {

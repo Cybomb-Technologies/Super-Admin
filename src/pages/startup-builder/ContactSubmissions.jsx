@@ -15,11 +15,19 @@ import {
     Phone,
     FileText,
     X,
-    ChevronDown
+    ChevronDown,
+    Trash2
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
 import { Input } from '@/components/ui/input';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 import { getAuthHeaders } from '@/utils/startupBuilderAuth';
 
 const API_BASE_URL = import.meta.env.VITE_PAPLIXO_API_URL;
@@ -99,7 +107,7 @@ const ContactSubmissions = () => {
     if (loading && submissions.length === 0) {
         return (
             <div className="flex flex-col justify-center items-center h-[60vh] gap-4">
-                <div className="w-12 h-12 border-4 border-indigo-600/20 border-t-indigo-600 rounded-full animate-spin" />
+                <div className="w-12 h-12 border-4 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin" />
                 <p className="text-slate-500 font-medium">Fetching correspondence...</p>
             </div>
         );
@@ -111,7 +119,7 @@ const ContactSubmissions = () => {
                 <div className={styles.headerInner}>
                     <div className={styles.headerTitle}>
                         <div className={styles.iconWrapper}>
-                            <Mail className="w-8 h-8" />
+                            <Mail className="w-8 h-8 text-white" />
                         </div>
                         <div>
                             <h1 className={styles.titleMain}>Inbound Messages</h1>
@@ -119,8 +127,8 @@ const ContactSubmissions = () => {
                         </div>
                     </div>
                     <div className="text-right">
-                        <div className="text-4xl font-black">{submissions.filter(s => !s.read).length}</div>
-                        <div className="text-xs uppercase font-black tracking-widest opacity-80">Unread</div>
+                        <div className="text-4xl font-black text-white">{submissions.filter(s => !s.read).length}</div>
+                        <div className="text-xs uppercase font-black tracking-widest opacity-80 text-slate-400">Unread</div>
                     </div>
                 </div>
             </div>
@@ -129,24 +137,24 @@ const ContactSubmissions = () => {
                 <div className={styles.searchWrapper}>
                     <Search className={styles.searchIcon} />
                     <input
-                        className={styles.searchInput}
+                        className={`${styles.searchInput} bg-white/5 border-none text-white placeholder:text-slate-500 focus:ring-0`}
                         placeholder="Search by sender, email or subject..."
                         value={searchTerm}
                         onChange={e => setSearchTerm(e.target.value)}
                     />
                 </div>
                 <Select value={statusFilter} onValueChange={setStatusFilter}>
-                    <SelectTrigger className="w-64 h-14 rounded-2xl bg-slate-50 border-slate-100 font-bold">
+                    <SelectTrigger className="w-64 h-14 rounded-full bg-white/5 border-white/10 font-bold text-white">
                         <SelectValue placeholder="All Messages" />
                     </SelectTrigger>
-                    <SelectContent className="rounded-2xl">
-                        <SelectItem value="all">All Submissions</SelectItem>
-                        <SelectItem value="unread">Unread Only</SelectItem>
-                        <SelectItem value="read">Read Only</SelectItem>
-                        <SelectItem value="flagged">Flagged Only</SelectItem>
+                    <SelectContent className="rounded-2xl bg-slate-900 border-white/10 text-white">
+                        <SelectItem value="all" className="focus:bg-white/10 focus:text-white cursor-pointer p-3 rounded-xl font-bold">All Submissions</SelectItem>
+                        <SelectItem value="unread" className="focus:bg-white/10 focus:text-white cursor-pointer p-3 rounded-xl font-bold">Unread Only</SelectItem>
+                        <SelectItem value="read" className="focus:bg-white/10 focus:text-white cursor-pointer p-3 rounded-xl font-bold">Read Only</SelectItem>
+                        <SelectItem value="flagged" className="focus:bg-white/10 focus:text-white cursor-pointer p-3 rounded-xl font-bold">Flagged Only</SelectItem>
                     </SelectContent>
                 </Select>
-                <Button className="h-14 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white px-8 font-bold">
+                <Button className="h-14 rounded-full bg-black hover:bg-slate-900 text-white px-8 font-bold shadow-xl active:scale-95 transition-all hover:scale-105">
                     <Download className="w-4 h-4 mr-2" />
                     Export CSV
                 </Button>
@@ -177,15 +185,15 @@ const ContactSubmissions = () => {
                             {new Date(sub.createdAt).toLocaleDateString()}
                         </div>
                         <div className="flex justify-end gap-2">
-                            <Button variant="ghost" className="w-10 h-10 rounded-xl hover:bg-white p-0">
-                                <Eye className="w-4 h-4 text-blue-600" />
+                            <Button variant="ghost" className="w-10 h-10 rounded-xl hover:bg-white/10 p-0 text-slate-400">
+                                <Eye className="w-4 h-4 text-blue-400" />
                             </Button>
                             <Button
                                 variant="ghost"
-                                className="w-10 h-10 rounded-xl hover:bg-white p-0"
+                                className="w-10 h-10 rounded-xl hover:bg-white/10 p-0"
                                 onClick={(e) => { e.stopPropagation(); handleMarkAsRead(sub._id, sub.read); }}
                             >
-                                {sub.read ? <EyeOff className="w-4 h-4 text-slate-400" /> : <Mail className="w-4 h-4 text-orange-500" />}
+                                {sub.read ? <EyeOff className="w-4 h-4 text-slate-400" /> : <Mail className="w-4 h-4 text-amber-500" />}
                             </Button>
                         </div>
                     </div>
@@ -207,39 +215,39 @@ const ContactSubmissions = () => {
                                     <div className="flex items-center gap-4 mb-2">
                                         <div className={styles.avatar}>{selectedSubmission.name.charAt(0)}</div>
                                         <div>
-                                            <h2 className="text-2xl font-black text-slate-900">{selectedSubmission.name}</h2>
-                                            <p className="text-slate-500 font-bold">{selectedSubmission.email}</p>
+                                            <h2 className="text-2xl font-black text-white">{selectedSubmission.name}</h2>
+                                            <p className="text-slate-400 font-bold">{selectedSubmission.email}</p>
                                         </div>
                                     </div>
-                                    <div className="flex gap-4 text-xs font-black uppercase tracking-widest text-slate-400">
+                                    <div className="flex gap-4 text-xs font-black uppercase tracking-widest text-slate-500">
                                         <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> {new Date(selectedSubmission.createdAt).toLocaleString()}</span>
                                         {selectedSubmission.phone && <span className="flex items-center gap-1"><Phone className="w-3 h-3" /> {selectedSubmission.phone}</span>}
                                     </div>
                                 </div>
-                                <Button variant="ghost" onClick={() => setIsModalOpen(false)} className="rounded-full w-12 h-12 p-0">
+                                <Button variant="ghost" onClick={() => setIsModalOpen(false)} className="rounded-full w-12 h-12 p-0 text-slate-400 hover:text-white hover:bg-white/10">
                                     <X className="w-6 h-6" />
                                 </Button>
                             </div>
                             <div className={styles.modalBody}>
                                 <div className="mb-6">
-                                    <h4 className="text-xs font-black uppercase text-slate-400 mb-2">Subject</h4>
-                                    <p className="text-xl font-black text-slate-900">{selectedSubmission.subject}</p>
+                                    <h4 className="text-xs font-black uppercase text-slate-500 mb-2">Subject</h4>
+                                    <p className="text-xl font-black text-white">{selectedSubmission.subject}</p>
                                 </div>
-                                <h4 className="text-xs font-black uppercase text-slate-400 mb-2">Message Body</h4>
+                                <h4 className="text-xs font-black uppercase text-slate-500 mb-2">Message Body</h4>
                                 <div className={styles.messageBox}>
                                     {selectedSubmission.message}
                                 </div>
                             </div>
-                            <div className="p-8 border-t border-slate-100 flex justify-between items-center bg-slate-50/50">
+                            <div className="p-8 border-t border-white/10 flex justify-between items-center bg-slate-900/50">
                                 <div className="flex gap-3">
-                                    <Button variant="outline" className="rounded-2xl font-bold h-12 px-6 bg-white border-slate-200">
+                                    <Button variant="outline" className="rounded-2xl font-bold h-12 px-6 bg-transparent border-white/10 text-slate-300 hover:bg-white/5 hover:text-white">
                                         <Flag className="w-4 h-4 mr-2" /> Mark Flagged
                                     </Button>
-                                    <Button variant="outline" className="rounded-2xl font-bold h-12 px-6 bg-white border-slate-200">
+                                    <Button variant="outline" className="rounded-2xl font-bold h-12 px-6 bg-transparent border-white/10 text-slate-300 hover:bg-white/5 hover:text-white">
                                         <Trash2 className="w-4 h-4 mr-2" /> Trash
                                     </Button>
                                 </div>
-                                <Button onClick={() => setIsModalOpen(false)} className="bg-slate-900 text-white rounded-2xl font-black h-12 px-10 shadow-xl">
+                                <Button onClick={() => setIsModalOpen(false)} className="bg-white text-slate-900 hover:bg-slate-200 rounded-2xl font-black h-12 px-10 shadow-xl">
                                     Done
                                 </Button>
                             </div>
