@@ -6,7 +6,7 @@ import styles from "./Sidebar.module.css";
 const API_BASE_URL = import.meta.env.VITE_CYBOMB_API_BASE || "http://localhost:5002";
 const VITE_RANKSEO_API_URL = import.meta.env.VITE_RANKSEO_API_URL || "http://localhost:5001";
 
-const Dropdown = ({ title, items, icon, counts = {}, onTabChange }) => {
+const Dropdown = ({ title, items, icon, counts = {}, onTabChange, isCollapsed }) => {
   const [open, setOpen] = useState(false);
   const loc = useLocation();
 
@@ -14,6 +14,11 @@ const Dropdown = ({ title, items, icon, counts = {}, onTabChange }) => {
   useEffect(() => {
     if (items.some((i) => loc.pathname.startsWith(i.to))) setOpen(true);
   }, [loc.pathname, items]);
+
+  // Force close dropdown if sidebar is collapsed
+  useEffect(() => {
+    if (isCollapsed) setOpen(false);
+  }, [isCollapsed]);
 
   const getCountForRoute = (label) => {
     const keyMap = {
@@ -24,7 +29,7 @@ const Dropdown = ({ title, items, icon, counts = {}, onTabChange }) => {
       "Job Openings": "jobopenings",
       "Blog Management": "blogs",
       "Press Release": "pressreleases",
-      
+
       // Rank SEO Keys
       "Overview": "rankOverview",
       "Users": "rankUsers",
@@ -40,18 +45,21 @@ const Dropdown = ({ title, items, icon, counts = {}, onTabChange }) => {
   return (
     <li className={styles.menuItem}>
       <button
-        className={`${styles.menuButton} ${open ? styles.menuButtonOpen : ""}`}
-        onClick={() => setOpen((s) => !s)}
+        className={`${styles.menuButton} ${open ? styles.menuButtonOpen : ""} ${isCollapsed ? styles.collapsedMenuButton : ""}`}
+        onClick={() => !isCollapsed && setOpen((s) => !s)}
+        title={isCollapsed ? title : ""}
       >
         <div className={styles.menuButtonContent}>
           <span className={styles.linkIcon}>{icon}</span>
-          <span className={styles.linkText}>{title}</span>
+          {!isCollapsed && <span className={styles.linkText}>{title}</span>}
         </div>
-        <span className={`${styles.arrow} ${open ? styles.menuButtonOpen : ""}`}>
-          &#9660;
-        </span>
+        {!isCollapsed && (
+          <span className={`${styles.arrow} ${open ? styles.menuButtonOpen : ""}`}>
+            &#9660;
+          </span>
+        )}
       </button>
-      {open && (
+      {open && !isCollapsed && (
         <ul className={styles.submenu}>
           {items.map((it) => {
             const itemCount = getCountForRoute(it.label);
@@ -88,7 +96,7 @@ const Dropdown = ({ title, items, icon, counts = {}, onTabChange }) => {
   );
 };
 
-export default function Sidebar({ onRankSeoTabChange, rankSeoData }) {
+export default function Sidebar({ onRankSeoTabChange, rankSeoData, isCollapsed, toggleSidebar }) {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [cybombCounts, setCybombCounts] = useState({});
   const [rankSeoCounts, setRankSeoCounts] = useState({});
@@ -111,7 +119,7 @@ export default function Sidebar({ onRankSeoTabChange, rankSeoData }) {
       const fetchCount = async (url) => {
         try {
           const res = await fetch(url, { headers });
-          if(res.ok) {
+          if (res.ok) {
             const data = await res.json();
             if (Array.isArray(data)) return data.length;
             if (Array.isArray(data.users)) return data.users.length;
@@ -119,7 +127,7 @@ export default function Sidebar({ onRankSeoTabChange, rankSeoData }) {
             return 0;
           }
           return 0;
-        } catch(e) { return 0; }
+        } catch (e) { return 0; }
       };
 
       // Simplified stats fetching for Sidebar badges
@@ -129,7 +137,7 @@ export default function Sidebar({ onRankSeoTabChange, rankSeoData }) {
         // Add other endpoints as needed
       };
 
-      setRankSeoCounts(prev => ({...prev, ...results}));
+      setRankSeoCounts(prev => ({ ...prev, ...results }));
     } catch (error) {
       console.error("Error fetching Rank SEO counts:", error);
     }
@@ -161,7 +169,7 @@ export default function Sidebar({ onRankSeoTabChange, rankSeoData }) {
         } catch (error) { console.error(error); }
       }));
 
-      setCybombCounts(prev => ({...prev, ...results}));
+      setCybombCounts(prev => ({ ...prev, ...results }));
     } catch (error) {
       console.error("Error in fetchCybombCounts:", error);
     }
@@ -226,10 +234,10 @@ export default function Sidebar({ onRankSeoTabChange, rankSeoData }) {
     { to: "/pdf-works/user", label: "User" },
     { to: "/pdf-works/contact-details", label: "Contact Details" },
     { to: "/pdf-works/admin-details", label: "Admin Details" },
-    { to: "/pdf-works/pricing-management", label: "Pricing Management"},
-    { to: "/pdf-works/blog-manager", label: "Blog Manager"},
-    { to: "/pdf-works/payment-manager", label: "Payment Manager"},
-    { to: "/pdf-works/topup-manager", label: "Topup Manager"},
+    { to: "/pdf-works/pricing-management", label: "Pricing Management" },
+    { to: "/pdf-works/blog-manager", label: "Blog Manager" },
+    { to: "/pdf-works/payment-manager", label: "Payment Manager" },
+    { to: "/pdf-works/topup-manager", label: "Topup Manager" },
 
   ];
 
@@ -241,6 +249,19 @@ export default function Sidebar({ onRankSeoTabChange, rankSeoData }) {
     { to: "/djittrading/Enrollment", label: "Enrollment" },
     { to: "/djittrading/Coupon-Generator", label: "Coupon Generator" },
     { to: "/djittrading/Newsletter", label: "Newsletter" },
+  ];
+
+  const startupbuilder = [
+    { to: "/startup-builder/analytics", label: "Analytics" },
+    { to: "/startup-builder/users", label: "Users" },
+    { to: "/startup-builder/pricing", label: "Pricing Manager" },
+    { to: "/startup-builder/payments", label: "Payment Manager" },
+    { to: "/startup-builder/templates", label: "Templates" },
+    { to: "/startup-builder/categories", label: "Categories" },
+    { to: "/startup-builder/subcategories", label: "SubCategories" },
+    { to: "/startup-builder/contacts", label: "Contact Submissions" },
+    { to: "/startup-builder/newsletter", label: "Newsletter" },
+    { to: "/startup-builder/user-access", label: "User Access" },
   ];
 
   const cybombDropdownCounts = useMemo(() => {
@@ -277,15 +298,25 @@ export default function Sidebar({ onRankSeoTabChange, rankSeoData }) {
         </div>
       </div>
 
-      <aside className={`${styles.sidebar} ${isMobileOpen ? styles.sidebarOpen : ""}`}>
-        <div className={styles.brand}>
+      <aside className={`${styles.sidebar} ${isMobileOpen ? styles.sidebarOpen : ""} ${isCollapsed ? styles.sidebarCollapsed : ""}`}>
+        <button
+          className={`${styles.toggleBtn} ${isCollapsed ? styles.collapsedToggle : ""}`}
+          onClick={toggleSidebar}
+          title={isCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
+        >
+          {isCollapsed ? "»" : "«"}
+        </button>
+
+        <div className={`${styles.brand} ${isCollapsed ? styles.brandCollapsed : ""}`}>
           <div className={styles.brandLogoContainer}>
             <div className={styles.brandLogo}>⚡</div>
           </div>
-          <div className={styles.brandTextContainer}>
-            <div className={styles.brandTitle}>Super Admin</div>
-            <div className={styles.brandSubtitle}>Administration Panel</div>
-          </div>
+          {!isCollapsed && (
+            <div className={styles.brandTextContainer}>
+              <div className={styles.brandTitle}>Super Admin</div>
+              <div className={styles.brandSubtitle}>Administration Panel</div>
+            </div>
+          )}
         </div>
 
         <nav className={styles.nav}>
@@ -295,34 +326,38 @@ export default function Sidebar({ onRankSeoTabChange, rankSeoData }) {
                 to="/dashboard"
                 className={({ isActive }) => `${styles.link} ${isActive ? styles.active : ""}`}
                 onClick={() => setIsMobileOpen(false)}
+                title={isCollapsed ? "Dashboard" : ""}
               >
                 <span className={styles.linkIcon}>📊</span>
-                <span className={styles.linkText}>Dashboard</span>
+                {!isCollapsed && <span className={styles.linkText}>Dashboard</span>}
               </NavLink>
             </li>
 
             {userRole === "superadmin" && (
-              <Dropdown title="Admin" items={adminItems} icon="👨‍💼" counts={{}} onTabChange={onRankSeoTabChange} />
+              <Dropdown title="Admin" items={adminItems} icon="👨‍💼" counts={{}} onTabChange={onRankSeoTabChange} isCollapsed={isCollapsed} />
             )}
 
-            <Dropdown title="Rank SEO" items={rankSeoItems} icon="📈" counts={rankSeoDropdownCounts} onTabChange={onRankSeoTabChange} />
-            <Dropdown title="Cybomb" items={cybombItems} icon="🚀" counts={cybombDropdownCounts} onTabChange={onRankSeoTabChange} />
-            <Dropdown title="Aitals Tech" items={aitals} icon="📄" counts={{}} onTabChange={onRankSeoTabChange} />
-            <Dropdown title="PDF Works" items={pdfworks} icon="📄" counts={{}} onTabChange={onRankSeoTabChange} />
-            <Dropdown title="Social Media" items={socialmedia} icon="💹" counts={{}} onTabChange={onRankSeoTabChange} />
-            <Dropdown title="DjitTrading" items={djittrading} icon="💬" counts={{}} onTabChange={onRankSeoTabChange} />
+            <Dropdown title="Rank SEO" items={rankSeoItems} icon="📈" counts={rankSeoDropdownCounts} onTabChange={onRankSeoTabChange} isCollapsed={isCollapsed} />
+            <Dropdown title="Cybomb" items={cybombItems} icon="🚀" counts={cybombDropdownCounts} onTabChange={onRankSeoTabChange} isCollapsed={isCollapsed} />
+            <Dropdown title="Aitals Tech" items={aitals} icon="📄" counts={{}} onTabChange={onRankSeoTabChange} isCollapsed={isCollapsed} />
+            <Dropdown title="PDF Works" items={pdfworks} icon="📄" counts={{}} onTabChange={onRankSeoTabChange} isCollapsed={isCollapsed} />
+            <Dropdown title="Social Media" items={socialmedia} icon="💹" counts={{}} onTabChange={onRankSeoTabChange} isCollapsed={isCollapsed} />
+            <Dropdown title="DjitTrading" items={djittrading} icon="💬" counts={{}} onTabChange={onRankSeoTabChange} isCollapsed={isCollapsed} />
+            <Dropdown title="Startup Builder" items={startupbuilder} icon="🏗️" counts={{}} onTabChange={onRankSeoTabChange} isCollapsed={isCollapsed} />
           </ul>
         </nav>
 
         <div className={styles.sidebarFooter}>
           <div className={styles.userInfo}>
             <div className={styles.userAvatar}>{firstLetter}</div>
-            <div className={styles.userDetails}>
-              <div className={styles.userName}>{userName}</div>
-              <div className={styles.userRole}>
-                {userRole === "superadmin" ? "Super Administrator" : "Administrator"}
+            {!isCollapsed && (
+              <div className={styles.userDetails}>
+                <div className={styles.userName}>{userName}</div>
+                <div className={styles.userRole}>
+                  {userRole === "superadmin" ? "Super Administrator" : "Administrator"}
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </aside>

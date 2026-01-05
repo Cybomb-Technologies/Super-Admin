@@ -1,5 +1,6 @@
 :root{
   --sidebar-width: 260px;
+  --sidebar-collapsed-width: 80px;
   --bg: #0f172a;
   --card: #1e293b;
   --muted: #94a3b8;
@@ -269,6 +270,11 @@ body{
   margin-left: var(--sidebar-width);
   min-height: 100vh;
   background: transparent;
+  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.content.collapsed {
+  margin-left: var(--sidebar-collapsed-width);
 }
 
 /* Admin Header Styles */

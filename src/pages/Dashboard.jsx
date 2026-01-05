@@ -1,8 +1,12 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
+import { toast } from 'sonner'
 import styles from './Dashboard.module.css'
 
 export default function Dashboard() {
-  // Project data with icons and status
+  const navigate = useNavigate()
+
+  // Project data with icons, status, and target routes
   const projects = [
     {
       id: 1,
@@ -10,7 +14,8 @@ export default function Dashboard() {
       description: "Advanced cybersecurity solutions and threat intelligence platform providing enterprise-grade protection",
       type: "projectCybomb",
       icon: "🛡️",
-      status: "Active"
+      status: "Active",
+      path: "/cybomb/dashboard-overview"
     },
     {
       id: 2,
@@ -18,7 +23,8 @@ export default function Dashboard() {
       description: "AI-powered talent acquisition and management system revolutionizing HR processes",
       type: "projectAitals",
       icon: "🤖",
-      status: "Active"
+      status: "Active",
+      path: "/aitals/dashboard"
     },
     {
       id: 3,
@@ -26,7 +32,8 @@ export default function Dashboard() {
       description: "Comprehensive PDF processing suite with advanced editing and conversion capabilities",
       type: "projectPDF",
       icon: "📄",
-      status: "Development"
+      status: "Development",
+      path: "/pdf-works/dashboard"
     },
     {
       id: 4,
@@ -34,7 +41,8 @@ export default function Dashboard() {
       description: "Search engine optimization platform with real-time analytics and AI-driven insights",
       type: "projectRankSEO",
       icon: "📈",
-      status: "Active"
+      status: "Active",
+      path: "/rankseo/dashboard"
     },
     {
       id: 5,
@@ -42,7 +50,8 @@ export default function Dashboard() {
       description: "All-in-one social media management platform with scheduling and analytics",
       type: "projectSocialMedia",
       icon: "📱",
-      status: "Active"
+      status: "Active",
+      path: "/social-media/dashboard"
     },
     {
       id: 6,
@@ -50,7 +59,8 @@ export default function Dashboard() {
       description: "Complete ecosystem for startup development, funding, and growth management",
       type: "projectStartup",
       icon: "🚀",
-      status: "Development"
+      status: "Development",
+      path: null // Coming Soon
     },
     {
       id: 7,
@@ -58,7 +68,8 @@ export default function Dashboard() {
       description: "Advanced algorithmic trading platform with real-time market analysis",
       type: "projectDjit",
       icon: "💹",
-      status: "Active"
+      status: "Active",
+      path: "/djittrading/dashboard"
     },
     {
       id: 8,
@@ -66,13 +77,20 @@ export default function Dashboard() {
       description: "Enterprise Human Resource Management System with payroll and performance tracking",
       type: "projectHRMS",
       icon: "👥",
-      status: "Active"
+      status: "Active",
+      path: null // Coming Soon
     }
   ]
 
-  const handleProjectClick = (projectName) => {
-    console.log(`Navigating to ${projectName}`);
-    // Add your navigation logic here
+  const handleProjectClick = (project) => {
+    if (project.path) {
+      navigate(project.path)
+    } else {
+      toast.info(`${project.name} is coming soon!`, {
+        description: "We're currently building this module. Stay tuned!",
+        duration: 3000,
+      })
+    }
   }
 
   const getStatusClass = (status) => {
@@ -84,20 +102,16 @@ export default function Dashboard() {
       {/* Header */}
       <div className={styles.header}>
         <h1 className={styles.title}>Cybomb Project</h1>
-        {/* <p className={styles.subtitle}>
-          Explore our innovative digital solutions and technology platforms designed to transform businesses
-        </p> */}
       </div>
 
       {/* Projects Section */}
       <div className={styles.projectsSection}>
-        {/* <h2 className={styles.sectionTitle}>Featured Projects</h2> */}
         <div className={styles.projectsGrid}>
           {projects.map((project, index) => (
-            <div 
+            <div
               key={project.id}
               className={`${styles.projectCard} ${styles[project.type]}`}
-              onClick={() => handleProjectClick(project.name)}
+              onClick={() => handleProjectClick(project)}
               style={{ animationDelay: `${index * 0.1}s` }}
             >
               <div className={styles.projectIcon}>
@@ -114,12 +128,12 @@ export default function Dashboard() {
       </div>
 
       {/* Quick Actions */}
-      <div className={styles.quickActions}>
+      {/* <div className={styles.quickActions}>
         <button className={styles.actionButton}>Launch New Project</button>
         <button className={styles.actionButton}>View Analytics</button>
         <button className={styles.actionButton}>Team Management</button>
         <button className={styles.actionButton}>Settings & Configuration</button>
-      </div>
+      </div> */}
 
       {/* Footer */}
       <div className={styles.footer}>

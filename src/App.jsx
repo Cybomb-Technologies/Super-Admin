@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Sidebar from "./components/Sidebar";
 import Adminheader from "./components/Adminheader";
 import ProtectedRoute from "./components/ProtectedRoute";
+import { Toaster } from "sonner";
 
 import Dashboard from "./pages/Dashboard";
 import SettingsGeneral from "./pages/settings/SettingsGeneral";
@@ -33,7 +34,7 @@ import PaymentManagement from "./pages/pdfworks/PaymentManagement";
 import TopupManagement from "./pages/pdfworks/TopupManagement";
 
 // Rank SEO Imports
-import  AdminDashboard from "./pages/rankseo/dashboard";
+import AdminDashboard from "./pages/rankseo/dashboard";
 import UsersTab from "./pages/rankseo/UsersTab";
 import AuditTab from "./pages/rankseo/AuditTab";
 import PricingTab from "./pages/rankseo/PricingTab";
@@ -67,6 +68,19 @@ import NewsletterManagement from "./pages/djittrading/NewsletterManagement";
 import DJIAdminManager from "./pages/admin/djittrading/djiadmin";
 
 import PFDAdminManager from "./pages/admin/pdfworks/PFDAdminManager";
+
+// Startup Builder Imports
+import StartupAnalytics from "./pages/startup-builder/Analytics";
+import StartupUsers from "./pages/startup-builder/Users";
+import StartupPricing from "./pages/startup-builder/AdminPricingManager";
+import StartupCategories from "./pages/startup-builder/Categories";
+import StartupContacts from "./pages/startup-builder/ContactSubmissions";
+import StartupNewsletter from "./pages/startup-builder/Newsletter";
+import StartupPayments from "./pages/startup-builder/PaymentManager";
+import StartupSubCategories from "./pages/startup-builder/SubCategories";
+import StartupTemplates from "./pages/startup-builder/Templates";
+import StartupUserAccess from "./pages/startup-builder/UserAccess";
+import StartupPlaceholder from "./pages/startup-builder/Placeholder";
 export default function App() {
   const [token, setToken] = useState(localStorage.getItem("token"));
   const location = useLocation();
@@ -82,6 +96,19 @@ export default function App() {
     return () => window.removeEventListener("tokenChanged", handleTokenChange);
   }, []);
 
+  // 🔹 Sidebar collapse state
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(
+    localStorage.getItem("isSidebarCollapsed") === "true"
+  );
+
+  const toggleSidebar = () => {
+    setIsSidebarCollapsed((prev) => {
+      const newState = !prev;
+      localStorage.setItem("isSidebarCollapsed", newState);
+      return newState;
+    });
+  };
+
   // 🔹 Hide layout for login route
   const hideLayout =
     location.pathname === "/admin/login" ||
@@ -89,6 +116,7 @@ export default function App() {
 
   return (
     <>
+      <Toaster position="top-center" richColors />
       {hideLayout ? (
         // ✅ Show only login page
         <Routes>
@@ -98,12 +126,18 @@ export default function App() {
       ) : (
         // ✅ Protected layout (Sidebar + Header + Main content)
         <div className="app-layout">
-          {token && <Sidebar />}
+          {token && (
+            <Sidebar
+              isCollapsed={isSidebarCollapsed}
+              setIsCollapsed={setIsSidebarCollapsed}
+              toggleSidebar={toggleSidebar}
+            />
+          )}
 
-          <div className="main-area">
+          <div className={`main-area ${isSidebarCollapsed ? "collapsed-layout" : ""}`}>
             {token && <Adminheader />}
 
-            <main className="content">
+            <main className={`content ${isSidebarCollapsed ? "collapsed" : ""}`}>
               <Routes>
                 <Route
                   path="/"
@@ -326,7 +360,7 @@ export default function App() {
                   path="/PDF-Works/pricing-management"
                   element={
                     <ProtectedRoute>
-                      <PricingManagement/>
+                      <PricingManagement />
                     </ProtectedRoute>
                   }
                 />
@@ -334,7 +368,7 @@ export default function App() {
                   path="/PDF-Works/blog-manager"
                   element={
                     <ProtectedRoute>
-                      <BlogManagerPDF/>
+                      <BlogManagerPDF />
                     </ProtectedRoute>
                   }
                 />
@@ -342,7 +376,7 @@ export default function App() {
                   path="/PDF-Works/payment-manager"
                   element={
                     <ProtectedRoute>
-                      <PaymentManagement/>
+                      <PaymentManagement />
                     </ProtectedRoute>
                   }
                 />
@@ -350,16 +384,16 @@ export default function App() {
                   path="/PDF-Works/topup-manager"
                   element={
                     <ProtectedRoute>
-                      <TopupManagement/>
+                      <TopupManagement />
                     </ProtectedRoute>
                   }
-                />                
+                />
                 {/* Rank SEO Routes */}
                 <Route
                   path="/rankseo/dashboard"
                   element={
                     <ProtectedRoute>
-                       <AdminDashboard />
+                      <AdminDashboard />
                     </ProtectedRoute>
                   }
                 />
@@ -411,13 +445,13 @@ export default function App() {
                     </ProtectedRoute>
                   }
                 />
-                
 
-                 <Route
+
+                <Route
                   path="/djittrading/dashboard"
                   element={
                     <ProtectedRoute>
-                     <DjittradingDashboard />
+                      <DjittradingDashboard />
                     </ProtectedRoute>
                   }
                 />
@@ -425,44 +459,44 @@ export default function App() {
                   path="/djittrading/course"
                   element={
                     <ProtectedRoute>
-                      <Courses/>
+                      <Courses />
                     </ProtectedRoute>
                   }
                 />
 
-                 <Route
+                <Route
                   path="/djittrading/users"
                   element={
                     <ProtectedRoute>
-                     <DjittradingUsers/>
+                      <DjittradingUsers />
                     </ProtectedRoute>
                   }
                 />
-                 <Route
+                <Route
                   path="/djittrading/Enrollment"
                   element={
                     <ProtectedRoute>
-                      <EnrollmentManagement/>
+                      <EnrollmentManagement />
                     </ProtectedRoute>
                   }
                 />
-                 <Route
+                <Route
                   path="/djittrading/Coupon-Generator"
                   element={
                     <ProtectedRoute>
-                      <CouponGenerator/>
+                      <CouponGenerator />
                     </ProtectedRoute>
                   }
                 />
-                 <Route
+                <Route
                   path="/djittrading/Newsletter"
                   element={
                     <ProtectedRoute>
-                     <NewsletterManagement/>
+                      <NewsletterManagement />
                     </ProtectedRoute>
                   }
                 />
-                
+
                 <Route
                   path="/settings/general"
                   element={
@@ -495,7 +529,7 @@ export default function App() {
                     </ProtectedRoute>
                   }
                 />
-                  <Route
+                <Route
                   path="/admin/aitals-admin"
                   element={
                     <ProtectedRoute>
@@ -524,6 +558,88 @@ export default function App() {
                   element={
                     <ProtectedRoute>
                       <PFDAdminManager />
+                    </ProtectedRoute>
+                  }
+                />
+
+                {/* Startup Builder Routes */}
+                <Route
+                  path="/startup-builder/analytics"
+                  element={
+                    <ProtectedRoute>
+                      <StartupAnalytics />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/startup-builder/pricing"
+                  element={
+                    <ProtectedRoute>
+                      <StartupPricing />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/startup-builder/categories"
+                  element={
+                    <ProtectedRoute>
+                      <StartupCategories />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/startup-builder/contacts"
+                  element={
+                    <ProtectedRoute>
+                      <StartupContacts />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/startup-builder/newsletter"
+                  element={
+                    <ProtectedRoute>
+                      <StartupNewsletter />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/startup-builder/users"
+                  element={
+                    <ProtectedRoute>
+                      <StartupUsers />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/startup-builder/payments"
+                  element={
+                    <ProtectedRoute>
+                      <StartupPayments />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/startup-builder/templates"
+                  element={
+                    <ProtectedRoute>
+                      <StartupTemplates />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/startup-builder/subcategories"
+                  element={
+                    <ProtectedRoute>
+                      <StartupSubCategories />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/startup-builder/user-access"
+                  element={
+                    <ProtectedRoute>
+                      <StartupUserAccess />
                     </ProtectedRoute>
                   }
                 />
