@@ -621,7 +621,7 @@ const Templates = () => {
                     </div>
                     <Button
                         onClick={() => setShowAddTemplate(true)}
-                        className="bg-sky-500 hover:bg-sky-600 text-white rounded-2xl h-14 px-8 font-black shadow-xl shadow-sky-900/20 flex items-center justify-center transition-all"
+                        className="bg-black text-white rounded-2xl h-14 px-8 font-black shadow-xl shadow-sky-900/20 flex items-center justify-center transition-all"
                     >
                         <Plus className="w-5 h-5 mr-2" />
                         New Template
@@ -638,7 +638,7 @@ const Templates = () => {
                             ) : (
                                 <div className="w-full h-full flex flex-col items-center justify-center text-slate-400 gap-2">
                                     <Image className="w-12 h-12" />
-                                    <span className="text-[10px] font-black uppercase tracking-widest">No Preview</span>
+                                    <span className="text-[10px] font-black text-white uppercase tracking-widest">No Preview</span>
                                 </div>
                             )}
                             <div className={styles.cardBadge}>
@@ -647,7 +647,7 @@ const Templates = () => {
                         </div>
                         <div className={styles.cardContent}>
                             <h3 className={styles.cardTitle}>{template.name}</h3>
-                            <p className="text-slate-400 text-xs font-bold line-clamp-2 mb-4 leading-relaxed">
+                            <p className="text-slate-300 text-white text-sm font-semibold line-clamp-2 mb-4 leading-relaxed">
                                 {template.description || "Design and structure your next big thing with this comprehensive blueprint."}
                             </p>
                             <div className={styles.cardMeta}>
@@ -657,14 +657,14 @@ const Templates = () => {
                             </div>
                         </div>
                         <div className={styles.cardActions}>
-                            <Button variant="outline" size="sm" className="flex-1 rounded-xl font-bold h-10 border-white/10 hover:bg-white/10 hover:text-white text-slate-300 bg-transparent" onClick={() => handleDownload(template)}>
+                            <Button variant="outline" size="sm" className="flex-1 rounded-xl font-bold h-10 border-white/20 hover:bg-white/10 hover:text-white text-white bg-transparent" onClick={() => handleDownload(template)}>
                                 <Download className="w-4 h-4 mr-2" /> Get
                             </Button>
-                            <Button variant="outline" size="sm" className="flex-1 rounded-xl font-bold h-10 border-white/10 hover:bg-white/10 hover:text-white text-slate-300 bg-transparent" onClick={() => handleEditClick(template)}>
+                            <Button variant="outline" size="sm" className="flex-1 rounded-xl font-bold h-10 border-white/20 hover:bg-white/10 hover:text-white text-white bg-transparent" onClick={() => handleEditClick(template)}>
                                 <Edit className="w-4 h-4 mr-2" /> Edit
                             </Button>
-                            <Button variant="outline" size="sm" className="flex-none w-10 h-10 p-0 rounded-xl border-white/10 text-rose-400 hover:bg-rose-500/20 hover:text-rose-300 bg-transparent" onClick={() => handleDelete(template._id)}>
-                                <Trash2 className="w-4 h-4" />
+                            <Button variant="outline" size="sm" className="flex-none w-10 h-10 p-0 rounded-xl border-white/20 text-rose-400 hover:bg-rose-500/20 hover:text-rose-300 bg-transparent" onClick={() => handleDelete(template._id)}>
+                                <Trash2 className="w-4 h-4 text-white" />
                             </Button>
                         </div>
                     </div>
@@ -683,7 +683,7 @@ const Templates = () => {
                         >
                             <div className="p-10">
                                 <div className="flex justify-between items-center mb-10">
-                                    <h2 className="text-3xl font-black tracking-tighter text-white uppercase">Create Template</h2>
+                                    <h2 className="text-2xl font-black tracking-tighter text-white uppercase">Create Template</h2>
                                     <Button variant="ghost" className="rounded-full w-12 h-12 p-0 text-slate-400 hover:text-white hover:bg-white/10" onClick={() => setShowAddTemplate(false)}><X /></Button>
                                 </div>
                                 <div className={styles.formGrid}>
@@ -723,7 +723,7 @@ const Templates = () => {
                                             <input type="file" id="file-upload" className="hidden" onChange={handleFileChange} accept=".pdf,.doc,.docx,.txt,.xls,.xlsx" />
                                             <FileText className="w-12 h-12 text-slate-500 mx-auto mb-4" />
                                             <div className="font-black text-white text-lg">{newTemplate.file ? newTemplate.file.name : "Select or Drop Document"}</div>
-                                            <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">PDF, DOCX, XLSX (Max 5MB)</div>
+                                            <div className="text-[10px] font-black text-white uppercase tracking-widest mt-1">PDF, DOCX, XLSX (Max 5MB)</div>
                                         </div>
                                     </div>
                                     <div className={`${styles.inputGroup} col-span-2`}>
@@ -731,11 +731,11 @@ const Templates = () => {
                                         <textarea className={`${styles.textarea} bg-white/5 border border-white/10 text-white rounded-2xl p-4 focus:ring-2 focus:ring-sky-500/50 outline-none min-h-[150px]`} value={newTemplate.content} onChange={(e) => handleInputChange("content", e.target.value)} placeholder="Describe the template structure and components..." />
                                     </div>
                                 </div>
-                                <div className="flex gap-4 mt-12">
-                                    <Button className="flex-1 h-16 rounded-2xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white font-black text-lg shadow-2xl shadow-sky-900/20 border-0 active:scale-95 transition-all" onClick={handleAddTemplate} disabled={isSubmitting}>
+                                <div className="flex gap-4 mt-12 pt-2">
+                                    <Button className="flex-1 h-16 rounded-2xl bg-black hover:bg-black/80 text-white font-black text-lg shadow-2xl shadow-sky-900/20 border-0 active:scale-95 transition-all" onClick={handleAddTemplate} disabled={isSubmitting}>
                                         {isSubmitting ? "Generating..." : "Finalize Template"}
                                     </Button>
-                                    <Button variant="outline" className="h-16 px-10 rounded-2xl border-white/10 text-white hover:bg-white/10 font-black" onClick={() => setShowAddTemplate(false)}>
+                                    <Button variant="outline" className="h-16 mx-2 px-10 rounded-2xl border-white/20 text-white hover:bg-white/10 font-black bg-transparent" onClick={() => setShowAddTemplate(false)}>
                                         Discard
                                     </Button>
                                 </div>
@@ -781,10 +781,10 @@ const Templates = () => {
                                     </div>
                                 </div>
                                 <div className="flex gap-4 mt-12">
-                                    <Button className="flex-1 h-16 rounded-2xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white font-black text-lg shadow-2xl shadow-sky-900/20 border-0" onClick={handleEditTemplate} disabled={isEditing}>
+                                    <Button className="flex-1 h-16 rounded-2xl bg-gradient-to-r bg-black from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white font-black text-lg shadow-2xl shadow-sky-900/20 border-0" onClick={handleEditTemplate} disabled={isEditing}>
                                         {isEditing ? "Syncing..." : "Publish Changes"}
                                     </Button>
-                                    <Button variant="outline" className="h-16 px-10 rounded-2xl border-white/10 text-white hover:bg-white/10 font-black" onClick={() => setShowEditTemplate(false)}>
+                                    <Button variant="outline" className="h-16 mx-2 px-10 rounded-2xl border-white/20 text-white hover:bg-white/10 font-black bg-transparent" onClick={() => setShowEditTemplate(false)}>
                                         Abort
                                     </Button>
                                 </div>

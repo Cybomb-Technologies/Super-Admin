@@ -1,20 +1,47 @@
 import * as React from "react"
+import { createPortal } from "react-dom"
 import { cn } from "@/lib/utils"
 
 const Dialog = ({ children, open, onOpenChange }) => {
     if (!open) return null;
-    return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/50">
-            <div className="relative w-full max-w-lg p-6 bg-white rounded-lg shadow-lg">
+    
+    return createPortal(
+        <div 
+            style={{
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                width: '100vw',
+                height: '100vh',
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                zIndex: 2147483647,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                backdropFilter: 'blur(2px)'
+            }}
+            onClick={() => onOpenChange(false)}
+        >
+            <div 
+                onClick={e => e.stopPropagation()}
+                style={{
+                    position: 'relative',
+                    width: '100%',
+                    maxWidth: '95vw',
+                    maxHeight: '90vh',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    outline: 'none',
+                    padding: '0 20px',
+                    boxSizing: 'border-box'
+                }}
+            >
                 {children}
-                <button
-                    onClick={() => onOpenChange(false)}
-                    className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
-                >
-                    ✕
-                </button>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 };
 
@@ -23,7 +50,7 @@ const DialogTrigger = ({ children, asChild, ...props }) => {
 };
 
 const DialogContent = ({ children, className, ...props }) => (
-    <div className={cn("mt-4", className)} {...props}>
+    <div className={cn("relative w-full", className)} {...props}>
         {children}
     </div>
 );

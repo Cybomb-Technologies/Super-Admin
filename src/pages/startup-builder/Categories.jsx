@@ -144,22 +144,22 @@ const Categories = () => {
                             <div className={styles.itemActions}>
                                 <Button
                                     variant="ghost"
-                                    className={styles.actionBtn + " hover:bg-blue-500/10 hover:text-blue-400 text-slate-400"}
+                                    className={styles.actionBtn}
                                     onClick={() => {
                                         setEditingId(category._id);
                                         setEditValue(category.name);
                                     }}
                                 >
-                                    <Edit className="w-4 h-4" />
+                                    <Edit className="w-4 h-4 text-black" />Edit
                                 </Button>
                                 <Button
                                     variant="ghost"
-                                    className={styles.actionBtn + " hover:bg-red-500/10 hover:text-red-400 text-slate-400"}
+                                    className={styles.actionBtn}
                                     onClick={() => {
                                         if (!confirm('Are you sure?')) return;
                                     }}
                                 >
-                                    <Trash2 className="w-4 h-4" />
+                                    <Trash2 className="w-4 h-4" />Trash
                                 </Button>
                             </div>
                         </motion.div>

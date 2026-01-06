@@ -126,10 +126,10 @@ const Newsletter = () => {
                     />
                 </div>
                 <Select value={sortBy} onValueChange={setSortBy}>
-                    <SelectTrigger className="w-64 h-14 rounded-full bg-white/5 border-white/10 font-bold text-white">
+                    <SelectTrigger className="w-64 h-14 rounded-full bg-black border-white/10 font-bold text-white">
                         <SelectValue placeholder="Sort Order" />
                     </SelectTrigger>
-                    <SelectContent className="rounded-2xl bg-slate-900 border-white/10 text-white">
+                    <SelectContent className="rounded-2xl bg-black border-white/10 text-white">
                         <SelectItem value="newest" className="focus:bg-white/10 focus:text-white cursor-pointer p-3 rounded-xl font-bold">Newest First</SelectItem>
                         <SelectItem value="oldest" className="focus:bg-white/10 focus:text-white cursor-pointer p-3 rounded-xl font-bold">Oldest First</SelectItem>
                     </SelectContent>

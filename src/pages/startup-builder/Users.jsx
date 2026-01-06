@@ -363,22 +363,25 @@ const UsersPage = () => {
 
             {/* Modal */}
             <Dialog open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
-                <DialogContent className="max-w-2xl border border-white/10 p-0 overflow-hidden bg-slate-900 shadow-[0_50px_100px_-20px_rgba(0,0,0,0.5)] rounded-[3.5rem] text-white">
+                <DialogContent 
+                    className="w-full border border-white/10 p-0 overflow-hidden shadow-[0_50px_100px_-20px_rgba(0,0,0,0.5)] rounded-[3.5rem] text-white"
+                    style={{ backgroundColor: '#0f0c29', zIndex: 2147483647, width: '100%', maxWidth: '1024px' }} 
+                >
                     {selectedUser && (
-                        <div className="relative">
-                            <div className="h-40 bg-slate-950 relative">
+                        <div className="relative ">
+                            <div className="h-40 bg-black relative">
                                 <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, #6366f1 1px, transparent 0)', backgroundSize: '16px 16px' }} />
-                                <button onClick={() => setIsPreviewOpen(false)} className="absolute top-8 right-8 w-12 h-12 bg-white/10 hover:bg-white/20 text-white rounded-2xl flex items-center justify-center backdrop-blur-md transition-all">
+                                <button onClick={() => setIsPreviewOpen(false)} className="absolute top-8 right-8 w-12 h-12 bg-black hover:bg-white/20 text-white rounded-2xl flex items-center justify-center backdrop-blur-md transition-all">
                                     <X className="w-6 h-6" />
                                 </button>
-                                <div className="absolute -bottom-12 left-12 p-1.5 bg-slate-900 rounded-[2.5rem] shadow-2xl border border-white/10">
+                                {/* <div className="absolute p-4 -bottom-12 left-12 p-1.5 bg-black rounded-[2.5rem] shadow-2xl border border-white/10">
                                     <div className="w-24 h-24 rounded-[2rem] flex items-center justify-center text-white text-3xl font-black" style={{ background: getPlanConfig(selectedUser.planId).bg }}>
                                         {(selectedUser.username || selectedUser.email || 'U')[0].toUpperCase()}
                                     </div>
-                                </div>
+                                </div> */}
                             </div>
 
-                            <div className="pt-20 p-12">
+                            <div className="pt-20 p-4 p-12">
                                 <div className="flex justify-between items-start mb-10">
                                     <div>
                                         <h2 className="text-4xl font-black text-white tracking-tight leading-none mb-3 italic">{selectedUser.username || 'IDENTITY_UNSET'}</h2>
@@ -413,7 +416,7 @@ const UsersPage = () => {
                                     </div>
                                 </div>
 
-                                <Button className="w-full h-16 rounded-[2rem] bg-indigo-600 text-white font-black text-lg shadow-xl shadow-indigo-600/20 hover:scale-[1.02] active:scale-95 transition-all">
+                                <Button className="w-full h-16 rounded-[2rem] bg-black text-white font-black text-lg shadow-xl shadow-indigo-600/20 hover:scale-[1.02] active:scale-95 transition-all">
                                     Manage Permissions
                                 </Button>
                             </div>
