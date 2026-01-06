@@ -259,14 +259,14 @@ const UserAccess = () => {
                                         autoFocus
                                     />
                                     <Button
-                                        className="h-16 px-8 bg-indigo-600 text-white rounded-2xl font-black hover:bg-indigo-500 transition-all"
+                                        className="h-16 px-8 bg-black text-white rounded-2xl font-black hover:bg-indigo-500 transition-all"
                                         onClick={() => handleUpdateAccessLevel(accessLevel._id)}
                                     >
                                         Apply
                                     </Button>
                                     <Button
                                         variant="outline"
-                                        className="h-16 px-8 rounded-2xl border-white/10 font-black text-slate-400 hover:bg-white/5 hover:text-white"
+                                        className="h-16 px-8 rounded-2xl border-white/10 font-black text-white hover:bg-white/5 hover:text-white"
                                         onClick={cancelEditing}
                                     >
                                         Abort
@@ -289,14 +289,14 @@ const UserAccess = () => {
                                             className="w-14 h-14 p-0 rounded-2xl border-white/10 text-slate-400 hover:bg-indigo-500/10 hover:text-indigo-400 hover:border-indigo-500/50 bg-transparent"
                                             onClick={() => startEditing(accessLevel)}
                                         >
-                                            <Edit className="w-6 h-6" />
+                                            <Edit className="w-6 h-6 text-white m-2" />
                                         </Button>
                                         <Button
                                             variant="outline"
-                                            className="w-14 h-14 p-0 rounded-2xl border-white/10 text-slate-400 hover:bg-red-500/10 hover:text-red-400 hover:border-red-500/50 bg-transparent"
+                                            className="w-14 h-14 p-0 rounded-2xl  text-slate-400 hover:bg-red-500/10 hover:text-red-400 hover:border-red-500/50 bg-transparent"
                                             onClick={() => handleDeleteAccessLevel(accessLevel._id)}
                                         >
-                                            <Trash2 className="w-6 h-6" />
+                                            <Trash2 className="w-6 h-6 text-white m-2" />
                                         </Button>
                                     </div>
                                 </>

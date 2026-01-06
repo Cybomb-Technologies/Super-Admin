@@ -144,10 +144,10 @@ const ContactSubmissions = () => {
                     />
                 </div>
                 <Select value={statusFilter} onValueChange={setStatusFilter}>
-                    <SelectTrigger className="w-64 h-14 rounded-full bg-white/5 border-white/10 font-bold text-white">
+                    <SelectTrigger className="w-64 h-14 rounded-full bg-black border-white/10 font-bold text-white">
                         <SelectValue placeholder="All Messages" />
                     </SelectTrigger>
-                    <SelectContent className="rounded-2xl bg-slate-900 border-white/10 text-white">
+                    <SelectContent className="rounded-2xl bg-black border-white/10 text-white">
                         <SelectItem value="all" className="focus:bg-white/10 focus:text-white cursor-pointer p-3 rounded-xl font-bold">All Submissions</SelectItem>
                         <SelectItem value="unread" className="focus:bg-white/10 focus:text-white cursor-pointer p-3 rounded-xl font-bold">Unread Only</SelectItem>
                         <SelectItem value="read" className="focus:bg-white/10 focus:text-white cursor-pointer p-3 rounded-xl font-bold">Read Only</SelectItem>

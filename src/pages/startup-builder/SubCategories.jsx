@@ -130,10 +130,10 @@ const SubCategories = () => {
                             value={newSubCategory.categoryId}
                             onValueChange={(value) => setNewSubCategory(prev => ({ ...prev, categoryId: value }))}
                         >
-                            <SelectTrigger className="w-full h-12 px-4 bg-white/5 border border-white/10 rounded-2xl text-sm font-medium focus:ring-2 focus:ring-emerald-500/50 transition-all outline-none text-white">
+                            <SelectTrigger className="w-full h-12 px-4 bg-black border border-white/10 rounded-2xl text-sm font-medium focus:ring-2 focus:ring-emerald-500/50 transition-all outline-none text-white">
                                 <SelectValue placeholder="Select Category" />
                             </SelectTrigger>
-                            <SelectContent className="bg-[#0f172a] border border-white/10 rounded-xl text-white">
+                            <SelectContent className="bg-black border border-white/10 rounded-xl text-white">
                                 {categories.map(category => (
                                     <SelectItem
                                         key={category._id}
@@ -198,7 +198,7 @@ const SubCategories = () => {
                                         setEditValue(sub.name);
                                     }}
                                 >
-                                    <Edit className="w-4 h-4" />
+                                    <Edit className="w-4 h-4" />Edit
                                 </Button>
                                 <Button
                                     variant="ghost"
@@ -207,7 +207,7 @@ const SubCategories = () => {
                                         if (!confirm('Are you sure?')) return;
                                     }}
                                 >
-                                    <Trash2 className="w-4 h-4" />
+                                    <Trash2 className="w-4 h-4" />Trash
                                 </Button>
                             </div>
                         </motion.div>

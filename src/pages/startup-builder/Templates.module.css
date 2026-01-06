@@ -198,6 +198,7 @@
   width: 100%;
   max-width: 60rem;
   max-height: 90vh;
+  padding: 2rem;
   overflow-y: auto;
   position: relative;
   background: linear-gradient(145deg, #1e293b, #0f172a);
@@ -218,7 +219,7 @@
 .label {
   font-size: 0.75rem;
   font-weight: 900;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.7);
   text-transform: uppercase;
   letter-spacing: 0.1em;
 }
@@ -279,4 +280,48 @@
 .fileDropzone:hover {
   border-color: #38bdf8;
   background: rgba(56, 189, 248, 0.05);
+}
+
+/* Ensure no white backgrounds anywhere */
+.container * {
+  box-sizing: border-box;
+}
+
+/* Override any default white backgrounds */
+.header input,
+.header select,
+.header button:not([class*="bg-"]) {
+  background: transparent !important;
+}
+
+/* Ensure all inputs and selects in the page have dark theme */
+input:not([type="file"]):not([type="checkbox"]):not([type="radio"]),
+select,
+textarea {
+  background: rgba(0, 0, 0, 0.2) !important;
+  color: white !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+input:not([type="file"]):not([type="checkbox"]):not([type="radio"])::placeholder,
+textarea::placeholder {
+  color: rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Fix file input button styling */
+input[type="file"]::file-selector-button,
+input[type="file"]::-webkit-file-upload-button {
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: white !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-radius: 0.75rem !important;
+  padding: 0.5rem 1rem !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+}
+
+input[type="file"]::file-selector-button:hover,
+input[type="file"]::-webkit-file-upload-button:hover {
+  background: rgba(255, 255, 255, 0.2) !important;
 }
